@@ -1,0 +1,164 @@
+.container,
+.containerModal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.containerModal {
+    position: fixed;
+    justify-content: center;
+    transition: background-color 1s ease;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1200;
+    /* height: 100%; */
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.noteCreate,
+.noteRead,
+.noteEdit {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    cursor: 'pointer';
+    background-color: white;
+}
+
+.noteCreate {
+    box-shadow: 0 4px 8px rgba(0.4, 0.4, 0.4, 0.4);
+}
+
+.noteEdit,
+.noteRead {
+    box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
+}
+
+.noteRead {
+    max-height: 420px;
+}
+
+.noteEdit {
+    max-height: 80%;
+}
+
+.noteCreate:hover,
+.noteRead:hover,
+.noteEdit:hover {
+    box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
+}
+
+@media screen and (max-width: 600px) {
+
+    .noteCreate,
+    .noteRead,
+    .noteEdit {
+        max-width: 380px;
+    }
+}
+
+.noteHeader {}
+
+.noteBody {}
+
+.noteFooter {}
+
+
+.textField {
+    outline: none;
+    border: none;
+    color: black;
+    cursor: pointer;
+    font-size: large;
+}
+
+
+.infoContainerRead {
+    overflow-y: hidden;
+}
+
+.infoContainer {
+    overflow-y: auto;
+}
+
+.titleContainer .titleContainerScroll {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.titleContainer div,
+.contentContainer div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.titleContainer p,
+.contentContainer p {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    word-wrap: break-word;
+}
+
+.titleContainerScroll {
+    box-shadow: 0 2px 2px rgba(0.2, 0.2, 0.2, 0.2);
+}
+
+
+.contentContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+
+.nestedNotesContainer {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.nestedNotesWrapper,
+.footerWrapper {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.footerContainer,
+.footerContainerRead {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.footerContainerRead {}
+
+.footerContainerRead:hover {}
+
+.noteOptionsMenuButton {
+    position: relative;
+}
+
+.noteOptionsMenu {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    top: 3rem;
+    position: absolute;
+    left: 1rem;
+    z-index: 1100;
+    outline: 0.5px solid lightgray;
+    box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
+}

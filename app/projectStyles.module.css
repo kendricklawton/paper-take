@@ -1,0 +1,36 @@
+.projectHeader {}
+
+.projectBody {}
+
+.projectFooter {}
+
+/* Project Selector Styles */
+.projectSelectorCreate,
+.projectSelectorRead {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    cursor: 'pointer',
+}
+
+.projectSelectorCreate {
+    box-shadow: 0 4px 8px rgba(0.4, 0.4, 0.4, 0.4);
+}
+
+.projectSelectorRead {
+    box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
+}
+
+
+@media screen and (max-width: 720px) {
+
+    .projectSelectorCreate,
+    .projectSelectorRead {
+        max-width: 380px;
+    }
+
+    .container {
+        max-width: 380px;
+    }
+}
