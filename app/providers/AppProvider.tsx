@@ -52,7 +52,7 @@ interface AppProviderProps {
 
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     const { user } = useAuthContext();
-    const [currentList, setCurrentList] = useState<'notes' | 'projects'>('projects');
+    const [currentList, setCurrentList] = useState<'notes' | 'projects'>('notes');
     const [notes, setNotes] = useState<Note[]>([]);
     const [projects, setProjects] = useState<Project[]>([]);
     const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);

@@ -3,7 +3,8 @@
 import styles from "./page.module.css";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { useAppContext } from "./providers/AppProvider";
-import GUI from "./components/GUI";
+import NoteGUI from "./components/NoteGUI";
+import ProjectGUI from "./components/ProjectGUI";
 import { Note, Project } from "./models";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -23,7 +24,7 @@ const Notes =()=> {
 
         return (
             <>
-                <GUI operation={'create'} object={new Note(
+                <NoteGUI operation={'create'} note={new Note(
                     new Date(),
                     uuidv4(),
                     '',
@@ -39,7 +40,7 @@ const Notes =()=> {
                 ) :
                     (
                         activeNotes.map(note => (
-                            <GUI key={note.id} operation={'read'} object={note} />
+                            <NoteGUI key={note.id} operation={'read'} note={note} />
                         ))
                     )}
             </>
@@ -51,7 +52,7 @@ const Projects =()=> {
 
     return (
         <>
-            <GUI operation={'create'} object={new Project(
+            <ProjectGUI operation={'create'} project={new Project(
                 new Date(),
                 uuidv4(),
                 'New Project',
@@ -63,12 +64,13 @@ const Projects =()=> {
             )} />
             {activeProjects.length === 0 ? (
                 <div className={styles.pageText}>
-                    <p>Projects you create will appear here</p>
+                    <p>Projects are currently under construction</p>
+                    {/* <p>Projects you create will appear here</p> */}
                 </div>
             ) :
                 (
                     activeProjects.map(project => (
-                        <GUI key={project.id} operation={'read'} object={project} />
+                        <ProjectGUI key={project.id} operation={'read'} project={project} />
                     ))
                 )}
         </>

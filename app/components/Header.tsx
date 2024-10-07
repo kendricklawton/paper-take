@@ -7,11 +7,13 @@ import { IconButton } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import {
     AccountBoxOutlined, ArchiveOutlined, CircleOutlined, Close, DeleteOutlined, LoginOutlined,
-    LogoutOutlined, MenuOpen, Refresh, Search, SettingsOutlined, Archive, Delete,
+    LogoutOutlined, MenuOpen, Refresh, Search,
+    // SettingsOutlined, 
+    Archive, Delete,
     HelpCenter,
     HelpCenterOutlined,
     Circle,
-    Settings,
+    // Settings,
     Lightbulb,
     LightbulbOutlined
 } from '@mui/icons-material';
@@ -32,7 +34,7 @@ export default function Header() {
     const [title, setTitle] = useState('');
     const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
     const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
-    const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
+    // const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
 
     const pathname = usePathname();
@@ -88,7 +90,7 @@ export default function Header() {
             }
             if (settingsMenuRef.current && !settingsMenuRef.current.contains(event.target as Node)) {
                 if (!settingsButtonRef.current?.contains(event.target as Node)) {
-                    setIsSettingsMenuOpen(false);
+                    // setIsSettingsMenuOpen(false);
                 }
             }
         };
@@ -214,7 +216,7 @@ export default function Header() {
                         <Refresh />
                     </IconButton>
                 )}
-                <div className={styles.settingsAnchor}>
+                {/* <div className={styles.settingsAnchor}>
                     <IconButton
                         ref={settingsButtonRef}
                         onClick={() => setIsSettingsMenuOpen(prev => !prev)}>
@@ -233,7 +235,7 @@ export default function Header() {
                             </div>
                         </nav>
                     )}
-                </div>
+                </div> */}
                 <div className={styles.accountAnchor}>
                     <IconButton
                         ref={accountButtonRef}

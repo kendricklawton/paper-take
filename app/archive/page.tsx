@@ -16,7 +16,7 @@ export default function Archive() {
                 </div>
             ) : (
                 archivedNotes.map(note => (
-                    <NoteGUI note={note} mode='read' key={note.id} />
+                    <NoteGUI note={note} operation='read' key={note.id} />
                 ))
             )}
         </div>

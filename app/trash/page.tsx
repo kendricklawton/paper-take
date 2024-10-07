@@ -1,6 +1,7 @@
 'use client'
 
-import GUI from "../components/GUI";
+import NoteGUI from "../components/NoteGUI";
+// import ProjectGUI from "../components/ProjectGUI";
 import styles from "../page.module.css";
 import { useAppContext } from "../providers/AppProvider";
 
@@ -11,11 +12,10 @@ export default function Trash() {
     return (
         <div className={styles.page}>
             {trashNotes.length === 0 ? (
-                <h1>Empty Trash</h1>
+                <div className={styles.pageTitle}><p>Empty Trash</p></div>
             ) : (
                 trashNotes.map(note => (
-                    // <NoteGUI note={note} operation='read' key={note.id} />
-                    <GUI object={note} operation='read' key={note.id} />
+                    <NoteGUI operation={'read'} note={note} key={note.id} />
                 ))
             )}
         </div >
