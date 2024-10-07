@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import { AppProvider } from './AppProvider';
+import { AuthProvider } from './AuthProvider';
 import { ThemeProvider } from './ThemeProvider';
 
 interface ProviderWrapperProps {
@@ -8,11 +9,13 @@ interface ProviderWrapperProps {
 
 const ProviderWrapper: React.FC<ProviderWrapperProps> = ({ children }) => {
     return (
-        <ThemeProvider>
-            <AppProvider>
-                {children}
-            </AppProvider>
-        </ThemeProvider>
+        <AuthProvider>
+            <ThemeProvider>
+                <AppProvider>
+                    {children}
+                </AppProvider>
+            </ThemeProvider>
+        </AuthProvider>
     );
 };
 

@@ -1,126 +1,292 @@
 'use client'
-// AppProvider.tsx
-import React, { createContext, useCallback, useState, useMemo, ReactNode, useContext } from 'react';
-import { Note } from '../models/note';
-import { Project } from '../models/project';
 
-// interface AppProviderProps {
-//     children: ReactNode;
-// }
-// export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
+import React, {
+    createContext,
+    useContext,
+    useState,
+    useMemo,
+    useCallback,
+    useEffect,
+    ReactNode,
+} from 'react';
 
-// Define your context type
-export interface AppContextType {
-    notes: Note[];
+import {
+    collection,
+    doc,
+    getDocs,
+    query,
+    runTransaction,
+    Transaction
+} from "firebase/firestore";
+import { firestore } from '../firebase';
+import { Note, Project } from '../models';
+import { useAuthContext } from './AuthProvider';
+
+interface AppContextType {
     filteredNotes: Note[];
+    info: string[];
+    isLoadingApp: boolean;
+    isLoginModalOpen: boolean;
+    notes: Note[];
     projects: Project[];
-    filteredProjects: Project[];
-    infoQueue: string[];
-    addInfoToQueue: (info: string) => void;
-    clearInfoQueue: () => void;
-    createNote: (note: Note) => void;
-    deleteNote: (id: string) => void;
-    addProject: (project: Project) => void;
-    deleteProject: (id: string) => void;
-    error: string | null;
+    searchTerm: string;
+    currentList: 'notes' | 'projects';
+    createNote: (newNote: Note) => Promise<void>;
+    deleteNote: (noteId: string) => Promise<void>;
+    fetchData: () => Promise<void>;
+    handleCloseSearch: () => void;
+    handleSearch: (term: string) => void;
+    setInfo: React.Dispatch<React.SetStateAction<string[]>>;
+    setIsLoadingApp: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsLoginModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setCurrentList: React.Dispatch<React.SetStateAction<'notes' | 'projects'>>;
+    setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
+    updateNote: (updatedNote: Note) => Promise<void>;
 }
-
-const initialNotes: Note[] = [];
-const initialFilteredNotes: Note[] = [];
-const initialProjects: Project[] = [];
-const initialFilteredProjects: Project[] = [];
-const initialInfoQueue: string[] = [];
-const initialError: string | null = null;
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [notes, setNotes] = useState<Note[]>(initialNotes);
-    const [filteredNotes, setFilteredNotes] = useState<Note[]>(initialFilteredNotes);
-    const [projects, setProjects] = useState<Project[]>(initialProjects);
-    const [filteredProjects, setFilteredProjects] = useState<Project[]>(initialProjects);
-    const [infoQueue, setInfoQueue] = useState<string[]>(initialInfoQueue);
-    const [error, setError] = useState<string | null>(initialError);
+interface AppProviderProps {
+    children: ReactNode;
+}
 
-    const createNote = useCallback((note: Note) => {
+export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
+    const { user } = useAuthContext();
+    const [currentList, setCurrentList] = useState<'notes' | 'projects'>('projects');
+    const [notes, setNotes] = useState<Note[]>([]);
+    const [projects, setProjects] = useState<Project[]>([]);
+    const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
+    const [filteredItems, setFilteredItems] = useState<(Note | Project)[]>([]);
+    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [info, setInfo] = useState<string[]>([]);
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
+    const [isLoadingApp, setIsLoadingApp] = useState<boolean>(false);
+
+    const fetchData = useCallback(async () => {
         try {
+            setIsLoadingApp(true);
+            if (user) {
+                const notesRef = collection(firestore, "users", user.uid, "notes");
+                const qNotes = query(notesRef);
+                const querySnapshot = await getDocs(qNotes);
 
-            note.id = Date.now().toString(); 
-            
-            if (notes.some(existingNote => existingNote.id === note.id)) {
-                throw new Error('Note with this ID already exists.');
+                const notesArray: Note[] = querySnapshot.docs.map(doc => ({
+                    id: doc.data().id,
+                    ...doc.data(),
+                })) as Note[];
+                setNotes(notesArray);
+                console.log("Notes fetched successfully");
+
+                const projectsRef = collection(firestore, "users", user.uid, "projects");
+                const qProjects = query(projectsRef);
+                const projectsSnapshot = await getDocs(qProjects);
+
+                const projectsArray: Project[] = projectsSnapshot.docs.map(doc => ({
+                    id: doc.data().id,
+                    ...doc.data(),
+                }) as Project);
+                setProjects(projectsArray);
+                console.log("Projects fetched successfully");
+            } else {
+                console.log("No user is logged in, fetching notes from local storage");
             }
-
-            setNotes(prevNotes => [...prevNotes, note]);
-    
         } catch (error) {
-            console.error('Error creating note:', error);
+            console.log('Error fetching notes:', error);
+            setNotes([]);
+        } finally {
+            setIsLoadingApp(false);
         }
-    }, []);
+    }, [user]);
 
-    const deleteNote = useCallback((id: string) => {
+    useEffect(() => {
+        if (user) {
+            fetchData();
+        } else {
+            setNotes([]);
+        }
+    }, [user, fetchData]);
+
+    const createNote = useCallback(async (newNote: Note) => {
+        console.log('New Note - ', newNote);
+        setNotes(prevNotes => [...prevNotes, newNote]);
         try {
-            if (!notes.some(note => note.id === id)) {
-                throw new Error('Note with this ID does not exist.');
-            }
-            setNotes(prevNotes => prevNotes.filter(note => note.id !== id));
-            setError(null);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : String(err));
-        }
-    }, [notes]);
+            if (user) {
+                const notesRef = collection(firestore, "users", user.uid, "notes");
+                const docRef = doc(notesRef, newNote.id);
 
-    const addProject = useCallback((project: Project) => {
+                await runTransaction(firestore, async (transaction: Transaction) => {
+                    const docSnapshot = await transaction.get(docRef);
+                    if (docSnapshot.exists()) {
+                        throw new Error("Note ID collision detected");
+                    } else {
+                        transaction.set(docRef, newNote);
+                        console.log("Note created in Firestore");
+                    }
+                });
+                await fetchData();
+            }
+        } catch (error) {
+            console.error('Error creating note: ', error);
+            setNotes(prevNotes => prevNotes.filter(note => note.id !== newNote.id));
+        }
+    }, [user, fetchData]);
+
+    const createProject = useCallback(async (newProject: Project) => {
+        console.log('New Project - ', newProject);
+        setProjects(prevProjects => [...prevProjects, newProject]);
         try {
-            if (projects.some(existingProject => existingProject.id === project.id)) {
-                throw new Error('Project with this ID already exists.');
-            }
-            setProjects(prevProjects => [...prevProjects, project]);
-            setError(null);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : String(err));
-        }
-    }, [projects]);
+            if (user) {
+                const notesRef = collection(firestore, "users", user.uid, "projects");
+                const docRef = doc(notesRef, newProject.id);
 
-    const deleteProject = useCallback((id: string) => {
+                await runTransaction(firestore, async (transaction: Transaction) => {
+                    const docSnapshot = await transaction.get(docRef);
+                    if (docSnapshot.exists()) {
+                        throw new Error("Project ID collision detected");
+                    } else {
+                        transaction.set(docRef, newProject);
+                        console.log("Project created in Firestore");
+                    }
+                });
+                await fetchData();
+            }
+        } catch (error) {
+            console.error('Error creating project: ', error);
+            setProjects(prevProjects => prevProjects.filter(project => project.id !== newProject.id));
+        }
+    }, [user, fetchData]);
+
+
+
+
+    const updateNote = useCallback(async (updatedNote: Note) => {
+        const { id, ...noteData } = updatedNote;
+
+        const originalNote = notes.find(note => note.id === id);
+
+        console.log('originalNote', originalNote);
+
+        setNotes(prevNotes =>
+            prevNotes.map(note =>
+                note.id === id ? { ...originalNote, ...noteData } as Note : note
+            )
+        );
+
         try {
-            if (!projects.some(project => project.id === id)) {
-                throw new Error('Project with this ID does not exist.');
-            }
-            setProjects(prevProjects => prevProjects.filter(project => project.id !== id));
-            setError(null);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : String(err));
+            if (user) {
+                const notesRef = collection(firestore, "users", user.uid, "notes");
+                const docRef = doc(notesRef, id);
+
+                await runTransaction(firestore, async (transaction: Transaction) => {
+                    const docSnapshot = await transaction.get(docRef);
+                    if (!docSnapshot.exists()) {
+                        throw new Error("Note does not exist");
+                    } else {
+                        transaction.update(docRef, noteData);
+                        console.log("Note updated in Firestore");
+                    }
+                });
+                await fetchData();
+            } 
+        } catch (error) {
+            console.error('Error updating note: ', error);
+            setInfo(['Error updating note']);
+            setNotes(prevNotes =>
+                prevNotes.map(note =>
+                    note.id === id ? originalNote as Note : note
+                )
+            );
         }
-    }, [projects]);
+    }, [user, fetchData, notes]);
 
-    const addInfoToQueue = useCallback((info: string) => {
-        setInfoQueue(prevInfoQueue => [...prevInfoQueue, info]);
-        setError(null);
-    }, []);
+    const deleteNote = useCallback(async (noteId: string) => {
+        const noteToDelete = notes.find(note => note.id === noteId);
+        setNotes(prevNotes => prevNotes.filter(note => note.id !== noteId));
+        console.log('noteToDelete - ', noteToDelete);
+        try {
+            if (user) {
+                const notesRef = collection(firestore, "users", user.uid, "notes");
+                const docRef = doc(notesRef, noteId);
 
-    const clearInfoQueue = useCallback(() => {
-        setInfoQueue([]);
-        setError(null);
+                await runTransaction(firestore, async (transaction) => {
+                    const docSnapshot = await transaction.get(docRef);
+                    if (!docSnapshot.exists()) {
+                        throw new Error("Note does not exist");
+                    } else {
+                        transaction.delete(docRef);
+                        console.log("Note deleted in Firestore");
+                    }
+                });
+
+                await fetchData();
+            }
+        } catch (error) {
+            console.error('Error deleting note: ', error);
+            setNotes(prevNotes => [...prevNotes, noteToDelete!]);
+        }
+    }, [notes, user, fetchData]);
+
+    const handleSearch = useCallback((term: string) => {
+        setSearchTerm(term);
+        if (term.trim() === '') {
+            setFilteredItems([]);
+        } else {
+            const lowercasedTerm = term.toLowerCase();
+            setFilteredItems(
+                [...notes, ...projects].filter(item =>
+                    item.title.toLowerCase().includes(lowercasedTerm)
+                )
+            );
+
+        }
+    }, [notes, projects]);
+
+    const handleCloseSearch = useCallback(() => {
+        setSearchTerm('');
+        setFilteredNotes([]);
     }, []);
 
     const contextValue = useMemo(() => ({
+        currentList,
+        info,
+        isLoadingApp,
+        isLoginModalOpen,
         notes,
-        filteredNotes,
         projects,
-        filteredProjects,
-        infoQueue,
-        addInfoToQueue,
-        clearInfoQueue,
+        filteredItems,
+        filteredNotes,
+        searchTerm,
+        createProject,
         createNote,
+        fetchData,
+        updateNote,
         deleteNote,
-        addProject,
-        deleteProject,
-        error
+        handleSearch,
+        handleCloseSearch,
+        setCurrentList,
+        setIsLoadingApp,
+        setIsLoginModalOpen,
+        setInfo,
+        setNotes,
+        setProjects,
     }), [
-        notes, filteredNotes, projects, filteredProjects, infoQueue,
-        addInfoToQueue, clearInfoQueue, createNote, deleteNote, addProject, deleteProject, 
-        error]);
+        currentList,
+        info,
+        isLoadingApp,
+        isLoginModalOpen,
+        notes,
+        projects,
+        filteredItems,
+        filteredNotes,
+        searchTerm,
+        createProject,
+        createNote,
+        fetchData,
+        updateNote,
+        deleteNote,
+        handleSearch,
+        handleCloseSearch,
+    ]);
 
     return (
         <AppContext.Provider value={contextValue}>
@@ -129,10 +295,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     );
 };
 
-export const useAppContext = (): AppContextType => {
+export const useAppContext = () => {
     const context = useContext(AppContext);
     if (context === undefined) {
-        throw new Error('useAppContext must be used within AppProvider.tsx');
+        throw new Error('useAppContext must be used within AppProvider');
     }
     return context;
 };

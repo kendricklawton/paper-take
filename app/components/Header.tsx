@@ -1,50 +1,95 @@
-'use client'
+'use client';
 
-import { AccountCircleOutlined, AccountTreeOutlined, ArchiveOutlined, Close, DeleteOutlined, MenuOpen, NotesOutlined, Search, SettingsOutlined } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import styles from "./header.module.css";
+import { IconButton } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
+import {
+    AccountBoxOutlined, ArchiveOutlined, CircleOutlined, Close, DeleteOutlined, LoginOutlined,
+    LogoutOutlined, MenuOpen, Refresh, Search, SettingsOutlined, Archive, Delete,
+    HelpCenter,
+    HelpCenterOutlined,
+    Circle,
+    Settings,
+    Lightbulb,
+    LightbulbOutlined
+} from '@mui/icons-material';
+
 import { useAppContext } from '../providers/AppProvider';
+import { useAuthContext } from '../providers/AuthProvider';
+import styles from "./Header.module.css";
 
 export default function Header() {
-    const { } = useAppContext();
+    // Contexts
+    const { isLoadingAuth, logOut, user } = useAuthContext();
+    const {
+        searchTerm, handleSearch, handleCloseSearch, isLoadingApp,
+        isLoginModalOpen, setIsLoginModalOpen, fetchData, setNotes
+    } = useAppContext();
+
+    // State Variables
+    const [title, setTitle] = useState('');
+    const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
+    const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
+    const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+
     const pathname = usePathname();
     const router = useRouter();
 
-    const [linkTitle, setLinkTitle] = useState('');
-
-    const [isLinkMenuOpen, setIsLinkMenuOpen] = useState(false);
-    const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
-    const [isScrolled, setIsScrolled] = useState(false);
-
-    const archiveRef = useRef<HTMLAnchorElement>(null);
-    const homeRef = useRef<HTMLAnchorElement>(null);
+    const accountMenuRef = useRef<HTMLDivElement>(null);
+    const accountButtonRef = useRef<HTMLButtonElement>(null);
+    const navMenuRef = useRef<HTMLDivElement>(null);
+    const navButtonRef = useRef<HTMLButtonElement>(null);
+    const settingsMenuRef = useRef<HTMLDivElement>(null);
+    const settingsButtonRef = useRef<HTMLButtonElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-    const mediaRef = useRef<HTMLAnchorElement>(null);
-    const menuRef = useRef<HTMLDivElement>(null);
-    const projectRef = useRef<HTMLAnchorElement>(null);
-    const trashRef = useRef<HTMLAnchorElement>(null);
 
-    const handleOnFocusSearch = () => {
-        router.push('/search');
-    }
+    // Handlers
+    const handleOnFocusSearch = () => router.push('/search');
     const handleSearchButton = () => {
         router.push('/search');
-        inputRef.current?.focus();
+        if (inputRef.current) {
+            inputRef.current.focus();
+        }
     };
-
+    const handleLogin = () => {
+        setIsLoginModalOpen(true);
+        setIsAccountMenuOpen(false);
+    };
+    const handleLogOut = async () => {
+        try {
+            await logOut();
+            setNotes([]);
+            setIsAccountMenuOpen(false);
+        } catch (error) {
+            console.log(error);
+        }
+    };
     const handleCloseButton = () => {
         router.back();
-        // handleCloseSearch();
+        handleCloseSearch();
         window.scrollTo({ top: 0 });
-    }
+    };
 
+    // Effects
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-                setIsLinkMenuOpen(false);
+            if (navMenuRef.current && !navMenuRef.current.contains(event.target as Node)) {
+                if (!navButtonRef.current?.contains(event.target as Node)) {
+                    setIsNavMenuOpen(false);
+                }
+            }
+            if (accountMenuRef.current && !accountMenuRef.current.contains(event.target as Node)) {
+                if (!accountButtonRef.current?.contains(event.target as Node)) {
+                    setIsAccountMenuOpen(false);
+                }
+            }
+            if (settingsMenuRef.current && !settingsMenuRef.current.contains(event.target as Node)) {
+                if (!settingsButtonRef.current?.contains(event.target as Node)) {
+                    setIsSettingsMenuOpen(false);
+                }
             }
         };
 
@@ -52,15 +97,11 @@ export default function Header() {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, []);
+    }, [accountButtonRef, accountMenuRef, navButtonRef, navMenuRef, settingsButtonRef, settingsMenuRef]);
 
     useEffect(() => {
         const handleScroll = () => {
-            if (window.scrollY > 0) {
-                setIsScrolled(true);
-            } else {
-                setIsScrolled(false);
-            }
+            setIsScrolled(window.scrollY > 0);
         };
 
         window.addEventListener('scroll', handleScroll);
@@ -69,102 +110,162 @@ export default function Header() {
         };
     }, []);
 
-    // useEffect(() => {
-    //     handleCloseSearch();
-    //     if (pathname.includes('projects')) {
-    //         setLinkTitle('Projects');
-    //     } else {
-    //         switch (pathname) {
-    //             case ('/'):
-    //                 setLinkTitle('Notes');
-    //                 break;
-    //             case ('/search'):
-    //                 setLinkTitle('Search');
-    //                 break;
-    //             case '/reminders':
-    //                 setLinkTitle('Reminders');
-    //                 break;
-    //             case '/archive':
-    //                 setLinkTitle('Archive');
-    //                 break;
-    //             case '/settings':
-    //                 setLinkTitle('Settings');
-    //                 break;
-    //             case '/trash':
-    //                 setLinkTitle('Trash');
-    //                 break;
-    //             case '/help':
-    //                 setLinkTitle('Help');
-    //                 break;
-    //             default:
-    //                 setLinkTitle('');
-    //         }
-    //     }
-    // }, [handleCloseSearch, pathname, setIsSearch]);
+    useEffect(() => {
+        handleCloseSearch();
+        switch (pathname) {
+            case '/':
+                setTitle('Paper Take');
+                break;
+            case '/account':
+                setTitle('Account');
+                break;
+            case '/archive':
+                setTitle('Archive');
+                break;
+            case '/help':
+                setTitle('Help');
+                break;
+            case '/notes':
+                setTitle('Notes');
+                break;
+            case '/projects':
+                setTitle('Projects');
+                break;
+            case '/search':
+                setTitle('Search');
+                break;
+            case '/trash':
+                setTitle('Trash');
+                break;
+            default:
+                setTitle('Paper Take');
+        }
+    }, [handleCloseSearch, pathname]);
 
-    const toggleLinkMenu = () => {
-        setIsLinkMenuOpen(!isLinkMenuOpen);
+    if (isLoginModalOpen) {
+        return null;
     }
 
-    const toggleAccountMenu = () => {
-        setIsAccountMenuOpen(prevState => !prevState);
-    };
-
     return (
-        <>
-            <header className={isScrolled ? styles.headerScrolled : styles.header}>
-                <div className={styles.headerLeading}>
-                    {isLinkMenuOpen ? (
-                        <IconButton onClick={() => setIsLinkMenuOpen(false)}>
+        <header className={isScrolled ? styles.headerScrolled : styles.header}>
+            {/* Nav Leading */}
+            <div className={styles.headerLeading}>
+                <div className={styles.navAnchor}>
+                    <IconButton ref={navButtonRef} onClick={() => setIsNavMenuOpen(prev => !prev)}>
+                        {isNavMenuOpen ? <Close /> : <MenuOpen />}
+                    </IconButton>
+                    {isNavMenuOpen && (
+                        <nav className={styles.menu} ref={navMenuRef}>
+                            <Link className={pathname === '/' ? styles.navLinkActive : styles.navLink} href='/'>
+                                {pathname === '/' ? <Lightbulb /> : <LightbulbOutlined/>} Ideas
+                            </Link>
+                            {/* <Link className={pathname === '/notes' ? styles.navLinkActive : styles.navLink} href='/notes'>
+                                {pathname === '/notes' ? <Note /> : <NoteOutlined />} Notes
+                            </Link>
+                            <Link className={pathname === '/projects' ? styles.navLinkActive : styles.navLink} href='/projects'>
+                                {pathname === '/projects' ? <AccountTree /> : <AccountTreeOutlined/>} Projects
+                            </Link> */}
+                            <Link className={pathname === '/archive' ? styles.navLinkActive : styles.navLink} href='/archive'>
+                                {pathname === '/archive' ? <Archive /> : <ArchiveOutlined />} Archive
+                            </Link>
+                            <Link className={pathname === '/trash' ? styles.navLinkActive : styles.navLink} href='/trash'>
+                                {pathname === '/trash' ? <Delete /> : <DeleteOutlined />} Trash
+                            </Link>
+                            <Link className={pathname === '/help' ? styles.navLinkActive : styles.navLink} href='/help'>
+                                {pathname === '/help' ? <HelpCenter /> : <HelpCenterOutlined />} Help
+                            </Link>
+                        </nav>
+                    )}
+                </div>
+                <div className={styles.headerTitle}>
+                    <p>{title}</p>
+                </div>
+                {/* Nav Input */}
+                <div className={styles.searchInputContainer}>
+                    <IconButton onClick={handleSearchButton}>
+                        <Search />
+                    </IconButton>
+                    <input
+                        autoComplete="off"
+                        className={styles.searchInput}
+                        id='headerInput'
+                        type="text"
+                        placeholder='Search...'
+                        value={searchTerm}
+                        onChange={(e) => handleSearch(e.target.value)}
+                        onFocus={handleOnFocusSearch}
+                        ref={inputRef}
+                    />
+                    {pathname === '/search' && (
+                        <IconButton onClick={handleCloseButton}>
                             <Close />
                         </IconButton>
-                    ) : (
-                        <IconButton onClick={() => setIsLinkMenuOpen(true)}>
-                            <MenuOpen />
-                        </IconButton>
                     )}
-                    <div className={styles.headerTitle}>
-                        <h3>{linkTitle}</h3>
-                    </div>
-                    <div className={styles.searchInputContainer}>
-                        <IconButton onClick={handleSearchButton}>
-                            <Search />
-                        </IconButton>
-                        {/* <input
-                            // autoComplete="off"
-                            // className={styles.searchInput}
-                            // id='headerInput'
-                            // type="text"
-                            // placeholder='Search'
-                            // value={searchTerm}
-                            // onChange={(e) => handleSearch(e.target.value)}
-                            // onFocus={handleOnFocusSearch}
-                            // ref={inputRef}
-                        /> */}
-                        {/* {pathname === '/search' && (
-                            <IconButton onClick={handleCloseButton}>
-                                <Close />
-                            </IconButton>
-                        )} */}
-                    </div>
                 </div>
-                <div className={styles.headerTrailing}>
+            </div>
+            {/* Nav Trailing */}
+            <div className={styles.headerTrailing}>
+                {(isLoadingApp || isLoadingAuth) ? (
                     <IconButton>
-                        <SettingsOutlined />
+                        <CircularProgress size={20} />
                     </IconButton>
-                    <IconButton>
-                        <AccountCircleOutlined />
+                ) : (
+                    <IconButton onClick={fetchData}>
+                        <Refresh />
                     </IconButton>
+                )}
+                <div className={styles.settingsAnchor}>
+                    <IconButton
+                        ref={settingsButtonRef}
+                        onClick={() => setIsSettingsMenuOpen(prev => !prev)}>
+                        {isSettingsMenuOpen ? <Settings /> : <SettingsOutlined />}
+                    </IconButton>
+                    {isSettingsMenuOpen && (
+                        <nav className={styles.menu} ref={settingsMenuRef}>
+                            <div className={styles.navLink}>
+                                Todo - Theme
+                            </div>
+                            <div className={styles.navLink}>
+                                Todo - Enable Sharing
+                            </div>
+                            <div className={styles.navLink}>
+                                Todo - Reminder Defaults
+                            </div>
+                        </nav>
+                    )}
                 </div>
-            </header>
-            {isLinkMenuOpen && (
-                <div className={styles.navContainer} ref={menuRef}>
-                    {/* <Link className={pathname === '/' ? styles.navLinkActive : styles.navLink} ref={homeRef} href='/'><NotesOutlined />Notes</Link>
-                    <Link className={pathname === '/projects' ? styles.navLinkActive : styles.navLink} ref={projectRef} href='/projects'><AccountTreeOutlined />Projects</Link>
-                    <Link className={pathname === '/archive' ? styles.navLinkActive : styles.navLink} ref={archiveRef} href='/archive'><ArchiveOutlined />Archive</Link>
-                    <Link className={pathname === '/trash' ? styles.navLinkActive : styles.navLink} ref={trashRef} href='/trash'><DeleteOutlined />Trash</Link> */}
+                <div className={styles.accountAnchor}>
+                    <IconButton
+                        ref={accountButtonRef}
+                        onClick={() => setIsAccountMenuOpen(prev => !prev)}>
+                        {isAccountMenuOpen ? <Circle /> : <CircleOutlined />}
+                    </IconButton>
+                    {isAccountMenuOpen && (
+                        <nav className={styles.menu} ref={accountMenuRef}>
+                            {user && (
+                                <Link className={styles.navLink}
+                                    // ref={archiveLinkRef} 
+                                    onClick={() => setIsAccountMenuOpen(false)} href='/account'>
+                                    <AccountBoxOutlined /> Account
+                                </Link>
+                            )}
+                            {user ? (
+                                <div className={styles.navLink}
+                                    // ref={logOutRef} 
+                                    onClick={handleLogOut}>
+                                    <LogoutOutlined /> Log Out
+                                </div>
+                            ) : (
+                                <div className={styles.navLink}
+                                    // ref={loginRef} 
+                                    onClick={handleLogin}>
+                                    <LoginOutlined /> Login
+                                </div>
+                            )}
+                        </nav>
+                    )}
                 </div>
-            )}
-        </>
+            </div>
+        </header>
     );
 }

@@ -1,103 +1,57 @@
 'use client';
 
-import { AlarmOutlined, MoreVert, Archive, ArchiveOutlined, Bolt, Brush, ChevronLeft, ImageOutlined, NoteAddOutlined, NoteOutlined, PushPin, PushPinOutlined, RedoOutlined, UndoOutlined, DeleteForever, DeleteForeverOutlined, RestoreOutlined, RestoreFromTrashOutlined } from '@mui/icons-material';
-import { Box, Button, IconButton, TextField, MenuItem } from '@mui/material';
-import { useCallback, useContext, useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { useAppContext } from '../providers/AppProvider';
+import NoteBody from './NoteGUIBody';
+import NoteHeader from './NoteGUIHeader';
+import NoteFooter from './NoteGUIFooter';
+import NoteNestedNotes from './NoteGUINestedNotes';
+import styles from "./GUI.module.css"
+import { NestedNote, Note } from '../models';
+import { v4 as uuidv4 } from 'uuid';
 
-
-import NoteHeader from './NoteHeader';
-import NoteBody from './NoteBody';
-// import NoteFooter from './NoteFooter';
-import { Note } from '../models/note';
-import styles from "./noteStyles.module.css"
-
-// notes: Note[];
-// filteredNotes: Note[];
-// projects: Project[];
-// filteredProjects: Project[];
-// infoQueue: string[];
-// addInfoToQueue: (info: string) => void;
-// clearInfoQueue: () => void;
-// createNote: () => void;
-// deleteNote: (id: string) => void;
-// addProject: (project: Project) => void;
-// deleteProject: (id: string) => void;
-// error: string | null;
-
-export interface NoteGUIProps {
-    mode: 'create' | 'read';
-    note: Note;
+interface NoteGUIProps {
+    operation: 'read' | 'create';
+    note: Note
 }
 
-export default function NoteGUI({ mode, note }: NoteGUIProps) {
-    const { createNote, deleteNote } = useAppContext();
+const NoteGUI: React.FC<NoteGUIProps> = ({ operation, note }) => {
+    const { createNote, deleteNote, updateNote, setInfo } = useAppContext();
 
-    const initialMode = mode;
-
+    // State for UI properties
+    const initialOperation = operation;
+    const [isModalMode, setIsModalMode] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
-    const [isInfoScroll, setIsInfoScroll] = useState(false);
-    const [isNoteReminderMenuOpen, setIsNoteReminderMenu] = useState(false);
+    const [isNestedMode, setIsNestedMode] = useState(false);
     const [isNoteOptionsMenuOpen, setIsNoteOptionsMenu] = useState(false);
-    const [isViewMode, setIsViewMode] = useState(false);
 
+    // State for content arrays properties
     const [contentArray, setContentArray] = useState([note.content]);
+    const [nestedContentArray, setNestedContentArray] = useState(['']);
 
+    // State for nested note properties
+    const [nestedNoteId, setNestedNoteId] = useState('');
+    const [nestedNoteContent, setNestedContent] = useState('');
+    const [nestedNoteTitle, setNestedTitle] = useState('');
+
+    // State for note properties
     const isArchived = note.isArchived;
     const isPinned = note.isPinned;
     const isTrash = note.isTrash;
     const [title, setTitle] = useState(note.title);
     const [content, setContent] = useState(note.content);
+    const [nestedNotes, setNestedNotes] = useState<NestedNote[]>(note.nestedNotes);
+    const [prevNestedNotes, setPrevNestedNotes] = useState<NestedNote[]>([]);
 
+    // Refs for DOM elements and indexes
     const index = useRef(0);
-    const noteCreateRef = useRef(null);
-    const noteEditRef = useRef(null);
-    const noteReminderMenuRef = useRef(null);
-    const noteOptionsMenuRef = useRef(null);
-    const noteOptionsMenuRefButton = useRef(null);
-    const infoContainerRef = useRef(null);
+    const nestedIndex = useRef(0);
+    const noteCreateRef = useRef<HTMLFormElement | null>(null);
+    const noteEditRef = useRef<HTMLFormElement | null>(null);
+    const noteOptionsMenuRef = useRef<HTMLDivElement | null>(null);
+    const noteOptionsMenuRefButton = useRef<HTMLButtonElement | null>(null);
 
-    const toggleArchive = () => {
-        // if (isArchived) {
-        //     setInfoGeneral('Note unarchived')
-        // } else {
-        //     setInfoGeneral('Note archived')
-        // }
-        // setNotes(notes.map(note =>
-        //     note.id === props.note.id ? { ...note, isArchived: !note.isArchived } : note
-        // ));
-    };
-
-    const toggleEditModeTrue = () => {
-        // if (isTrash) {
-        //     setInfoGeneral('Cannot edit note in trash');
-        // } else if (props.mode === 'read') {
-        //     setIsEditMode(true);
-        //     setIsViewMode(true);
-        // } else {
-        //     setIsEditMode(true);
-        // }
-    }
-
-    const toggleDelete = () => {
-        // if (initialMode === 'create') {
-        //     handleResetNote();
-        //     setInfoGeneral('Note deleted');
-        // } else {
-
-        //     if (isTrash) {
-        //         setInfoGeneral('Note restored from trash')
-        //     } else {
-        //         setInfoGeneral('Note moved to trash')
-        //     }
-
-        //     setNotes(notes.map(note =>
-        //         note.id === props.note.id ? { ...note, isTrash: !note.isTrash } : note
-        //     ));
-        // }
-
-        // setIsNoteOptionsMenu(false);
-    };
+    const isUndoNestedNote = prevNestedNotes.length > 0;
 
     const handleTitleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (isTrash) {
@@ -106,222 +60,371 @@ export default function NoteGUI({ mode, note }: NoteGUIProps) {
         const newValue = event.target.value;
         if (newValue.length <= 1000) {
             if (newValue.length > 900) {
-                // setInfoTitle(1000 - newValue.length + ' characters remaining.');
+                setInfo([1000 - newValue.length + ' characters remaining.']);
             } else {
-                // setInfoTitle('');
+                setInfo(['']);
             }
-
-            setTitle(newValue);
-
-        }
-    };
+            if (isNestedMode) {
+                setNestedTitle(newValue);
+            } else {
+                setTitle(newValue);
+            }
+        };
+    }
 
     const handleContentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (isTrash) {
             return;
         }
         const newValue = event.target.value;
-
         if (newValue.length <= 5000) {
             if (newValue.length > 4500) {
-                // setInfoContent(5000 - newValue.length + ' characters remaining.');
+                setInfo([5000 - newValue.length + ' characters remaining.']);
             } else {
-                // setInfoContent('');
+                setInfo(['']);
             }
+            if (isNestedMode) {
+                setNestedContent(newValue);
+                nestedIndex.current = nestedIndex.current + 1;
+                setNestedContentArray(
+                    [...nestedContentArray.slice(0, nestedIndex.current), newValue]
+                );
+            } else {
+                setContent(newValue);
+                index.current = index.current + 1;
+                setContentArray(
+                    [...contentArray.slice(0, index.current), newValue]
+                );
+            }
+        }
+    }
 
-            setContent(newValue);
-            index.current = index.current + 1;
-            setContentArray(
-                [...contentArray.slice(0, index.current), newValue]
-            );
+    const handleResetNote = useCallback(() => {
+        if (initialOperation === "create") {
+            setContent('');
+            setTitle('');
+            setNestedContent('');
+            setNestedTitle('');
+            setNestedNotes([]);
+        }
+        setIsModalMode(false);
+        setContentArray([content]);
+        setNestedContentArray([nestedNoteContent]);
+        setIsNestedMode(false);
+        setIsEditMode(false);
+        index.current = 0;
+        nestedIndex.current = 0;
+    }, [initialOperation, content, nestedNoteContent],);
 
+    const handlePushToNestedNote = (nestedNote: NestedNote) => {
+        setNestedNoteId(nestedNote.id);
+        setNestedTitle(nestedNote.title);
+        setNestedContent(nestedNote.content);
+        setIsNestedMode(true);
+        console.log("Pushing To Nested Note: " + JSON.stringify(nestedNote));
+    };
+
+    const handleUndo = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        if (isNestedMode) {
+            if (nestedIndex.current > 0) {
+                nestedIndex.current = nestedIndex.current - 1;
+                setNestedContent(nestedContentArray[nestedIndex.current]);
+            }
+        } else {
+            if (index.current > 0) {
+                index.current = index.current - 1;
+                setContent(contentArray[index.current]);
+            }
         }
     };
 
-    const handleResetNote = useCallback(() => {
-        // if (initialMode === "create") {
-        //     setContent('');
-        //     setTitle('');
-        //     setInfoContent('');
-        //     setInfoTitle('');
-        // }
-        // setIsInfoScroll(false);
-        // setIsViewMode(false);
-        // setContentArray([content]);
-        // setIsEditMode(false);
-        // index.current = 0;
+    const handleRedo = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        if (isNestedMode) {
+            if (nestedIndex.current < nestedContentArray.length - 1) {
+                nestedIndex.current = nestedIndex.current + 1;
+                setNestedContent(nestedContentArray[nestedIndex.current]);
+            }
+        } else {
+            if (index.current < contentArray.length - 1) {
+                index.current = index.current + 1;
+                setContent(contentArray[index.current]);
+            }
+        }
+    };
 
-    }, [initialMode]);
+    const handleDeleteNote = async () => {
+        // setActionToConfirm('deleteNote');
+        // setShowDialog(true);
+        try {
+            await deleteNote(note.id);
+            setInfo(['Note deleted']);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleDeleteNestedNote = () => {
+        // setActionToConfirm('deleteNestedNote');
+        // setShowDialog(true);
+        setNestedTitle('');
+        setNestedContent('');
+        setNestedContentArray(['']);
+        setIsNestedMode(false);
+        nestedIndex.current = 0;
+        setPrevNestedNotes(nestedNotes);
+        const updatedNestedNotes = nestedNotes.filter(note => note.id !== nestedNoteId);
+        setNestedNotes(updatedNestedNotes);
+        setIsNestedMode(false);
+        setInfo(['Nested Note Deleted']);
+    };
+
+    const handleUndoDeletedNestedNote = () => {
+        setNestedNotes(prevNestedNotes);
+        setInfo(['Deleted Nested Note Restored']);
+        setPrevNestedNotes([]);
+    }
+
+    const handleCompareNestedNotesDifferent = (notes1: NestedNote[], notes2: NestedNote[]): boolean => {
+        if (notes1.length !== notes2.length) return true;
+
+        for (let i = 0; i < notes1.length; i++) {
+            const note1 = notes1[i];
+            const note2 = notes2[i];
+
+            if (
+                note1.title !== note2.title ||
+                note1.content !== note2.content ||
+                note1.id !== note2.id
+            ) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    const handleNestedNote = useCallback(() => {
+
+        const currentNestedNote = new NestedNote(
+            nestedNoteId,
+            nestedNoteTitle,
+            nestedNoteContent
+        );
+
+        console.log("Current Nested Note: " + JSON.stringify(currentNestedNote));
+
+        let updatedNestedNotes = nestedNotes;
+
+        if (currentNestedNote.id === "" && (currentNestedNote.title.trim().length !== 0 || currentNestedNote.content.trim().length !== 0)) {
+            console.log("Adding Nested Note");
+            currentNestedNote.id = uuidv4();
+            updatedNestedNotes = [...nestedNotes, currentNestedNote];
+        } else if (currentNestedNote.id !== "" && (currentNestedNote.title.trim().length !== 0 || currentNestedNote.content.trim().length !== 0)) {
+            console.log("Updating Nested Note");
+            updatedNestedNotes = nestedNotes.map((note) =>
+                note.id === nestedNoteId ? currentNestedNote : note
+            );
+        } else if (currentNestedNote.id !== "" && (currentNestedNote.title === "" && currentNestedNote.content === "")) {
+            console.log("Deleting Nested Note");
+            updatedNestedNotes = nestedNotes.filter(note => note.id !== currentNestedNote.id);
+        } else {
+            console.log("No Nested Note Added/Updated");
+        }
+
+        setNestedNotes(updatedNestedNotes);
+        setIsNestedMode(false);
+        setNestedTitle('');
+        setNestedNoteId('');
+        setNestedContent('');
+        setNestedContentArray(['']);
+        nestedIndex.current = 0;
+
+        return updatedNestedNotes;
+
+    }, [nestedNoteContent, nestedNoteId, nestedNoteTitle, nestedNotes]);
 
 
-    // const handleUndo = () => {
-    //     if (index.current > 0) {
-    //         index.current = index.current - 1;
-    //         setContent(contentArray[index.current]);
-    //     }
-    // };
+    const handleNote = useCallback(() => {
+        if (isTrash) {
+            return;
+        }
 
-    // const handleRedo = () => {
+        let currentNestedNotes: NestedNote[] = [];
 
-    //     if (index.current < contentArray.length - 1) {
-    //         index.current = index.current + 1;
-    //         setContent(contentArray[index.current]);
-    //     }
+        if (isNestedMode) {
+            console.log("Handling Nested Note");
+            currentNestedNotes = handleNestedNote();
+            console.log("Completed Handling Nested Note");
+        } else {
+            currentNestedNotes = nestedNotes;
+        }
 
-    // };
+        console.log("Current Nested Notes: " + JSON.stringify(currentNestedNotes));
 
-    // const handleNote = useCallback(() => {
+        const currentNote = {
+            content: content,
+            isArchived: isArchived,
+            isPinned: isPinned,
+            nestedNotes: currentNestedNotes,
+            title: title,
+            id: note.id,
+        };
 
-    //     if (isTrash) {
-    //         handleResetNote();
-    //         return;
-    //     }
-    //     const note = {
-    //         title: title,
-    //         content: content,
-    //         isArchived: isArchived,
-    //         isPinned: isPinned,
+        const prevNote = note;
 
-    //     };
+        if (initialOperation === 'create') {
+            if (currentNote.title !== prevNote.title || currentNote.content !== prevNote.content || currentNote.nestedNotes.length > 0) {
+                createNote(currentNote as Note);
+            } else {
+                console.log("No Note Created");
+            }
+        } else {
+            const nestedNotesChanged = handleCompareNestedNotesDifferent(nestedNotes, prevNote.nestedNotes);
 
-    //     const prevNote = props.note;
+            if (currentNote.title.trim().length === 0 && currentNote.content.trim().length === 0 && currentNote.nestedNotes.length === 0) {
+                deleteNote(note.id);
+                console.log("Deleted Note");
+            } else {
+                if (currentNote.title !== prevNote.title || currentNote.content !== prevNote.content || nestedNotesChanged || currentNote.isArchived !== prevNote.isArchived) {
+                    updateNote(currentNote as Note);
+                    console.log("Updated Note");
+                } else {
+                    console.log("No Note Updated");
+                }
+            }
+        }
 
-    //     if (initialMode === 'create') {
-    //         if (note.title !== prevNote.title || note.content !== prevNote.content) {
-    //             createNote(note);
-    //             console.log("Created Note");
-    //         } else {
-    //             console.log("No Note Created");
-    //         }
-    //     } else {
+        handleResetNote();
+    }, [isTrash, nestedNotes, isNestedMode, title, content, isArchived, isPinned, note, initialOperation, handleResetNote, handleNestedNote, createNote, deleteNote, updateNote]);
 
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        handleNote();
+    };
 
-    //         if (note.title.trim().length === 0 && note.content.trim().length === 0) {
-    //             deleteNote(props.note.id);
-    //             console.log("Deleted Note");
-    //         } else {
-    //             if (note.title !== prevNote.title || note.content !== prevNote.content || note.isArchived !== prevNote.isArchived) {
-    //                 updateNote(note);
-    //                 console.log("Updated Note");
-    //             } else {
-    //                 console.log("No Note Updated");
-    //             }
-    //         }
-    //     }
+    const handleClickOutside = useCallback((event: MouseEvent) => {
+        event.stopPropagation();
+        if (isNoteOptionsMenuOpen && noteOptionsMenuRef.current && !noteOptionsMenuRef.current.contains(event.target as Node) &&
+            !(noteOptionsMenuRefButton.current && noteOptionsMenuRefButton.current.contains(event.target as Node))) {
+            setIsNoteOptionsMenu(false);
+        }
 
-    //     handleResetNote();
-    // }, [isTrash, title, content, isArchived, isPinned, props.note, initialMode, handleResetNote, createNote, deleteNote, updateNote]);
+        if (isEditMode || isTrash) {
+            if (initialOperation === 'create' && noteCreateRef.current && !noteCreateRef.current.contains(event.target as Node)) {
+                handleNote();
+            } else if (noteEditRef.current && !noteEditRef.current.contains(event.target as Node)) {
+                handleNote();
+            }
+        }
+    }, [isNoteOptionsMenuOpen, isEditMode, isTrash, initialOperation, handleNote]);
 
-    // const handleSubmit = (event) => {
-    //     event.preventDefault();
-    //     handleNote();
-    // };
+    const toggleArchive = async () => {
+        await updateNote({ ...note, isArchived: !isArchived } as Note);
+        setInfo([isArchived ? 'Note archived' : 'Note unarchived']);
+        setIsNoteOptionsMenu(false);
+    };
 
-    // const handleClickOutside = useCallback((event) => {
-    //     event.stopPropagation();
-    //     if (isNoteOptionsMenuOpen && noteOptionsMenuRef.current && !noteOptionsMenuRef.current.contains(event.target) &&
-    //         !noteOptionsMenuRefButton.current.contains(event.target)) {
+    const toggleDelete = async () => {
+        if (initialOperation === 'create') {
+            handleResetNote();
+            setInfo(['Note deleted']);
+        } else {
+            await updateNote({ ...note, isTrash: !isTrash } as Note);
+            setInfo([isTrash ? 'Note restored' : 'Note moved to trash']);
+        }
+        setIsNoteOptionsMenu(false);
+    };
 
-    //         setIsNoteOptionsMenu(false);
-    //     }
+    const toggleModeTrue = () => {
+        if (isTrash) {
+            setInfo(['Cannot edit note in trash']);
+        } else if (initialOperation === 'read') {
+            setIsEditMode(true);
+            setIsModalMode(true);
+        } else {
+            setIsEditMode(true);
+        }
+    }
 
-    //     if (isEditMode || isTrash) {
-    //         if (initialMode === 'create' && noteCreateRef.current && !noteCreateRef.current.contains(event.target)) {
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [handleClickOutside]);
 
-    //             handleNote();
-    //         } else if (noteEditRef.current && !noteEditRef.current.contains(event.target)) {
-
-    //             handleNote();
-    //         }
-    //     }
-    // }, [isNoteOptionsMenuOpen, isEditMode, isTrash, initialMode, handleNote]);
-
-    // useEffect(() => {
-    //     document.addEventListener('mousedown', handleClickOutside);
-    //     return () => {
-    //         document.removeEventListener('mousedown', handleClickOutside);
-    //     };
-    // }, [handleClickOutside]);
-
-    // useEffect(() => {
-    //     const handleScroll = () => {
-    //         if (infoContainerRef.current) {
-    //             if (infoContainerRef.current.scrollTop > 0) {
-    //                 setIsInfoScroll(true);
-    //             } else {
-    //                 setIsInfoScroll(false);
-    //             }
-    //         }
-
-    //     };
-
-    //     const container = infoContainerRef.current;
-    //     if (container) {
-    //         container.addEventListener('scroll', handleScroll);
-    //     }
-
-    //     return () => {
-    //         if (container) {
-    //             container.removeEventListener('scroll', handleScroll);
-    //         }
-    //     };
-    // }, [isViewMode]);
-
-    // useEffect(() => {
-    //     const previousOverflow = document.body.style.overflowY;
-    //     document.body.style.overflowY = isViewMode ? 'hidden' : 'auto';
-    //     return () => {
-    //         document.body.style.overflowY = previousOverflow;
-    //     };
-    // }, [isViewMode]);
+    useEffect(() => {
+        const previousOverflow = document.body.style.overflowY;
+        document.body.style.overflowY = isModalMode ? 'hidden' : 'auto';
+        return () => {
+            document.body.style.overflowY = previousOverflow;
+        };
+    }, [isModalMode]);
 
     return (
-        <div className={!isViewMode ? styles.container : styles.containerModal}>
-            <Box component="form"
-                className={!isViewMode ? (initialMode === 'create' ? styles.noteCreate : styles.noteRead) : styles.noteEdit}
-                // onSubmit={handleSubmit} 
-                ref={initialMode === 'create' ? noteCreateRef : noteEditRef}>
+        <div className={!isModalMode ? styles.container : styles.containerNote}>
+            <form
+                className={!isModalMode ? (initialOperation === 'create' ? styles.create : styles.read) : styles.noteEdit}
+                onSubmit={handleSubmit} ref={initialOperation === 'create' ? noteCreateRef : noteEditRef}>
                 <div
-                    className={(initialMode === 'read' && !isViewMode) ? styles.infoContainerRead : styles.infoContainer}
-                    ref={infoContainerRef}
+                    className={(initialOperation === 'read' && !isModalMode) ? styles.infoContainerRead : styles.infoContainer}
                 >
                     <NoteHeader
-                        handleTitleChange={handleTitleChange}
-                        initialMode={initialMode}
+                        initialOperation={initialOperation}
                         isEditMode={isEditMode}
-                        isViewMode={isViewMode}
+                        isModalMode={isModalMode}
+                        isNestedMode={isNestedMode}
+                        nestedNoteTitle={nestedNoteTitle}
                         title={title}
-                        toggleEditModeTrue={toggleEditModeTrue}
+                        handleTitleChange={handleTitleChange}
+                        toggleModeTrue={toggleModeTrue}
                     />
                     <NoteBody
                         content={content}
                         handleContentChange={handleContentChange}
-                        initialMode={initialMode}  // Fixed the formatting here
+                        initialOperation={initialOperation}
                         isEditMode={isEditMode}
-                        isViewMode={isViewMode}
-                        toggleEditModeTrue={toggleEditModeTrue}
+                        isNestedMode={isNestedMode}
+                        isModalMode={isModalMode}
+                        nestedNoteContent={nestedNoteContent}
+                        toggleModeTrue={toggleModeTrue}
                     />
                 </div>
-                {/* <NoteFooter
+                <NoteNestedNotes
+                    isNestedMode={isNestedMode}
+                    nestedNotes={nestedNotes}
+                    handlePushToNestedNote={handlePushToNestedNote}
+                    toggleModeTrue={toggleModeTrue}
+                />
+                <NoteFooter
                     contentArray={contentArray}
-                    handleRedo={handleRedo}
-                    handleUndo={handleUndo}
-                    initialMode={initialMode}
+                    initialOperation={initialOperation}
                     isArchived={isArchived}
                     isEditMode={isEditMode}
+                    isNestedMode={isNestedMode}
                     isNoteOptionsMenuOpen={isNoteOptionsMenuOpen}
-                    isNoteReminderMenuOpen={isNoteReminderMenuOpen}
                     isTrash={isTrash}
-                    mode={props.mode}
+                    isUndoNestedNote={isUndoNestedNote}
+                    nestedContentArray={nestedContentArray}
                     noteOptionsMenuRef={noteOptionsMenuRef}
                     noteOptionsMenuRefButton={noteOptionsMenuRefButton}
-                    noteReminderMenuRef={noteReminderMenuRef}
+                    nestedIndex={nestedIndex}
                     index={index}
+                    handleNestedNote={handleNestedNote}
+                    handleUndoDeletedNestedNote={handleUndoDeletedNestedNote}
+                    handleRedo={handleRedo}
+                    handleUndo={handleUndo}
+                    setIsNestedMode={setIsNestedMode}
                     setIsNoteOptionsMenu={setIsNoteOptionsMenu}
                     toggleArchive={toggleArchive}
                     toggleDelete={toggleDelete}
-                /> */}
-            </Box >
+                    handleDeleteNote={handleDeleteNote}
+                    handleDeleteNestedNote={handleDeleteNestedNote}
+                />
+            </form >
         </div>
     );
 }
+
+export default NoteGUI;

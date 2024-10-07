@@ -1,0 +1,33 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    min-width: 1000px;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: #f8f9fa;
+}
+
+.headerTop {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    /* background-color: green; */
+    justify-content: space-between;
+}
+
+.headerTopRight {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+}
