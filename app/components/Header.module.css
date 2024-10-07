@@ -1,0 +1,136 @@
+/* header Styles */
+.header,
+.headerScrolled {
+    top: 0;
+    position: fixed;
+    display: flex;
+    flex-direction: row;
+    height: 4rem;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
+    background-color: white;
+    z-index: 1;
+}
+
+.headerScrolled {
+    box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
+}
+
+.headerLeading,
+.headerTrailing {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.headerLeading {
+    width: 100%;
+    gap: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+.headerTrailing {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.accountAnchor,
+.navAnchor,
+.settingsAnchor {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-decoration: none;
+}
+
+.accountAnchor,
+.settingsAnchor {
+    justify-content: flex-end;
+}
+.navAnchor {
+    justify-content: flex-start;
+}
+
+.headerTitle {
+    width: 200px;
+}
+
+.headerTitle p {
+    color: gray;
+    font-size: x-large;
+    font-weight: lighter;
+}
+
+@media screen and (max-width: 600px) {
+    .headerTitle {
+        display: none;
+    }
+}
+
+.menu {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    top: 4.5rem;
+    position: fixed;
+    z-index: 5;
+    box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
+}
+
+.navLink,
+.navLinkActive {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: x-large;
+    font-weight: lighter;
+    gap: 1rem;
+    color: gray;
+    padding: 0.5rem;
+    text-decoration: none;
+    transition: transform 0.05s ease;
+    z-index: 3;
+    cursor: pointer;
+}
+
+.navLink:hover {
+    background-color: rgba(0.2, 0.2, 0.2, 0.2);
+}
+
+.navLinkActive {
+    background-color: #F9E1A8;
+}
+
+.searchInputContainer {
+    display: flex;
+    max-width: 600px;
+    width: 100%;
+    flex-direction: row;
+    padding-left: 0.5rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    padding-right: 0.5rem;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
+}
+
+.searchInputContainer {
+    background-color: #f4f4f4;
+}
+
+
+.searchInputContainer:hover {
+    box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
+}
+
+.searchInput {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    width: 100%;
+    z-index: 2;
+}

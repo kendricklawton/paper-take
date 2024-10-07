@@ -1,0 +1,101 @@
+.formContainer {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+}
+
+.authForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    padding: 1rem;
+    z-index: 10;
+    background-color: white;
+    padding: 1rem;
+}
+
+.containerModal {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: background-color 1s ease;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding-top: 5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    z-index: 5;
+    height: 100vh;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.inputContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+}
+
+.input,
+.inputVisiblity {
+    font-size: normal;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    outline: none;
+    border: none;
+    border-bottom: 0.5px solid lightgrey;
+    background-color: inherit;
+    color: black;
+    width: 100%;
+}
+
+.input::placeholder,
+.inputVisiblity::placeholder {
+    color: gray;
+}
+
+.input:focus,
+.inputVisiblity:focus {
+    border-bottom: 0.5px solid black;
+}
+
+.inputVisiblity {
+    padding-right: 2rem;
+}
+
+.visiblityIcon {
+    position: absolute;
+    right: 0;
+}
+
+.formButton {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    font: large monospace;
+    color: #fff;
+    background-color: black
+}
+
+.formButton:disabled {
+    background-color: #f0f0f0;
+    color: darkgrey;
+    border: none;
+    cursor: not-allowed;
+}
+
+.textError {
+    color: red;
+    font-size: small;
+}
