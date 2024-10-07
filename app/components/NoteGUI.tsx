@@ -6,7 +6,7 @@ import NoteBody from './NoteGUIBody';
 import NoteHeader from './NoteGUIHeader';
 import NoteFooter from './NoteGUIFooter';
 import NoteNestedNotes from './NoteGUINestedNotes';
-import styles from "./GUI.module.css"
+import styles from "./styles.module.css";
 import { NestedNote, Note } from '../models';
 import { v4 as uuidv4 } from 'uuid';
 

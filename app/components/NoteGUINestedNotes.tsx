@@ -2,7 +2,7 @@
 
 import { IconButton, Tooltip } from "@mui/material";
 import { NoteOutlined } from "@mui/icons-material";
-import styles from "./GUI.module.css"
+import styles from "./styles.module.css";
 import { NestedNote } from "../models";
 
 interface NoteNestedNotesProps {

@@ -91,7 +91,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
                 console.log("No user is logged in, fetching notes from local storage");
             }
         } catch (error) {
-            console.log('Error fetching notes:', error);
+            console.log('Error fetching notes: ', error);
             setNotes([]);
         } finally {
             setIsLoadingApp(false);
@@ -155,10 +155,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
             setProjects(prevProjects => prevProjects.filter(project => project.id !== newProject.id));
         }
     }, [user, fetchData]);
-
-
-
-
+    
     const updateNote = useCallback(async (updatedNote: Note) => {
         const { id, ...noteData } = updatedNote;
 

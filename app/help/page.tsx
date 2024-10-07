@@ -3,7 +3,10 @@ import styles from '../page.module.css';
 export default function Page() {
     return (
         <div className={styles.page}>
-            <div className={styles.pageTitle}><p>The Help Center Is Currently Under Construction</p></div>
+            <div className={styles.pageTitle}>
+                <p>Help Center Under Construction</p>
+                <p>Contact Us - support@machinename.dev</p>
+            </div>
             <div className={styles.wrapper}>
                 {/* <div className={styles.helpContainer}>
                     <p>Notes</p>
@@ -30,9 +33,9 @@ export default function Page() {
                     <p>Deleting your account</p>
                     <p>To delete your account click on the account interface on the home screen. Press the submit button.</p>
                 </div> */}
-                <div className={styles.helpContainer}>
+                {/* <div className={styles.helpContainer}>
                     <p>Contact Us - support@machinename.dev</p>
-                </div>
+                </div> */}
             </div>
         </div>
     )

@@ -14,7 +14,7 @@ import {
     NoteOutlined,
 } from '@mui/icons-material';
 import { Button, IconButton } from '@mui/material';
-import styles from "./GUI.module.css"
+import styles from "./styles.module.css";
 
 interface NoteFooterProps {
     contentArray: string[];

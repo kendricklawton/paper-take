@@ -11,9 +11,9 @@ import IconButton from '@mui/material/IconButton';
 
 
 const LoginModal: React.FC = () => {
-    const { 
-        // authError, 
-        createUserAccount, login } = useAuthContext();
+    const {
+        authError,
+        createUserAccount, login, setAuthError } = useAuthContext();
     const { isLoginModalOpen, setIsLoginModalOpen } = useAppContext();
 
     const [email, setEmail] = useState('');
@@ -30,10 +30,6 @@ const LoginModal: React.FC = () => {
 
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
-    };
-
-    const isLoginButtonEnabled = () => {
-        return email.trim() !== '' && password.trim() !== '' && (isLogin || confirmPassword.trim() !== '');
     };
 
     const handleClose = () => {
@@ -83,26 +79,33 @@ const LoginModal: React.FC = () => {
         }
 
         try {
-            let result;
-
             if (isLogin) {
                 await login(email, password);
+                handleClose();
             } else {
                 await createUserAccount(email, password);
+                handleClose();
                 alert('Account created successfully. Please verify your email address to access all the available features.');
             }
-            if (result) {
-                handleClose();
-            }
+
         } catch (error) {
-            console.log('Error:', error);   
+            console.log('Error:', error);
+        } finally {
+            setEmail('');
+            setPassword('');
+            setConfirmPassword('');
         }
     };
 
     const handleSwitch = () => {
         setIsLogin((prev) => !prev);
         setConfirmPassword('');
+        setAuthError('');
         setErrors({ email: '', password: '', confirmPassword: '' });
+    };
+
+    const isLoginButtonEnabled = () => {
+        return email.trim() !== '' && password.trim() !== '' && (isLogin || confirmPassword.trim() !== '');
     };
 
     useEffect(() => {
@@ -122,10 +125,9 @@ const LoginModal: React.FC = () => {
         isLoginModalOpen && (
             <div className={styles.containerModal}>
                 <div className={styles.loginCloseButtonContainer}>
-              
-                <IconButton onClick={handleClose}>
-                    <Close />
-                </IconButton>
+                    <IconButton onClick={handleClose}>
+                        <Close />
+                    </IconButton>
                 </div>
                 <div className={styles.loginContainer}>
                     <h1>{isLogin ? 'Log into Paper Take' : 'Create an account'}</h1>
@@ -166,13 +168,13 @@ const LoginModal: React.FC = () => {
                             {
                                 errors.password ? <p aria-live="polite" className={styles.errorText}>{errors.password}</p> : null
                             }
-                            {/* {
-                                authError
+                            {
+                                authError != ""
                                     ?
                                     <p className={styles.textError} aria-live="polite">{authError}</p>
                                     :
                                     null
-                            } */}
+                            }
                             {!isLogin && (
                                 <div className={styles.inputContainer}>
                                     <input

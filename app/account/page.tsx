@@ -4,7 +4,6 @@ import styles from "../page.module.css";
 import { useAuthContext } from "../providers/AuthProvider";
 import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos';
 import AccountModal from '../components/AccountModal';
-// import AccountModal from '../components/AccountModal';
 
 export default function Account() {
     const { user } = useAuthContext();
@@ -58,7 +57,7 @@ export default function Account() {
                         <div className={styles.accountContainerItem} onClick={pushToSendVerification}>
                             <p style={{
                                 color: 'red'
-                            }}>Needs Attention! Resend Email Account Verification</p>
+                            }}>Account Needs Email Verification!</p>
                             <ArrowForwardIos style={{
                                 color: 'red'
                             }} />

@@ -61,6 +61,10 @@ export default function Header() {
         setIsAccountMenuOpen(false);
     };
     const handleLogOut = async () => {
+        if (pathname === '/account') {
+            router.push('/');
+        }
+
         try {
             await logOut();
             setNotes([]);
