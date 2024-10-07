@@ -11,7 +11,9 @@ import IconButton from '@mui/material/IconButton';
 
 
 const LoginModal: React.FC = () => {
-    const { authError, createUserAccount, login } = useAuthContext();
+    const { 
+        // authError, 
+        createUserAccount, login } = useAuthContext();
     const { isLoginModalOpen, setIsLoginModalOpen } = useAppContext();
 
     const [email, setEmail] = useState('');
@@ -84,9 +86,9 @@ const LoginModal: React.FC = () => {
             let result;
 
             if (isLogin) {
-                result = await login(email, password);
+                await login(email, password);
             } else {
-                result = await createUserAccount(email, password);
+                await createUserAccount(email, password);
                 alert('Account created successfully. Please verify your email address to access all the available features.');
             }
             if (result) {
@@ -164,13 +166,13 @@ const LoginModal: React.FC = () => {
                             {
                                 errors.password ? <p aria-live="polite" className={styles.errorText}>{errors.password}</p> : null
                             }
-                            {
+                            {/* {
                                 authError
                                     ?
                                     <p className={styles.textError} aria-live="polite">{authError}</p>
                                     :
                                     null
-                            }
+                            } */}
                             {!isLogin && (
                                 <div className={styles.inputContainer}>
                                     <input
