@@ -1,0 +1,152 @@
+.containerModalAccount,
+.containerModalLogin {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    z-index: 5;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.containerModalAccount {
+    background-color: rgba(0, 0, 0, 0.7);
+    transition: background-color 1s ease;
+}
+
+.containerModalLogin {
+    background-color: inherit;
+}
+
+.containerAccount,
+.containerLogin {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    z-index: 6;
+}
+
+.containerAccount {
+    max-width: 600px;
+}
+
+.containerLogin {
+    background-color: #fff;
+    max-width: 800px;
+    gap: 1rem;
+}
+
+.closeButtonContainer {
+    position: fixed;
+    display: flex;
+    top: 0;
+    right: 0.5rem;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    height: 4rem;
+    align-items: center;
+}
+
+.formContainerLogin,
+.formContainerLoginHelp {
+    display: flex;
+
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+.formContainerLogin {
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+ .formContainerLoginHelp {
+    flex-direction: column;
+}
+
+@media screen and (max-width: 768px) {
+    .formContainerLogin {
+        flex-direction: column;
+    }
+}
+
+.formAccount,
+.formLogin {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 600px;
+}
+
+.formAccount {
+    background-color: white;
+    padding: 1rem;
+}
+
+.dividerContainer {
+    display: flex;
+    height: 100%;
+}
+
+.dividerContainerMobile {
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+    .dividerContainer {
+        display: none;
+    }
+
+    .dividerContainerMobile {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 600px;
+    }
+}
+
+.button {
+    font-family: monospace;
+    font-weight: lighter;
+    border-radius: 0px;
+    color: #fff;
+    background-color: black
+}
+
+.button:disabled {
+    background-color: #f0f0f0;
+    color: darkgrey;
+    border: none;
+    cursor: not-allowed;
+}
+
+.textButtonContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.textButton {
+    color: inherit;
+    border-radius: 0px;
+}
+
+.textError {
+    color: red;
+    font-size: small;
+}
+
+.textTerms {
+    color: gray;
+    font-size: small;
+}
