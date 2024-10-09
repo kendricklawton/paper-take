@@ -1,21 +1,48 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import styles from './Project.module.css';
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 
-const initialItems = [
+const toggleButtonStyles = {
+    fontSize: 'large',
+    fontWeight: 'lighter',
+    fontFamily: 'monospace',
+    color: 'inherit',
+    border: 'none',
+    borderRadius: '0px',
+    textTransform: 'none'
+};
+
+const initialTasks = [
     { id: '1', content: 'Item 1' },
     { id: '2', content: 'Item 2' },
     { id: '3', content: 'Item 3' },
+    { id: '4', content: 'Item 4' },
+    { id: '5', content: 'Item 5' },
+    { id: '6', content: 'Item 6' },
 ];
 
-const columnHeaders = ['Work Item', 'New', 'Active', 'Impeded', 'Closed'];
+const columnHeaders = [
+    // 'Work Item',
+    'New',
+    'Active',
+    'Closed'
+];
 
 const ProjectBody: React.FC = () => {
+    const [currentColumn, setCurrentColumn] = useState('notes');
     const [columns, setColumns] = useState<{ [key: number]: { id: string; content: string }[] }>({
-        0: initialItems,
+        0: initialTasks,
         1: [],
         2: [],
-        3: [],
-        4: [],
+        // 3: [],
     });
+    const [isMobile, setIsMobile] = useState(false);
+
+
+
+    const handleColumnChange = (event: React.MouseEvent<HTMLElement>, newColumn: string) => {
+        setCurrentColumn(newColumn);
+    }
 
     const handleDragStart = (event: React.DragEvent<HTMLDivElement>, itemId: string) => {
         event.dataTransfer.setData('text/plain', itemId);
@@ -25,7 +52,6 @@ const ProjectBody: React.FC = () => {
         event.preventDefault();
         const itemId = event.dataTransfer.getData('text/plain');
 
-        // Find the item and remove it from the current column
         const newColumns = { ...columns };
         for (const col in newColumns) {
             const index = newColumns[col].findIndex(item => item.id === itemId);
@@ -43,44 +69,106 @@ const ProjectBody: React.FC = () => {
         event.preventDefault();
     };
 
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 768) {
+                setIsMobile(true);
+            } else {
+                setIsMobile(false);
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        handleResize();
+
+        return () => {
+            window.removeEventListener('resize', handleResize
+            )
+        };
+    }, [isMobile]);
+
+    const desktopView = () => {
+        return (
+            <div className={styles.body}>
+                {Object.keys(columns).map((columnIndexStr) => {
+                    const columnIndex = Number(columnIndexStr);
+                    return (
+                        <div
+                            key={columnIndex}
+                            onDragOver={handleDragOver}
+                            onDrop={(event) => handleDrop(event, columnIndex)}
+                            className={styles.column}
+                        >
+                            <h3>{columnHeaders[columnIndex]}</h3>
+                            {columns[columnIndex].map((task) => (
+                                <div
+                                    key={task.id}
+                                    draggable
+                                    onDragStart={(event) => handleDragStart(event, task.id)}
+                                    className={styles.item}
+                                >
+                                    {task.content}
+                                </div>
+                            ))}
+                        </div>
+                    );
+                })}
+            </div>
+        );
+    }
+
+    const mobileView = () => {
+        return (
+            <div className={styles.body}>
+                <ToggleButtonGroup
+                    value={currentColumn}
+                    exclusive
+                    onChange={handleColumnChange}
+                    aria-label="column"
+                    sx={{
+                        width: '100%',
+                        border: 'none',
+                        borderRadius: '0px',
+                        justifyContent: 'center',
+                    }}
+                >
+                    {columnHeaders.map((header, index) => (
+                        <ToggleButton
+                            key={index}
+                            value={header.toLowerCase()}
+                            sx={toggleButtonStyles}
+                        >
+                            {header}
+                        </ToggleButton>
+                    ))}
+                </ToggleButtonGroup>
+                <div
+                    onDragOver={handleDragOver}
+                    onDrop={(event) => handleDrop(event, 0)}
+                    className={styles.column}
+                >
+                    <h3>{columnHeaders[0]}</h3>
+                    {columns[0].map((task) => (
+                        <div
+                            key={task.id}
+                            draggable
+                            onDragStart={(event) => handleDragStart(event, task.id)}
+                            className={styles.item}
+                        >
+                            {task.content}
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-            {Object.keys(columns).map((columnIndexStr) => {
-                const columnIndex = Number(columnIndexStr);
-                return (
-                    <div
-                        key={columnIndex}
-                        onDragOver={handleDragOver}
-                        onDrop={(event) => handleDrop(event, columnIndex)}
-                        style={{
-                            width: '20%',
-                            minHeight: '200px',
-                            border: '1px solid black',
-                            padding: '10px',
-                            backgroundColor: '#f0f0f0',
-                        }}
-                    >
-                        <h3 style={{ textAlign: 'center' }}>{columnHeaders[columnIndex]}</h3>
-                        {columns[columnIndex].map((item) => (
-                            <div
-                                key={item.id}
-                                draggable
-                                onDragStart={(event) => handleDragStart(event, item.id)}
-                                style={{
-                                    padding: '10px',
-                                    margin: '5px',
-                                    backgroundColor: '#fff',
-                                    border: '1px solid #ccc',
-                                    cursor: 'grab',
-                                }}
-                            >
-                                {item.content}
-                            </div>
-                        ))}
-                    </div>
-                );
-            })}
-        </div>
+        <>
+            {
+                isMobile ? mobileView() : desktopView()
+            }
+        </>
     );
 };
 

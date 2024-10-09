@@ -6,7 +6,9 @@ import Divider from '@mui/material/Divider';
 import styles from './LoginModal.module.css';
 import { useAuthContext } from '../providers/AuthProvider';
 import { useAppContext } from '../providers/AppProvider';
-import { Close, Policy, VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material';
+import { 
+    // Close, 
+    Policy, VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 
 
@@ -37,6 +39,10 @@ const LoginModal: React.FC = () => {
     };
 
     const handleClose = () => {
+        setEmail('');
+        setPassword('');
+        setConfirmPassword('');
+        setErrors({ email: '', password: '', confirmPassword: '' });
         setIsLoginModalOpen(false);
     };
 
@@ -83,15 +89,12 @@ const LoginModal: React.FC = () => {
         }
 
         try {
-            let result;
-
             if (isLogin) {
                 await login(email, password);
+                handleClose();
             } else {
                 await createUserAccount(email, password);
                 alert('Account created successfully. Please verify your email address to access all the available features.');
-            }
-            if (result) {
                 handleClose();
             }
         } catch (error) {
@@ -121,12 +124,12 @@ const LoginModal: React.FC = () => {
     return (
         isLoginModalOpen && (
             <div className={styles.containerModal}>
-                <div className={styles.loginCloseButtonContainer}>
+                {/* <div className={styles.loginCloseButtonContainer}>
               
                 <IconButton onClick={handleClose}>
                     <Close />
                 </IconButton>
-                </div>
+                </div> */}
                 <div className={styles.loginContainer}>
                     <h1>{isLogin ? 'Log into Paper Take' : 'Create an account'}</h1>
                     <div className={styles.loginContainerBody}>

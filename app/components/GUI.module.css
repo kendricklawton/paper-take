@@ -10,10 +10,12 @@
     width: 100%;
 }
 
-.containerProject,
-.containerNote {
+.containerModal {
     position: fixed;
     transition: background-color 1s ease;  
+        padding-top: 5rem;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 5;
     padding-left: 1rem;
     padding-right: 1rem;
     height: 100vh;
@@ -23,16 +25,7 @@
     right: 0;
 }
 
-.containerNote {
-    padding-top: 5rem;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 5;
-}
 
-.containerProject {
-    margin-top: 5rem;
-
-}
 
 .create,
 .read,

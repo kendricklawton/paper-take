@@ -60,11 +60,17 @@ export default function Header() {
         setIsLoginModalOpen(true);
         setIsAccountMenuOpen(false);
     };
+    
     const handleLogOut = async () => {
+        if (pathname === '/account') {
+            router.push('/');
+        }
+
         try {
             await logOut();
             setNotes([]);
             setIsAccountMenuOpen(false);
+            setIsLoginModalOpen(true);
         } catch (error) {
             console.log(error);
         }

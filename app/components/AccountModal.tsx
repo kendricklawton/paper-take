@@ -27,7 +27,6 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
         setShowPassword(!showPassword);
     };
     const handleClose = () => {
-
         setDeleteAccount('');
         setDisplayName('');
         setEmail('');
