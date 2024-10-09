@@ -28,12 +28,12 @@
 .headerLeading {
     width: 100%;
     gap: 0.5rem;
-    padding-left: 0.5rem;
+    padding-left: 1rem;
 }
 
 .headerTrailing {
     padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    padding-right: 1rem;
 }
 
 .accountAnchor,

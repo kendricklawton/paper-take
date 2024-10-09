@@ -1,130 +1,8 @@
-// 'use client';
-
-// import { Button, TextField } from '@mui/material';
-// import styles from "./GUI.module.css"
-
-// export interface ProjectHeaderProps {
-//     initialOperation: string,
-//     isEditMode: boolean,
-//     title: string,
-//     description: string,
-//     handleTitleChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void,
-//     handleDescriptionChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void,
-//     setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>,
-// }
-
-// export default function ProjectHeader({
-//     initialOperation,
-//     isEditMode,
-//     title,
-//     description,
-//     handleTitleChange,
-//     handleDescriptionChange,
-//     setIsEditMode,
-// }: ProjectHeaderProps) {
-//     const readOnlyMode = initialOperation === 'read' && !isEditMode;
-//     const placeholderTitle = 'Project title...';
-//     const placeholderDescription = initialOperation === 'create' && !isEditMode ? 'Create a project...' : 'Project description...';
-
-//     const handleFocus = () => {
-//         if (!readOnlyMode) {
-//             setIsEditMode(true);
-//         }
-//     };
-
-//     const handleClick = () => {
-//         if (readOnlyMode) {
-//             setIsEditMode(true);
-//         }
-//     };
-
-//     return (
-//         initialOperation === 'create' && isEditMode ? (
-//             <div className={styles.projectHeader}>
-//                 <div className={styles.projectHeaderLeading}>
-//                     <TextField
-//                         autoComplete='off'
-//                         inputProps={{
-//                             readOnly: readOnlyMode,
-//                             style:
-//                             {
-//                                 fontSize: 'large',
-//                                 fontWeight: 'lighter',
-//                                 fontFamily: 'monospace',
-//                                 color: 'inherit',
-//                                 cursor: 'default',
-//                             },
-//                         }}
-//                         multiline
-//                         onChange={handleTitleChange}
-//                         onClick={initialOperation === 'create' ? undefined : handleClick}
-//                         onFocus={handleFocus}
-//                         placeholder={placeholderTitle}
-//                         sx={{
-//                             width: '100%',
-//                             '& .MuiOutlinedInput-root': {
-//                                 '& fieldset': { border: 'none' },
-//                                 '&:hover fieldset': { border: 'none' },
-//                                 '&.Mui-focused fieldset': { border: 'none' },
-//                             },
-//                         }}
-//                         value={title}
-//                     />
-//                 </div>
-//                 <div className={styles.projectHeaderTrailing}>
-//                         <Button sx={{
-//                             fontSize: 'large',
-//                             fontWeight: 'lighter',
-//                         }}>Add Item</Button>
-//                     <Button sx={{
-//                         fontSize: 'large',
-//                         fontWeight: 'lighter',
-//                     }}
-//                     onClick={()=> setIsEditMode(false)}>Close</Button>
-//                 </div>
-//             </div>
-//         ) :
-//             (
-//                 <TextField
-//                     inputProps={{
-//                         autoComplete: 'off',
-//                         readOnly: readOnlyMode,
-//                         style:
-//                         {
-//                             fontSize: 'normal',
-//                             fontWeight: 'lighter',
-//                             fontFamily: 'monospace',
-//                             color: 'inherit',
-//                             cursor: 'default',
-//                         },
-//                     }}
-//                     multiline
-//                     onChange={handleDescriptionChange}
-//                     onClick={handleClick}
-//                     onFocus={handleFocus}
-//                     placeholder={placeholderDescription}
-//                     sx={{
-//                         width: '100%',
-//                         '& .MuiOutlinedInput-root': {
-//                             '& fieldset': { border: 'none' },
-//                             '&:hover fieldset': { border: 'none' },
-//                             '&.Mui-focused fieldset': { border: 'none' },
-//                         },
-//                     }}
-//                     value={description}
-//                 />
-//             )
-//     );
-// }
-
 'use client';
 
-// import { useState } from 'react';
 import styles from './Project.module.css';
-
-import { Button, TextField, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { Add } from '@mui/icons-material';
-
+import { Button, IconButton, TextField, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Add, Close, SettingsOutlined } from '@mui/icons-material';
 
 const toggleButtonStyles = {
     fontSize: 'large',
@@ -136,58 +14,73 @@ const toggleButtonStyles = {
     textTransform: 'none'
 };
 
-
 interface ProjectHeaderProps {
     description: string;
+    isProjectSettingsOpen: boolean;
+    projectSettingsMenuRef: React.RefObject<HTMLDivElement>;
+    projectSettingsMenuButtonRef: React.RefObject<HTMLButtonElement>;
     title: string;
+    handleClose: () => void;
+    handleProjectSettingsMenu: () => void;
 }
 
-
-const ProjectHeader: React.FC<ProjectHeaderProps> = ({description, title}) => {
+const ProjectHeader: React.FC<ProjectHeaderProps> = (
+    {
+        description,
+        isProjectSettingsOpen,
+        projectSettingsMenuRef,
+        projectSettingsMenuButtonRef,
+        title,
+        handleClose,
+        handleProjectSettingsMenu
+    }
+) => {
     console.log('Project Header:', title, description);
     return (
-            <div className={styles.header}>
-                <div className={styles.headerTop}>
+        <div className={styles.header}>
+            <div className={styles.headerTop}>
+                <TextField
+                    autoComplete='off'
+                    inputProps={{
+                        style: {
+                            fontSize: 'large',
+                            fontWeight: 'lighter',
+                            fontFamily: 'monospace',
+                            color: 'inherit',
+                            cursor: 'default',
 
-                    <TextField
-                        autoComplete='off'
-                        inputProps={{
-                            style: {
-                                fontSize: 'large',
-                                fontWeight: 'lighter',
-                                fontFamily: 'monospace',
-                                color: 'inherit',
-                                cursor: 'default',
-                            },
-                        }}
-                        // onChange={handleTitleChange}
-                        // onClick={initialOperation === 'create' ? undefined : handleClick}
-                        // onFocus={handleFocus}
-                        placeholder={'Create a project...'}
-                        sx={{
-                            width: '100%',
-                            maxWidth: '600px',
-                            backgroundColor: 'yellow',
-                            '& .MuiOutlinedInput-root': {
-                                '& fieldset': { border: 'none' },
-                                '&:hover fieldset': { border: 'none' },
-                                '&.Mui-focused fieldset': { border: 'none' },
-                            },
-                        }}
-                        value={title}
-
-                    />
+                        }
+                    }}
+                    // onChange={handleTitleChange}
+                    // onClick={initialOperation === 'create' ? undefined : handleClick}
+                    // onFocus={handleFocus}
+                    placeholder={'Create a project...'}
+                    sx={{
+                        width: '100%',
+                        maxWidth: '600px',
+                        '& .MuiOutlinedInput-root': {
+                            '& fieldset': { border: 'none' },
+                            '&:hover fieldset': { border: 'none' },
+                            '&.Mui-focused fieldset': { border: 'none' },
+                        },
+                    }}
+                    value={title}
+                />
+                <div className={styles.headerTopTrailing}>
                     <Button variant="contained" startIcon={<Add />}
-                        //  endIcon={<ArrowDownwardOutlined/>}
                         sx={{
                             borderRadius: '0px',
+                            minWidth: '150px',
                         }}
                     >
-                        Add New Work Item
+                        Add New Item
                     </Button>
+                    <IconButton onClick={handleClose}>
+                        <Close />
+                    </IconButton>
                 </div>
-
-
+            </div>
+            <div className={styles.headerBottom}>
                 <ToggleButtonGroup
                     color="primary"
                     // value={currentList}
@@ -197,6 +90,9 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({description, title}) => {
                     sx={{
                         border: 'none',
                         borderRadius: '0px',
+                        justifyContent: 'start',
+                        width: '100%',
+                        // backgroundColor: 'yellow',
                     }}>
                     <ToggleButton value="Taskboard"
                         sx={toggleButtonStyles}
@@ -224,12 +120,29 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = ({description, title}) => {
                         Goal
                     </ToggleButton>
                 </ToggleButtonGroup>
+                <div className={styles.headerBottomTrailing}>
+                    <div className={styles.projectSettingsMenuAnchor}>
 
+                        <IconButton
+                            ref={projectSettingsMenuButtonRef}
+                            onClick={handleProjectSettingsMenu}>
+                            <SettingsOutlined />
+                        </IconButton>
+                        {
+                            isProjectSettingsOpen &&
+                            (
+                                <div className={styles.projectSettingsMenu} ref={projectSettingsMenuRef}>
+                                    <div className={styles.menuItem}>Add Column</div>
+                                    <div className={styles.menuItem}>Share</div>
+                                    <div className={styles.menuItem}>Delete</div>
+                                </div>
+                            )
+                        }
+                    </div>
+                </div>
             </div>
-
-        
+        </div>
     )
-
 }
 
 export default ProjectHeader;

@@ -51,7 +51,7 @@ export class Note {
     isPinned: boolean;
     isTrash: boolean;
     images: string[];
-    nestedNotes: NestedNote[];
+    // nestedNotes: NestedNote[];
     reminder?: Date;
 
     constructor(
@@ -63,7 +63,7 @@ export class Note {
         isPinned: boolean,
         isTrash: boolean,
         images: string[] = [],
-        nestedNotes: NestedNote[] = [],
+        // nestedNotes: NestedNote[] = [],
         reminder?: Date
     ) {
         this.createdAt = createdAt;
@@ -74,7 +74,7 @@ export class Note {
         this.isPinned = isPinned;
         this.isTrash = isTrash;
         this.images = images;
-        this.nestedNotes = nestedNotes;
+        // this.nestedNotes = nestedNotes;
         this.reminder = reminder;
     }
 
@@ -82,15 +82,15 @@ export class Note {
         try {
             const { createdAt, id, title, content, isArchived,
                 isPinned, isTrash, reminder, images = [],
-                nestedNotes = []
+                // nestedNotes = []
             } = JSON.parse(jsonString);
 
             // Todo - Add Error Handling
 
-            const parsedNestedNotes = nestedNotes
-                .map((nestedNote: NestedNote) => NestedNote
-                    .fromJSON(JSON.stringify(nestedNote)))
-                .filter((note: NestedNote | null) => note !== null) as NestedNote[];
+            // const parsedNestedNotes = nestedNotes
+            //     .map((nestedNote: NestedNote) => NestedNote
+            //         .fromJSON(JSON.stringify(nestedNote)))
+            //     .filter((note: NestedNote | null) => note !== null) as NestedNote[];
 
             return new Note(
                 createdAt ? new Date(createdAt) : undefined,
@@ -101,7 +101,7 @@ export class Note {
                 isPinned,
                 isTrash,
                 images,
-                parsedNestedNotes,
+                // parsedNestedNotes,
                 reminder ? new Date(reminder) : undefined
             );
         } catch (error) {
@@ -120,7 +120,7 @@ export class Note {
             isPinned: this.isPinned,
             isTrash: this.isTrash,
             images: this.images,
-            nestedNotes: this.nestedNotes.map(nestedNote => nestedNote.toJson()),
+            // nestedNotes: this.nestedNotes.map(nestedNote => nestedNote.toJson()),
             reminder: this.reminder?.toISOString() || null
         });
     }
@@ -132,7 +132,7 @@ export class Task {
     title: string;
     description: string;
     dueDate: Date | undefined;
-    status: 'not started' | 'in progress' | 'completed';
+    status: 'new' | 'active' | 'closed';
 
     constructor(
         createdAt: Date | undefined,
@@ -140,9 +140,9 @@ export class Task {
         title: string,
         description: string,
         dueDate: Date | undefined,
-        status: 'not started' | 'in progress' | 'completed',
+        status: 'new' | 'active' | 'closed',
     ) {
-        if (!['not started', 'in progress', 'completed'].includes(status)) {
+        if (!['new', 'active', 'closed'].includes(status)) {
             throw new Error('Invalid status');
         }
         this.createdAt = createdAt;
@@ -168,7 +168,7 @@ export class Task {
                 throw new Error("Missing required properties");
             }
 
-            const validStatuses: Set<string> = new Set(['not started', 'in progress', 'completed']);
+            const validStatuses: Set<string> = new Set(['new', 'active', 'closed']);
             if (!validStatuses.has(status)) {
                 throw new Error('Invalid status');
             }
@@ -179,7 +179,7 @@ export class Task {
                 title,
                 description,
                 dueDate ? new Date(dueDate) : undefined,
-                status as 'not started' | 'in progress' | 'completed',
+                status as 'new' | 'active' | 'closed',
             );
         } catch (error) {
             console.error('Error parsing Task JSON:', error);

@@ -1,19 +1,7 @@
-.page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    min-width: 1000px;
-    padding-top: 5rem;
-    padding-bottom: 5rem;
-}
-
 .header {
     display: flex;
     flex-direction: column;
     width: 100%;
-    background-color: #f8f9fa;
 }
 
 .headerTop {
@@ -21,13 +9,95 @@
     flex-direction: row;
     align-items: center;
     width: 100%;
-    /* background-color: green; */
     justify-content: space-between;
 }
 
-.headerTopRight {
+.headerTopTrailing {
     display: flex;
     flex-direction: row;
-    gap: 1rem;
+    gap: 0.5rem;
     align-items: center;
+}
+
+.headerBottom {
+    background-color: aquamarine;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.headerBottomTrailing {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: yellow;
+}
+
+.body {
+    display: flex;
+    flex-direction: row;
+    /* align-items: center; */
+    width: 100%;
+    gap: 1rem;
+}
+
+.column {
+    width: 100%;
+    min-width: 300px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
+}
+
+.column h3 {
+    text-align: start;
+    padding: 1rem;
+}
+
+.item {
+    /* padding: 1rem; */
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    max-width: 384px;
+    background-color: lightgrey;
+    cursor: grab;
+}
+
+.projectSettingsMenuAnchor {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.projectSettingsMenu {
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        top: 3rem;
+        position: absolute;
+        z-index: 5;
+        box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
+}
+
+.menuItem {
+    padding: 1rem;
+    background-color: inherit;
+    align-items: center;
+    width: 120px;
+}
+
+@media screen and (max-width: 768px) {
+    .body {
+        flex-direction: column;
+    }
+
+    .column {
+        width: 100%;
+    }
 }

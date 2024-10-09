@@ -6,8 +6,6 @@ export interface NoteHeaderProps {
     initialOperation: string,
     isEditMode: boolean,
     isModalMode: boolean,
-    isNestedMode: boolean,
-    nestedNoteTitle: string,
     title: string,
     handleTitleChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void,
     toggleModeTrue: () => void,
@@ -17,8 +15,6 @@ export default function NoteHeader({
     initialOperation,
     isEditMode,
     isModalMode,
-    isNestedMode,
-    nestedNoteTitle,
     title,
     handleTitleChange,
     toggleModeTrue
@@ -67,7 +63,7 @@ export default function NoteHeader({
                             '&.Mui-focused fieldset': { border: 'none' },
                         },
                     }}
-                    value={isNestedMode ? nestedNoteTitle : title}
+                    value={title}
                 />
 
             )}

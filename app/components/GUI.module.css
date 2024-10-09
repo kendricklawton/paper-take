@@ -25,17 +25,6 @@
     right: 0;
 }
 
-<<<<<<< HEAD:app/components/GUI.module.css
-=======
-.containerNote {
-    display: flex;
-    flex-direction: column;
-    padding-top: 5rem;
-    background-color: rgba(0, 0, 0, 0.7);
-    align-items: center;
-    z-index: 5;
-}
->>>>>>> origin/main:app/components/styles.module.css
 
 
 .create,

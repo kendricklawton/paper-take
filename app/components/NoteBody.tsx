@@ -6,9 +6,7 @@ interface NoteBodyProps {
     content: string;
     initialOperation: 'read' | 'create';
     isEditMode: boolean;
-    isNestedMode: boolean;
     isModalMode: boolean;
-    nestedNoteContent: string;
     handleContentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
     toggleModeTrue: () => void;
 }
@@ -17,17 +15,15 @@ export default function NoteBody({
     content,
     initialOperation,
     isEditMode,
-    isNestedMode,
     isModalMode,
-    nestedNoteContent,
     handleContentChange,
     toggleModeTrue
 }: NoteBodyProps) {
     const readOnlyMode = initialOperation === 'read' && !isModalMode;
-    const placeholderText = isNestedMode ? 'Nested - Create a note...' : 'Create a note...';
+    const placeholderText = 'Create a note...';
 
     const handleFocus = () => {
-        if (!readOnlyMode && !isNestedMode) {
+        if (!readOnlyMode) {
             toggleModeTrue();
         }
     };
@@ -67,7 +63,7 @@ export default function NoteBody({
                                 '&.Mui-focused fieldset': { border: 'none' },
                             },
                         }}
-                        value={isNestedMode ? nestedNoteContent : content}
+                        value={content}
                     />
             ))}
         </>

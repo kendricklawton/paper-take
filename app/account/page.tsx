@@ -1,4 +1,5 @@
 'use client'
+
 import { useState } from 'react';
 import styles from "../page.module.css";
 import { useAuthContext } from "../providers/AuthProvider";
@@ -6,18 +7,16 @@ import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos';
 import AccountModal from '../components/AccountModal';
 
 export default function Account() {
-    const { user } = useAuthContext();
-
+    const { user, userDisplayName } = useAuthContext();
     const [method, setMethod] = useState('');
     const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
-    // const [displayName, setDisplayName] = useState(localStorage.getItem('displayName') || '');
-
-    const pushToEmail = () => {
+    
+    const pushToDeleteAccount = () => {
         if (user?.emailVerified === false) {
             alert("You must verify your current email before making account changes.");
             return;
         }
-        setMethod('email');
+        setMethod('delete');
         setIsAccountModalOpen(true);
     }
 
@@ -26,17 +25,13 @@ export default function Account() {
         setIsAccountModalOpen(true);
     }
 
-    const pushToPassword = () => {
-        setMethod('password');
+    const pushToEmail = () => {
+        setMethod('email');
         setIsAccountModalOpen(true);
     }
 
-    const pushToDeleteAccount = () => {
-        if (user?.emailVerified === false) {
-            alert("You must verify your current email before making account changes.");
-            return;
-        }
-        setMethod('delete');
+    const pushToPassword = () => {
+        setMethod('password');
         setIsAccountModalOpen(true);
     }
 
@@ -83,10 +78,10 @@ export default function Account() {
                             <p>Display Name </p>
                         </div>
                         {
-                            user?.displayName
+                            userDisplayName
                                 ?
                                 <div className={styles.accountContainerItemTrailing}>
-                                    {user?.displayName}
+                                    {userDisplayName}
                                     <ArrowForwardIos />
                                 </div>
                                 :
