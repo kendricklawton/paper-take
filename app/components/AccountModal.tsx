@@ -31,10 +31,14 @@ interface AccountModalProps {
 
 const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) => {
     const Router = useRouter();
+<<<<<<< HEAD
 
     const { authError, user, resetPassword, setAuthError, updateUserDisplayName, updateUserEmail, 
         // updateUserPassword,
         deleteUserAccount } = useAuthContext();
+=======
+    const { authError, user, deleteUserAccount, sendUserVerification, updateUserDisplayName, updateUserEmail, updateUserPassword } = useAuthContext();
+>>>>>>> origin/main
 
     const [deleteAccount, setDeleteAccount] = useState('');
     const [newDisplayName, setNewDisplayName] = useState('');
@@ -43,6 +47,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
     const [password, setPassword] = useState('');
     // const [newPassword, setNewPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+<<<<<<< HEAD
     // const [confirmNewPassword, setConfirmNewPassword] = useState('');
     const [errors, setErrors] = useState({ displayName: '', email: '', password: '', newPassword: '' });
 
@@ -51,6 +56,15 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
         setShowPassword(!showPassword);
     };
 
+=======
+    const [confirmNewPassword, setConfirmNewPassword] = useState('');
+    const [errors, setErrors] = useState({ email: '', password: '', newPassword: '' });
+
+    const handleClickShowPassword = () => {
+        setShowPassword(prev => !prev);
+    };
+
+>>>>>>> origin/main
     const handleClose = () => {
         setDeleteAccount('');
         setNewDisplayName('');
@@ -119,6 +133,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                     setErrors({ ...errors, displayName: 'Display name is the same as current display name' });
                     return;
                 }
+<<<<<<< HEAD
                 if (newDisplayName.length < 1) {
                     setErrors({ ...errors, displayName: 'Display name must be at least 1 character' });
                     return;
@@ -127,6 +142,14 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                 if (authAction) {
                     handleClose();
                 }
+=======
+                await updateUserDisplayName(displayName);
+                handleClose();
+            } else if (method === "verification") {
+                await sendUserVerification();
+                handleClose();
+                alert('Verification email sent');
+>>>>>>> origin/main
             }
         } catch (error) {
             handleClose();
@@ -136,6 +159,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
 
     const isButtonEnabled = () => {
         if (method === "email") {
+<<<<<<< HEAD
             return email.trim() !== '' && password.trim() !== '' && password.length > 6;
         } else if (method === "password") {
             return user?.email === email;
@@ -144,6 +168,15 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
             return password.length > 6 && deleteAccount === "delete-my-account" && password.trim() !== '' && password.length > 6;;
         } else if (method === "displayName") {
             return newDisplayName.trim() !== '' && newDisplayName.length > 1;
+=======
+            return email.length > 0 && confirmNewEmail.length;
+        } else if (method === "password") {
+            return password.length > 0 && confirmNewPassword.length;
+        } else if (method === "delete") {
+            return password.length > 0 && deleteAccount === "delete-my-account"
+        } else if (method === "displayName") {
+            return displayName.length > 0;
+>>>>>>> origin/main
         } else if (method === "verification") {
             return true;
         }
@@ -222,6 +255,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                             </>
                         )}
                         {method === "verification" && (
+<<<<<<< HEAD
                             <p>Current Email: {user?.email ? user?.email : 'N/A'}</p>
                         )}
                         {method !== "displayName" && method !== "verification" && method !== "password" && (
@@ -267,6 +301,51 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                             )
                         }
                         <Button className={styles.button} onClick={handleClose} type="reset">
+=======
+                            <p>Verification email will be sent to {user?.email}</p>
+                        )}
+                        {method != "displayName" && method != "verification" && (
+                            <div className={styles.inputContainer}>
+                                <input
+                                    className={styles.inputVisiblity}
+                                    type={showPassword ? 'text' : 'password'}
+                                    id="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    placeholder='Password'
+                                // aria-invalid={!!errors.password}
+                                />
+                                <IconButton onClick={handleClickShowPassword} className={styles.visiblityIcon}>
+                                    {
+                                        showPassword
+                                            ?
+                                            <VisibilityOffOutlined />
+                                            :
+                                            <VisibilityOutlined />
+                                    }
+                                </IconButton>
+                            </div>
+                        )}
+
+                        {
+                            authError
+                                ?
+                                <p className={styles.textError} aria-live="polite">{authError}</p>
+                                :
+                                null
+                        }
+                        {
+                            (method === "displayName" && user?.displayName) && (
+                                <button className={styles.formButton} type="submit">
+                                    Remove Display Name
+                                </button>
+                            )
+                        }
+                        <button className={styles.formButton} disabled={!isFormButtonEnabled()} type="submit">
+                            {method === "verification" ? 'Resend' : 'Submit'}
+                        </button>
+                        <button className={styles.formButton} onClick={handleClose} type="reset">
+>>>>>>> origin/main
                             Cancel
                         </Button>
                     </form>

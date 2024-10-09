@@ -52,7 +52,7 @@ export default function Account() {
                         <div className={styles.accountContainerItem} onClick={pushToSendVerification}>
                             <p style={{
                                 color: 'red'
-                            }}>Needs Attention! Resend Email Account Verification</p>
+                            }}>Account Needs Email Verification!</p>
                             <ArrowForwardIos style={{
                                 color: 'red'
                             }} />

@@ -2,11 +2,21 @@
 
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { useAppContext } from '../providers/AppProvider';
+<<<<<<< HEAD
 import NoteBody from './NoteBody';
 import NoteHeader from './NoteHeader';
 import NoteFooter from './NoteFooter';
 import styles from "./GUI.module.css"
 import { Note } from '../models';
+=======
+import NoteBody from './NoteGUIBody';
+import NoteHeader from './NoteGUIHeader';
+import NoteFooter from './NoteGUIFooter';
+import NoteNestedNotes from './NoteGUINestedNotes';
+import styles from "./styles.module.css";
+import { NestedNote, Note } from '../models';
+import { v4 as uuidv4 } from 'uuid';
+>>>>>>> origin/main
 
 interface NoteGUIProps {
     operation: 'read' | 'create';

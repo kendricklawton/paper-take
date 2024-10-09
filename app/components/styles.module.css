@@ -1,0 +1,201 @@
+/* Container Styles */
+.container,
+.containerModal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container {
+    width: 100%;
+}
+
+.containerModal {
+    position: fixed;
+    transition: background-color 1s ease;  
+        padding-top: 5rem;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 5;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    height: 100vh;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+<<<<<<< HEAD:app/components/GUI.module.css
+=======
+.containerNote {
+    display: flex;
+    flex-direction: column;
+    padding-top: 5rem;
+    background-color: rgba(0, 0, 0, 0.7);
+    align-items: center;
+    z-index: 5;
+}
+>>>>>>> origin/main:app/components/styles.module.css
+
+
+.create,
+.read,
+.noteEdit {
+    margin-top: 1rem;
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+}
+
+.projectEdit {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+}
+
+.projectHeader {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+
+}
+
+.projectHeaderLeading {
+    background-color: yellow;
+    width: 100%;
+    max-width: 600px;
+}
+
+.projectHeaderTrailing {
+   display: flex;
+   align-items: center;
+   justify-content: flex-end;
+   width: 100%;
+}
+
+.create {
+    box-shadow: 0 4px 8px rgba(0.4, 0.4, 0.4, 0.4);
+}
+
+.noteEdit,
+.read {
+    box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
+}
+
+.create,
+.read {
+    max-height: 420px;
+}
+
+.noteEdit {
+    max-height: 60%;
+    min-height: 4rem;
+}
+
+
+.create:focus,
+.read:focus,
+.noteEdit:focus {
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.create:hover,
+.read:hover,
+.noteEdit:hover {
+    box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
+}
+
+/* Info Container Styles */
+.infoContainerRead {
+    overflow-y: hidden;
+}
+
+.infoContainer {
+    overflow-y: auto;
+}
+
+/* .titleContainer .titleContainerScroll {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.titleContainer div,
+.contentContainer div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.titleContainerScroll {
+    box-shadow: 0 2px 2px rgba(0.2, 0.2, 0.2, 0.2);
+}
+
+.contentContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+} */
+
+/* Nested Notes Container Styles */
+.nestedNotesContainer {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.nestedNotesWrapper {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+/* Footer Styles */
+.footerWrapper {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.footerContainer,
+.footerContainerRead {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.footerLeading {
+    display: flex;
+    flex-direction: row;
+}
+
+.noteOptionsMenu {
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
+    display: flex;
+    flex-direction: column;
+    top: 44px;
+    position: absolute;
+    z-index: 4;
+}
+
+.menuItem {
+    padding: 1rem;
+    background-color: inherit;
+    align-items: center;
+}
+
+.menuItem:hover {
+    background-color: gray;
+}
+
+

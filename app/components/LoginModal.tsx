@@ -32,7 +32,10 @@ const StyledTextField = styled(TextField)({
 const LoginModal: React.FC = () => {
     const {
         authError,
+<<<<<<< HEAD
         resetPassword,
+=======
+>>>>>>> origin/main
         createUserAccount, login, setAuthError } = useAuthContext();
     const { isLoginModalOpen, setIsLoginModalOpen } = useAppContext();
 
@@ -52,6 +55,7 @@ const LoginModal: React.FC = () => {
         setShowPassword(prev => !prev);
     };
 
+<<<<<<< HEAD
     const isButtonEnabled = () => {
         if (isForgotPassword) {
             return email.trim() !== '';
@@ -62,6 +66,8 @@ const LoginModal: React.FC = () => {
         }
     };
 
+=======
+>>>>>>> origin/main
     const handleClose = () => {
         setEmail('');
         setPassword('');
@@ -79,6 +85,7 @@ const LoginModal: React.FC = () => {
         let authAction = false;
 
         try {
+<<<<<<< HEAD
             if (isForgotPassword) {
                 if (!email) {
                     setErrors({ ...errors, email: 'Email is required' });
@@ -138,6 +145,23 @@ const LoginModal: React.FC = () => {
             }
         } catch (error) {
             console.log('Error:', error);
+=======
+            if (isLogin) {
+                await login(email, password);
+                handleClose();
+            } else {
+                await createUserAccount(email, password);
+                handleClose();
+                alert('Account created successfully. Please verify your email address to access all the available features.');
+            }
+
+        } catch (error) {
+            console.log('Error:', error);
+        } finally {
+            setEmail('');
+            setPassword('');
+            setConfirmPassword('');
+>>>>>>> origin/main
         }
     };
 
@@ -153,9 +177,11 @@ const LoginModal: React.FC = () => {
         setAuthError(null);
         setIsLogin((prev) => !prev);
         setConfirmPassword('');
+        setAuthError('');
         setErrors({ email: '', password: '', confirmPassword: '' });
     };
 
+<<<<<<< HEAD
     return (
         isLoginModalOpen && (
             <div className={styles.containerModalLogin}>
@@ -165,6 +191,34 @@ const LoginModal: React.FC = () => {
                 </IconButton>
                 </div> */}
                 <div className={styles.containerLogin}>
+=======
+    const isLoginButtonEnabled = () => {
+        return email.trim() !== '' && password.trim() !== '' && (isLogin || confirmPassword.trim() !== '');
+    };
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 720);
+        };
+
+        window.addEventListener('resize', handleResize);
+        handleResize();
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    return (
+        isLoginModalOpen && (
+            <div className={styles.containerModal}>
+                <div className={styles.loginCloseButtonContainer}>
+                    <IconButton onClick={handleClose}>
+                        <Close />
+                    </IconButton>
+                </div>
+                <div className={styles.loginContainer}>
+>>>>>>> origin/main
                     <h1>{isLogin ? 'Log into Paper Take' : 'Create an account'}</h1>
                     <div className={isForgotPassword ? styles.formContainerLoginHelp : styles.formContainerLogin}>
                         <form className={styles.formLogin} onSubmit={handleSubmit}>
@@ -182,8 +236,24 @@ const LoginModal: React.FC = () => {
                                 errors.email && (<p aria-live="polite" className={styles.errorText}>{errors.email}</p>)
                             }
                             {
+<<<<<<< HEAD
                                 !isForgotPassword && (
                                     <StyledTextField
+=======
+                                errors.password ? <p aria-live="polite" className={styles.errorText}>{errors.password}</p> : null
+                            }
+                            {
+                                authError != ""
+                                    ?
+                                    <p className={styles.textError} aria-live="polite">{authError}</p>
+                                    :
+                                    null
+                            }
+                            {!isLogin && (
+                                <div className={styles.inputContainer}>
+                                    <input
+                                        className={styles.visiblityInput}
+>>>>>>> origin/main
                                         type={showPassword ? 'text' : 'password'}
                                         id="password"
                                         value={password}

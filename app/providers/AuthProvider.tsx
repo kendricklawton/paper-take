@@ -19,7 +19,7 @@ import {
     // sendEmailVerification,
     signInWithEmailAndPassword,
     updateProfile,
-    verifyBeforeUpdateEmail, 
+    verifyBeforeUpdateEmail,
     EmailAuthProvider,
     updatePassword,
     User
@@ -27,6 +27,7 @@ import {
 import { auth } from '../firebase';
 
 interface AuthContextType {
+<<<<<<< HEAD
     authError: string | null;
     isLoadingAuth: boolean;
     user: User | null;
@@ -41,17 +42,38 @@ interface AuthContextType {
     updateUserDisplayName: (newDisplayName: string) => Promise<boolean>;
     updateUserPassword: (newPassword: string, oldPassword: string) => Promise<boolean>;
     updateUserEmail: (newEmail: string, password: string) => Promise<boolean>;
+=======
+    authError: string;
+    isLoadingAuth: boolean;
+    user: User | null;
+    createUserAccount: (email: string, password: string) => Promise<void>;
+    deleteUserAccount: (password: string) => Promise<void>;
+    login: (email: string, password: string) => Promise<void>;
+    logOut: () => Promise<void>;
+    sendUserVerification: () => Promise<void>;
+    setAuthError: (error: string) => void;
+    updateUserDisplayName: (newDisplayName: string) => Promise<void>;
+    updateUserPassword: (newPassword: string, oldPassword: string) => Promise<void>;
+    updateUserEmail: (newEmail: string, password: string) => Promise<void>;
+>>>>>>> origin/main
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+<<<<<<< HEAD
     const baseURL = 'http://localhost:3000/';
     const [user, setUser] = useState<User | null>(null);
     const [userDisplayName, setUserDisplayName] = useState<string | null>(null);
     const [userEmail, setUserEmail] = useState<string | null>(null);
     const [isLoadingAuth, setIsAuthLoading] = useState<boolean>(true);
     const [authError, setAuthError] = useState<string | null>(null);
+=======
+    const paperTakeUrl = "http://localhost:3000/";
+    const [authError, setAuthError] = useState<string>('');
+    const [isLoadingAuth, setIsAuthLoading] = useState<boolean>(true);
+    const [user, setUser] = useState<User | null>(null);
+>>>>>>> origin/main
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -61,6 +83,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return () => unsubscribe();
     }, []);
 
+<<<<<<< HEAD
     useEffect(() => {
         if (user) {
             setUserDisplayName(user.displayName || null);
@@ -68,6 +91,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         } else {
             setUserDisplayName(null);
             setUserEmail(null);
+=======
+    const handleAuthError = useCallback((authError: unknown) => {
+        if (authError instanceof FirebaseError) {
+            console.log(authError.code);
+            if (authError.code === 'auth/invalid-credential') {
+                setAuthError('Invalid credentials provided. Please check your email and password.');
+            } else {
+                setAuthError('An authentication error occurred. Please try again.');
+            }
+        } else {
+            console.log(authError);
+            setAuthError('An unknown error occurred. Please try again.');
+>>>>>>> origin/main
         }
     }, [user]);
 
@@ -76,6 +112,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setAuthError(null);
     }, []);
 
+<<<<<<< HEAD
     const handleAuthError = (error: unknown) => {
         if (error instanceof FirebaseError) {
             console.error('FirebaseError:', error);
@@ -118,10 +155,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             return false;
         }
     }, [clearAuthError]);
+=======
+    const authAction = useCallback(async (action: () => Promise<void>) => {
+        setAuthError('');
+        try {
+            await action();
+        } catch (authError) {
+            handleAuthError(authError);
+            console.log(authError);
+        }
+    }, [handleAuthError]);
+>>>>>>> origin/main
 
     const createUserAccount = useCallback((email: string, password: string) =>
         authAction(async () => {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+<<<<<<< HEAD
             setUser(userCredential.user);
             return true;
         }), [authAction]);
@@ -131,6 +180,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         authAction(async () => {
             await sendPasswordResetEmail(auth, email, {
                 url: baseURL,
+=======
+            await sendEmailVerification(userCredential.user, {
+                url: paperTakeUrl,
+>>>>>>> origin/main
                 handleCodeInApp: true,
             });
             return true;
@@ -161,7 +214,29 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             return true;
         }), [authAction]);
 
+<<<<<<< HEAD
     const logOut = useCallback(() =>
+=======
+    const logOut = useCallback(async () => {
+        await auth.signOut();
+        setUser(null);
+    }, []);
+
+    const sendUserVerification = useCallback(() =>
+        authAction(async () => {
+            if (user) {
+                await sendEmailVerification(user, {
+                    url: paperTakeUrl,
+                    handleCodeInApp: true,
+                });
+                console.log('Verification email sent');
+            } else {
+                throw new Error('User is null');
+            }
+        }), [authAction, user]);
+
+    const updateUserDisplayName = useCallback((newDisplayName: string) =>
+>>>>>>> origin/main
         authAction(async () => {
             await auth.signOut();
             setUser(null);
@@ -175,11 +250,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         if (user) {
             try {
                 await updateProfile(user, { displayName: newDisplayName });
+<<<<<<< HEAD
                 return true;
             } catch (error) {
                 setUserDisplayName(prevUserDisplayName);
                 handleAuthError(error);
                 return false;
+=======
+            } else {
+                throw new Error('User is null');
+>>>>>>> origin/main
             }
         } else {
             setUserDisplayName(prevUserDisplayName);
@@ -209,6 +289,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                     console.error('User email is null');
                     return false;
                 }
+<<<<<<< HEAD
             } catch (error) {
                 setUserEmail(prevUserEmail);
                 handleAuthError(error);
@@ -221,6 +302,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             return false;
         }
     }, [user, userEmail, clearAuthError]);
+=======
+                await verifyBeforeUpdateEmail(user, newEmail, {
+                    url: paperTakeUrl,
+                    handleCodeInApp: true,
+                });
+            } else {
+                throw new Error('User is null');
+            }
+        }), [authAction, user]);
+>>>>>>> origin/main
 
     const updateUserPassword = useCallback((newPassword: string, password: string) =>
         authAction(async () => {
@@ -248,7 +339,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         deleteUserAccount,
         login,
         logOut,
+<<<<<<< HEAD
         resetPassword,
+=======
+        sendUserVerification,
+>>>>>>> origin/main
         setAuthError,
         updateUserDisplayName,
         updateUserPassword,
@@ -263,7 +358,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         deleteUserAccount,
         login,
         logOut,
+<<<<<<< HEAD
         resetPassword,
+=======
+        sendUserVerification,
+>>>>>>> origin/main
         setAuthError,
         updateUserDisplayName,
         updateUserPassword,
@@ -285,5 +384,3 @@ export const useAuthContext = (): AuthContextType => {
     }
     return context;
 };
-
-// export const MemoizedAuthProvider = memo(AuthProvider);
