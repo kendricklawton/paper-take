@@ -1,6 +1,5 @@
 'use client';
 
-import styles from "./GUI.module.css";
 import { styled, TextField } from '@mui/material';
 
 const StyledTextField = styled(TextField)({
@@ -9,20 +8,24 @@ const StyledTextField = styled(TextField)({
         fontSize: 'large',
         fontFamily: 'monospace',
         fontWeight: 'lighter',
-        color: 'inherit',
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': { border: 'none' },
         '&:hover fieldset': { border: 'none' },
         '&.Mui-focused fieldset': { border: 'none' },
     },
+    '@media (prefers-color-scheme: dark)': {
+        '& .MuiInputBase-input': {
+            color: 'white',
+        }
+    },
 });
 
 export interface NoteHeaderProps {
-    initialOperation: string,
+    title: string,
+    initialOperation: 'read' | 'create';
     isEditMode: boolean,
     isModalMode: boolean,
-    title: string,
     handleTitleChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void,
     toggleModeTrue: () => void,
 }
@@ -65,7 +68,6 @@ export default function NoteHeader({
                     onFocus={handleFocus}
                     placeholder={placeholderText}
                     value={title}
-                    className={styles.textField}
                     sx={{
                         '& .MuiInputBase-input': {
                             cursor: isEditMode ? 'text' : 'default',

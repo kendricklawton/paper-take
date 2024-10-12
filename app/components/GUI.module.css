@@ -107,7 +107,6 @@
 }
 
 .menu {
-    background-color: 'white';
     box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
     display: flex;
     flex-direction: column;
@@ -120,6 +119,7 @@
     padding: 1rem;
     align-items: center;
     color: inherit;
+    background-color: white;
 }
 
 .menuItem:hover {
@@ -131,15 +131,15 @@
     .read,
     .noteEdit
     .menu {
-        color: inherit;
         background-color: #121212;
         border: 0.5px solid gray;
     }
+    .menuItem {
+        background-color: #121212;
+    }
 }      
 
-
 /* Project Styles */
-
 .projectEdit {
     width: 100%;
     height: 100%;

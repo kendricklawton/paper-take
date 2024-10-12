@@ -71,7 +71,7 @@
 }
 
 .menu {
-    background-color: inherit;
+    background-color: white;
     display: flex;
     flex-direction: column;
     top: 4.5rem;

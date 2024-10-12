@@ -70,7 +70,6 @@ export default function NoteFooter({
                     </div>
                 </div>
             )}
-
             {((isEditMode && !isTrash) || (initialOperation === 'read' && !isTrash)) && (
                 <div className={styles.footerWrapper}>
                     <div className={styles.footerContainer}>

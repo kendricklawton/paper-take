@@ -1,11 +1,11 @@
 'use client';
 
-import { TextField } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, TextField } from '@mui/material';
 
 const StyledTextField = styled(TextField)({
     width: '100%',
     '& .MuiInputBase-input': {
+        fontSize: 'normal',
         fontFamily: 'monospace',
         fontWeight: 'lighter',
     },
