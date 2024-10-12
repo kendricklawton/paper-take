@@ -14,7 +14,30 @@ import {
 } from '@mui/icons-material';
 import styles from './Modal.module.css';
 
+const StyledButton = styled(Button)({
+    width: '100%',
+    fontFamily: 'monospace',
+    fontWeight: 'lighter',
+    color: 'white',
+    backgroundColor: 'black',
+    borderRadius: '0px',
+    '&:hover': {
+        backgroundColor: 'inherit',
+    },
+    '&:disabled': {
+        backgroundColor: '#f0f0f0',
+        color: 'gray',
+        border: 'none',
+        cursor: 'not-allowed'
+    },
+    '@media (prefers-color-scheme: dark)': {
+        color: 'black',
+        backgroundColor: 'white',
+    },
+});
+
 const StyledTextField = styled(TextField)({
+    width: '100%',
     '& .MuiInputBase-input': {
         fontFamily: 'monospace',
         fontWeight: 'lighter',
@@ -29,6 +52,11 @@ const StyledTextField = styled(TextField)({
         fontFamily: 'monospace',
         fontWeight: 'lighter',
         color: 'inherit',
+    },
+    '@media (prefers-color-scheme: dark)': {
+        '& .MuiInputBase-input': {
+            color: 'white',
+        }
     },
 });
 
@@ -201,9 +229,9 @@ const LoginModal: React.FC = () => {
                             )}
                             {errors.confirmPassword && (<p aria-live="polite" className={styles.textError}>{errors.confirmPassword}</p>)}
                             {authError && (<p className={styles.textError} aria-live="polite">{authError}</p>)}
-                            <Button className={styles.button} disabled={!isButtonEnabled()} type="submit">
+                            <StyledButton disabled={!isButtonEnabled()} type="submit">
                                 {isLoginHelp ? 'Send' : (isLogin ? 'Log in' : 'Create Account')}
-                            </Button>
+                            </StyledButton>
                         </form>
                         {!isLoginHelp && (
                             <>
@@ -218,9 +246,9 @@ const LoginModal: React.FC = () => {
                                     </Divider>
                                 </div>
                                 <div className={styles.formLogin}>
-                                    <Button className={styles.button} variant="contained" onClick={handleClose} startIcon={<Policy />}>
+                                    <StyledButton className={styles.button} variant="contained" onClick={handleClose} startIcon={<Policy />}>
                                         Continue without an account
-                                    </Button>
+                                    </StyledButton>
                                 </div>
                             </>
                         )}

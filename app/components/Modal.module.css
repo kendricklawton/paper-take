@@ -12,15 +12,16 @@
     bottom: 0;
     left: 0;
     right: 0;
+    transition: background-color 1s ease;
 }
 
 .containerModalAccount {
     background-color: rgba(0, 0, 0, 0.7);
-    transition: background-color 1s ease;
+
 }
 
 .containerModalLogin {
-    background-color: inherit;
+   background-color: white;
 }
 
 .containerAccount,
@@ -37,7 +38,6 @@
 }
 
 .containerLogin {
-    background-color: #fff;
     max-width: 800px;
     gap: 1rem;
 }
@@ -57,7 +57,6 @@
 .formContainerLogin,
 .formContainerLoginHelp {
     display: flex;
-
     align-items: center;
     gap: 1rem;
     width: 100%;
@@ -90,10 +89,6 @@
     padding-bottom: 1rem;
 }
 
-.formAccount {
-    background-color: white;
-}
-
 .formAccountContainer {
     display: flex;
     flex-direction: column;
@@ -124,20 +119,6 @@
     }
 }
 
-.button {
-    font-family: monospace;
-    font-weight: lighter;
-    border-radius: 0px;
-    color: #fff;
-    background-color: black
-}
-
-.button:disabled {
-    background-color: #f0f0f0;
-    color: darkgrey;
-    border: none;
-    cursor: not-allowed;
-}
 
 .textButtonContainer {
     display: flex;
