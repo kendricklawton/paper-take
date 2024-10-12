@@ -10,6 +10,7 @@ import { useAppContext } from "./providers/AppProvider";
 import NoteGUI from "./components/NoteGUI";
 import ProjectGUI from "./components/ProjectGUI";
 import { Note, Project } from "./models";
+import { v4 as uuidv4 } from 'uuid';
 
 const toggleButtonStyles = {
     fontSize: 'x-large',
@@ -92,7 +93,7 @@ const Projects = () => {
         <>
             <ProjectGUI operation={'create'} project={new Project(
                 undefined,
-                '',
+                uuidv4(),
                 'New Project',
                 '',
                 undefined,

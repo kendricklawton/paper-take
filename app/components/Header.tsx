@@ -265,7 +265,11 @@ export default function Header() {
                 <div className={styles.accountAnchor}>
                     <IconButton
                         ref={accountButtonRef}
-                        onClick={() => setIsAccountMenuOpen(prev => !prev)}>
+                        onClick={() => setIsAccountMenuOpen(prev => !prev)}
+                        sx={{
+                            color: 'gray'
+                        }}
+                        >
                         {isAccountMenuOpen ? <Circle /> : <CircleOutlined />}
                     </IconButton>
                     {isAccountMenuOpen && (

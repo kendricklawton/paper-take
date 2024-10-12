@@ -156,15 +156,12 @@
 }
 
 @media (prefers-color-scheme: dark) {
-
     .create,
     .read,
     .noteEdit
     .noteOptionsMenu {
+        color: inherit;
         background-color: #121212;
-    }
-
-    .noteOptionsMenu {
         border: 0.5px solid gray;
     }
 }
