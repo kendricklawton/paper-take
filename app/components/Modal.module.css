@@ -1,6 +1,6 @@
 .containerModalAccount,
 .containerModalLogin {
-    position: fixed;
+    position: absolute;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -21,9 +21,16 @@
 }
 
 .containerModalLogin {
-   background-color: white;
+    background-color: white;
 }
 
+@media (prefers-color-scheme: dark) {
+    .containerModalLogin {
+        background-color: #121212;
+    }
+}
+    
+        
 .containerAccount,
 .containerLogin {
     display: flex;
@@ -67,13 +74,33 @@
     justify-content: space-between;
 }
 
- .formContainerLoginHelp {
+.formContainerLoginHelp {
     flex-direction: column;
+}
+
+.dividerContainer {
+    display: flex;
+    height: 100%;
+}
+
+.dividerContainerMobile {
+    display: none;
 }
 
 @media screen and (max-width: 768px) {
     .formContainerLogin {
         flex-direction: column;
+    }
+
+    .dividerContainer {
+        display: none;
+    }
+
+    .dividerContainerMobile {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 600px;
     }
 }
 
@@ -97,27 +124,6 @@
     padding-right: 1rem;
 }
 
-.dividerContainer {
-    display: flex;
-    height: 100%;
-}
-
-.dividerContainerMobile {
-    display: none;
-}
-
-@media screen and (max-width: 768px) {
-    .dividerContainer {
-        display: none;
-    }
-
-    .dividerContainerMobile {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        max-width: 600px;
-    }
-}
 
 
 .textButtonContainer {
