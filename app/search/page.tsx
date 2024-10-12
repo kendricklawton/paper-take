@@ -3,10 +3,11 @@
 import { useAppContext } from '../providers/AppProvider';
 import NoteGUI from "../components/NoteGUI";
 import styles from "../page.module.css";
+import { Note } from '../models';
 
 export default function Search() {
-    const { filteredNotes } = useAppContext();
-    const searchNotes = filteredNotes.filter(note => !note.isTrash);
+    const { filteredItems } = useAppContext();
+    const searchNotes = filteredItems.filter(note => !note.isTrash);
 
     return (
         <div className={styles.content}>
@@ -20,7 +21,7 @@ export default function Search() {
                         <div style={{
                             height: '1rem'
                         }} key={note.id} />
-                        <NoteGUI note={note} operation='read' key={note.id} />
+                        <NoteGUI note={note as Note} operation='read' key={note.id} />
                     </>
                 ))
             )}
