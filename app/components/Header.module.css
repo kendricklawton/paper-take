@@ -80,7 +80,6 @@
     box-shadow: 0 2px 2px rgba(0.1, 0.1, 0.1, 0.1);
 }
 
-
 .navLink,
 .navLinkActive {
     display: flex;
@@ -135,6 +134,8 @@
     border: none;
     width: 100%;
     z-index: 2;
+    font-family: monospace;
+    font-size: normal;
 }
 
 @media(prefers-color-scheme: dark) {
