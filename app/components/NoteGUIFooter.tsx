@@ -3,40 +3,29 @@
 import {
     Archive,
     ArchiveOutlined,
-    ChevronLeft,
     DeleteForeverOutlined,
     MoreVert,
-    NoteAddOutlined,
     RedoOutlined,
     UndoOutlined,
     RestoreFromTrashOutlined,
-    RestoreOutlined,
     NoteOutlined,
 } from '@mui/icons-material';
 import { Button, IconButton } from '@mui/material';
-import styles from "./styles.module.css";
+import styles from "./GUI.module.css"
 
 interface NoteFooterProps {
     contentArray: string[];
+    initialOperation: 'read' | 'create';
     isArchived: boolean;
     isEditMode: boolean;
-    isNestedMode: boolean;
     isNoteOptionsMenuOpen: boolean;
     isTrash: boolean;
-    isUndoNestedNote: boolean;
-    initialOperation: 'read' | 'create';
-    nestedContentArray: string[];
     noteOptionsMenuRef: React.RefObject<HTMLDivElement>;
     noteOptionsMenuRefButton: React.RefObject<HTMLButtonElement>;
-    nestedIndex: React.MutableRefObject<number>;
     index: React.MutableRefObject<number>;
     handleDeleteNote: () => void;
-    handleDeleteNestedNote: () => void;
-    handleNestedNote: () => void;
     handleRedo: (event: React.MouseEvent<HTMLButtonElement>) => void;
     handleUndo: (event: React.MouseEvent<HTMLButtonElement>) => void;
-    handleUndoDeletedNestedNote: () => void;
-    setIsNestedMode: React.Dispatch<React.SetStateAction<boolean>>;
     setIsNoteOptionsMenu: React.Dispatch<React.SetStateAction<boolean>>;
     toggleArchive: () => void;
     toggleDelete: () => void;
@@ -44,25 +33,17 @@ interface NoteFooterProps {
 
 export default function NoteFooter({
     contentArray,
+    initialOperation,
     isArchived,
     isEditMode,
-    isNestedMode,
     isNoteOptionsMenuOpen,
     isTrash,
-    isUndoNestedNote,
-    initialOperation,
-    nestedContentArray,
     noteOptionsMenuRef,
     noteOptionsMenuRefButton,
-    nestedIndex,
     index,
     handleDeleteNote,
-    handleDeleteNestedNote,
-    handleUndoDeletedNestedNote,
-    handleNestedNote,
     handleRedo,
     handleUndo,
-    setIsNestedMode,
     setIsNoteOptionsMenu,
     toggleArchive,
     toggleDelete
@@ -74,11 +55,16 @@ export default function NoteFooter({
                 <div className={styles.footerWrapper}>
                     <div className={styles.footerContainer}>
                         <div>
-                            <IconButton aria-label="Delete note forever" onClick={() => handleDeleteNote()}>
-                                <DeleteForeverOutlined className={styles.icon} />
+                            <IconButton aria-label="Delete note forever" onClick={() => handleDeleteNote()}
+                                sx={{
+                                    color: 'gray'
+                                }}>
+                                <DeleteForeverOutlined  />
                             </IconButton>
-                            <IconButton aria-label="Restore from trash" onClick={() => toggleDelete()}>
-                                <RestoreFromTrashOutlined className={styles.icon} />
+                            <IconButton aria-label="Restore from trash" onClick={() => toggleDelete()} sx={{
+                                color: 'gray'
+                            }}>
+                                <RestoreFromTrashOutlined />
                             </IconButton>
                         </div>
                     </div>
@@ -86,35 +72,21 @@ export default function NoteFooter({
             )}
 
             {((isEditMode && !isTrash) || (initialOperation === 'read' && !isTrash)) && (
-                <div className={styles.footerWrapper}>
+                <div className={styles.footerWrapper} >
+
                     <div className={styles.footerContainer}>
                         <div className={styles.footerLeading}>
-                            {isEditMode && (
-                                <>
-                                    {isNestedMode ? (
-                                        <IconButton
-                                            aria-label="Add Note"
-                                            onClick={handleNestedNote}
-                                        >
-                                            <ChevronLeft className={styles.icon} />
-                                        </IconButton>
-                                    ) : (
-                                        <IconButton
-                                            aria-label="Set Nested Mode"
-                                            onClick={() => setIsNestedMode(true)}
-                                        >
-                                            <NoteAddOutlined className={styles.icon} />
-                                        </IconButton>
-                                    )}
-                                </>
-                            )}
+
                             <div>
                                 <IconButton
                                     ref={noteOptionsMenuRefButton}
                                     className={styles.noteOptionsMenuButton}
                                     onClick={() => setIsNoteOptionsMenu(!isNoteOptionsMenuOpen)}
+                                    sx={{
+                                        color: 'gray'
+                                    }}
                                 >
-                                    <MoreVert className={styles.icon} />
+                                    <MoreVert />
                                 </IconButton>
                                 {isNoteOptionsMenuOpen && (
                                     <div className={styles.noteOptionsMenu} ref={noteOptionsMenuRef}>
@@ -123,79 +95,42 @@ export default function NoteFooter({
                                 )}
                             </div>
                             {initialOperation !== 'create' && (
-                                <IconButton aria-label="Archive" onClick={() => toggleArchive()}>
-                                    {isArchived ? <Archive className={styles.icon} /> : <ArchiveOutlined className={styles.icon} />}
+                                <IconButton aria-label="Archive" 
+                                    sx={{
+                                        color: 'gray'
+                                    }}
+                                onClick={() => toggleArchive()}>
+                                    {isArchived ? <Archive  /> : <ArchiveOutlined />}
                                 </IconButton>
                             )}
                             {isEditMode && (
+
                                 <>
-                                    {isNestedMode ? (
-                                        <>
-                                            <IconButton
-                                                aria-label="Undo"
-                                                onClick={handleUndo}
-                                                disabled={nestedIndex.current === 0}
-                                            >
-                                                <UndoOutlined
-                                                />
-                                            </IconButton>
-                                            <IconButton
-                                                aria-label="Redo"
-                                                onClick={handleRedo}
-                                                sx={{
-                                                    color: 'gray'
-                                                }}
-                                                disabled={nestedIndex.current === nestedContentArray.length - 1}
-                                            >
-                                                <RedoOutlined />
-                                            </IconButton>
-                                            <IconButton
-                                                aria-label="Delete nested note forever"
-                                                onClick={handleDeleteNestedNote}
-                                                sx={{
-                                                    color: 'gray'
-                                                }}
-                                            >
-                                                <DeleteForeverOutlined className={styles.icon} />
-                                            </IconButton>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <IconButton
-                                                aria-label="Undo"
-                                                onClick={handleUndo}
-                                                disabled={index.current === 0}
-                                                sx={{
-                                                    color: 'gray'
-                                                }}
-                                            >
-                                                <UndoOutlined
-                                                />
-                                            </IconButton>
-                                            <IconButton
-                                                aria-label="Redo"
-                                                onClick={handleRedo}
-                                                disabled={index.current === contentArray.length - 1}
-                                                sx={{
-                                                    color: 'gray'
-                                                }}
-                                            >
-                                                <RedoOutlined
-                                                />
-                                            </IconButton>
-                                            {
-                                                isUndoNestedNote && (
-                                                    <IconButton
-                                                        aria-label="Undo Deleted Nested Note"
-                                                        onClick={handleUndoDeletedNestedNote}
-                                                    >
-                                                        <RestoreOutlined className={styles.icon} />
-                                                    </IconButton>
-                                                )
-                                            }
-                                        </>
-                                    )}
+                                    <IconButton
+                                        aria-label="Undo"
+                                        onClick={handleUndo}
+                                        disabled={index.current === 0}
+                                        sx={{
+                                            color: 'gray'
+                                        }}
+                                    >
+                                        <UndoOutlined
+                                        />
+                                    </IconButton>
+                                    <IconButton
+                                        aria-label="Redo"
+                                        onClick={handleRedo}
+                                        disabled={index.current === contentArray.length - 1}
+                                        sx={{
+                                            color: 'gray'
+                                        }}
+                                    >
+                                        <RedoOutlined
+                                        />
+                                    </IconButton>
+
                                 </>
+
                             )}
                         </div>
                         {isEditMode ? (

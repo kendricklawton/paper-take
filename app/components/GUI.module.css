@@ -1,41 +1,90 @@
-/* Container Styles */
-.container,
-.containerModal {
+.containerModal,
+.container {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.container {
-    width: 100%;
-}
-
 .containerModal {
     position: fixed;
-    transition: background-color 1s ease;  
-        padding-top: 5rem;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 5;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+    background-color: rgba(0, 0, 0, 0.7);
+    /* justify-content: center; */
+    z-index: 5;
     padding-left: 1rem;
     padding-right: 1rem;
-    height: 100vh;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
 }
 
-
+.container {
+    max-width: 600px;
+    width: 100%;
+}
 
 .create,
 .read,
 .noteEdit {
-    margin-top: 1rem;
     width: 100%;
-    max-width: 600px;
     display: flex;
     flex-direction: column;
     background-color: white;
+}
+
+.create,
+.read {
+    max-width: 600px;
+}
+
+.noteEdit {
+    max-width: 800px;
+}
+
+
+.create {
+    box-shadow: 0 2px 2px rgba(0.2, 0.2, 0.2, 0.2);
+}
+
+.noteEdit,
+.read {
+    box-shadow: 0 2px 2px rgba(0.1, 0.1, 0.1, 0.1);
+}
+
+.create,
+.read {
+    max-height: 420px;
+}
+
+.noteEdit {
+    max-height: 100%;
+}
+
+.infoContainerRead {
+    overflow-y: hidden;
+}
+
+.infoContainer {
+    overflow-y: auto;
+}
+
+.create:focus,
+.read:focus,
+.noteEdit:focus {
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    /* outline: none; */
+    /* border: none; */
+    box-shadow: 0 0px 0px rgba(0,0,0,0);
+}
+.create:hover,
+.read:hover,
+.noteEdit:hover {
+    /* box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2); */
 }
 
 .projectEdit {
@@ -58,94 +107,12 @@
 }
 
 .projectHeaderTrailing {
-   display: flex;
-   align-items: center;
-   justify-content: flex-end;
-   width: 100%;
-}
-
-.create {
-    box-shadow: 0 4px 8px rgba(0.4, 0.4, 0.4, 0.4);
-}
-
-.noteEdit,
-.read {
-    box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
-}
-
-.create,
-.read {
-    max-height: 420px;
-}
-
-.noteEdit {
-    max-height: 60%;
-    min-height: 4rem;
-}
-
-
-.create:focus,
-.read:focus,
-.noteEdit:focus {
-    -ms-user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    user-select: none;
-}
-
-.create:hover,
-.read:hover,
-.noteEdit:hover {
-    box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
-}
-
-/* Info Container Styles */
-.infoContainerRead {
-    overflow-y: hidden;
-}
-
-.infoContainer {
-    overflow-y: auto;
-}
-
-/* .titleContainer .titleContainerScroll {
     display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.titleContainer div,
-.contentContainer div {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
-.titleContainerScroll {
-    box-shadow: 0 2px 2px rgba(0.2, 0.2, 0.2, 0.2);
-}
-
-.contentContainer {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-} */
-
-/* Nested Notes Container Styles */
-.nestedNotesContainer {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: flex-end;
+    width: 100%;
 }
 
-.nestedNotesWrapper {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-}
-
-/* Footer Styles */
 .footerWrapper {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
@@ -187,4 +154,16 @@
     background-color: gray;
 }
 
+@media (prefers-color-scheme: dark) {
 
+    .create,
+    .read,
+    .noteEdit {
+        background-color: #121212;
+        border: 0.5px solid gray;
+    }
+
+    .menuItem {
+        border: 0.5px solid gray;
+    }
+}

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import {
     Project,
 } from '../models';
-import styles from "./styles.module.css";
+import styles from "./GUI.module.css"
 import { TextField } from '@mui/material';
 
 interface ProjectGUIProps {

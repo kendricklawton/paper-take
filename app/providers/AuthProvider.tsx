@@ -15,65 +15,44 @@ import {
     deleteUser,
     onAuthStateChanged,
     reauthenticateWithCredential,
+    sendEmailVerification,
     sendPasswordResetEmail,
-    // sendEmailVerification,
     signInWithEmailAndPassword,
     updateProfile,
+    // updatePassword,
     verifyBeforeUpdateEmail,
     EmailAuthProvider,
-    updatePassword,
-    User
+    User,
 } from "firebase/auth";
 import { auth } from '../firebase';
 
 interface AuthContextType {
-<<<<<<< HEAD
-    authError: string | null;
+    authError: string;
     isLoadingAuth: boolean;
     user: User | null;
     userDisplayName: string | null;
     userEmail: string | null;
-    createUserAccount: (email: string, password: string) => Promise<boolean>;
-    deleteUserAccount: (password: string) => Promise<boolean>;
-    login: (email: string, password: string) => Promise<boolean>;
-    logOut: () => Promise<boolean>;
-    resetPassword: (email: string) => Promise<boolean>;
-    setAuthError: (error: string | null) => void;
-    updateUserDisplayName: (newDisplayName: string) => Promise<boolean>;
-    updateUserPassword: (newPassword: string, oldPassword: string) => Promise<boolean>;
-    updateUserEmail: (newEmail: string, password: string) => Promise<boolean>;
-=======
-    authError: string;
-    isLoadingAuth: boolean;
-    user: User | null;
+    clearAuthError: () => void;
     createUserAccount: (email: string, password: string) => Promise<void>;
     deleteUserAccount: (password: string) => Promise<void>;
-    login: (email: string, password: string) => Promise<void>;
+    logIn: (email: string, password: string) => Promise<void>;
     logOut: () => Promise<void>;
+    sendPasswordReset: (email: string) => Promise<void>;
     sendUserVerification: () => Promise<void>;
-    setAuthError: (error: string) => void;
     updateUserDisplayName: (newDisplayName: string) => Promise<void>;
-    updateUserPassword: (newPassword: string, oldPassword: string) => Promise<void>;
     updateUserEmail: (newEmail: string, password: string) => Promise<void>;
->>>>>>> origin/main
+    // updateUserPassword: (newPassword: string, oldPassword: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-<<<<<<< HEAD
-    const baseURL = 'http://localhost:3000/';
-    const [user, setUser] = useState<User | null>(null);
-    const [userDisplayName, setUserDisplayName] = useState<string | null>(null);
-    const [userEmail, setUserEmail] = useState<string | null>(null);
-    const [isLoadingAuth, setIsAuthLoading] = useState<boolean>(true);
-    const [authError, setAuthError] = useState<string | null>(null);
-=======
-    const paperTakeUrl = "http://localhost:3000/";
+    const baseURL = 'http://papertake.io';
     const [authError, setAuthError] = useState<string>('');
-    const [isLoadingAuth, setIsAuthLoading] = useState<boolean>(true);
     const [user, setUser] = useState<User | null>(null);
->>>>>>> origin/main
+    const [userDisplayName, setUserDisplayName] = useState<string>('');
+    const [userEmail, setUserEmail] = useState<string>('');
+    const [isLoadingAuth, setIsAuthLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -83,42 +62,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return () => unsubscribe();
     }, []);
 
-<<<<<<< HEAD
     useEffect(() => {
         if (user) {
-            setUserDisplayName(user.displayName || null);
-            setUserEmail(user.email || null);
+            setUserDisplayName(user.displayName || '');
+            setUserEmail(user.email || '');
         } else {
-            setUserDisplayName(null);
-            setUserEmail(null);
-=======
-    const handleAuthError = useCallback((authError: unknown) => {
-        if (authError instanceof FirebaseError) {
-            console.log(authError.code);
-            if (authError.code === 'auth/invalid-credential') {
-                setAuthError('Invalid credentials provided. Please check your email and password.');
-            } else {
-                setAuthError('An authentication error occurred. Please try again.');
-            }
-        } else {
-            console.log(authError);
-            setAuthError('An unknown error occurred. Please try again.');
->>>>>>> origin/main
+            setUserDisplayName('');
+            setUserEmail('');
         }
     }, [user]);
 
-
-    const clearAuthError = useCallback(() => {
-        setAuthError(null);
-    }, []);
-
-<<<<<<< HEAD
-    const handleAuthError = (error: unknown) => {
+    const handleAuthError = useCallback((error: unknown) => {
         if (error instanceof FirebaseError) {
-            console.error('FirebaseError:', error);
             switch (error.code) {
                 case 'auth/invalid-credential':
-                    setAuthError('Invalid credentials');
+                    setAuthError('Invalid credentials provided');
                     break;
                 case 'auth/email-already-in-use':
                     setAuthError('Email already in use');
@@ -133,201 +91,156 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                     setAuthError('The password is too weak');
                     break;
                 case 'auth/too-many-requests':
-                    setAuthError('Access to this account has been temporarily ' +
-                        'disabled due to many failed login attempts. ' +
-                        'You can immediately restore it by resetting your password or you can try again later. If you need immediate assistance, please contact support.');
+                    setAuthError('Access temporarily disabled due to many failed attempts');
                     break;
                 default:
-                    setAuthError('An unknown firebase error occurred');
+                    setAuthError('An unknown error occurred.');
             }
         } else {
-            console.error('An error occurred:', error);
-            setAuthError('An error occurred. Please try again later. If the problem persists, please contact support.');
+            setAuthError('An error occurred. Please try again later.');
         }
-    };
+    }, []);
 
-    const authAction = useCallback(async (action: () => Promise<boolean>) => {
+    const clearAuthError = useCallback(() => {
+        setAuthError('');
+    }, []);
+
+    const createUserAccount = useCallback(async (email: string, password: string): Promise<void> => {
         clearAuthError();
         try {
-            return await action();
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            await sendEmailVerification(
+                userCredential.user,
+                {
+                    url: baseURL,
+                    handleCodeInApp: true
+                }
+            );
+            setUser(userCredential.user);
         } catch (error) {
             handleAuthError(error);
-            return false;
+            throw error;
         }
-    }, [clearAuthError]);
-=======
-    const authAction = useCallback(async (action: () => Promise<void>) => {
-        setAuthError('');
+    }, [clearAuthError, handleAuthError]);
+
+    const deleteUserAccount = useCallback(async (password: string): Promise<void> => {
+        clearAuthError();
         try {
-            await action();
-        } catch (authError) {
-            handleAuthError(authError);
-            console.log(authError);
-        }
-    }, [handleAuthError]);
->>>>>>> origin/main
-
-    const createUserAccount = useCallback((email: string, password: string) =>
-        authAction(async () => {
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-<<<<<<< HEAD
-            setUser(userCredential.user);
-            return true;
-        }), [authAction]);
-
-
-    const resetPassword = useCallback((email: string) =>   
-        authAction(async () => {
-            await sendPasswordResetEmail(auth, email, {
-                url: baseURL,
-=======
-            await sendEmailVerification(userCredential.user, {
-                url: paperTakeUrl,
->>>>>>> origin/main
-                handleCodeInApp: true,
-            });
-            return true;
-        }), [authAction]);
-
-    const deleteUserAccount = useCallback((password: string) =>
-        authAction(async () => {
             if (user) {
                 if (user.email) {
                     const credential = EmailAuthProvider.credential(user.email, password);
                     await reauthenticateWithCredential(user, credential);
-                } else {
-                    throw new Error('User email is null');
                 }
                 await deleteUser(user);
                 setUser(null);
-                return true;
-            } else {
-                setAuthError('User is null');
-                throw new Error('User is null');
             }
-        }), [authAction, user]);
+        } catch (error) {
+            handleAuthError(error);
+            throw error;
+        }
+    }, [clearAuthError, handleAuthError, user]);
 
-    const login = useCallback((email: string, password: string) =>
-        authAction(async () => {
+    const logIn = useCallback(async (email: string, password: string): Promise<void> => {
+        clearAuthError();
+        try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             setUser(userCredential.user);
-            return true;
-        }), [authAction]);
+        } catch (error) {
+            handleAuthError(error);
+            throw error;
+        }
+    }, [clearAuthError, handleAuthError]);
 
-<<<<<<< HEAD
-    const logOut = useCallback(() =>
-=======
-    const logOut = useCallback(async () => {
-        await auth.signOut();
-        setUser(null);
-    }, []);
-
-    const sendUserVerification = useCallback(() =>
-        authAction(async () => {
-            if (user) {
-                await sendEmailVerification(user, {
-                    url: paperTakeUrl,
-                    handleCodeInApp: true,
-                });
-                console.log('Verification email sent');
-            } else {
-                throw new Error('User is null');
-            }
-        }), [authAction, user]);
-
-    const updateUserDisplayName = useCallback((newDisplayName: string) =>
->>>>>>> origin/main
-        authAction(async () => {
+    const logOut = useCallback(async (): Promise<void> => {
+        clearAuthError();
+        try {
             await auth.signOut();
             setUser(null);
-            return true;
-        }), [authAction]);
-
-    const updateUserDisplayName = useCallback(async (newDisplayName: string) => {
-        const prevUserDisplayName = userDisplayName;
-        setUserDisplayName(newDisplayName);
-        clearAuthError();
-        if (user) {
-            try {
-                await updateProfile(user, { displayName: newDisplayName });
-<<<<<<< HEAD
-                return true;
-            } catch (error) {
-                setUserDisplayName(prevUserDisplayName);
-                handleAuthError(error);
-                return false;
-=======
-            } else {
-                throw new Error('User is null');
->>>>>>> origin/main
-            }
-        } else {
-            setUserDisplayName(prevUserDisplayName);
-            setAuthError('User is null');
-            console.error('User is null');
-            return false;
+        } catch (error) {
+            handleAuthError(error);
+            throw error;
         }
-    }, [user, userDisplayName, clearAuthError]);
+    }, [clearAuthError, handleAuthError]);
 
-    const updateUserEmail = useCallback(async (newEmail: string, password: string) => {
-        const prevUserEmail = userEmail;
-        setUserEmail(newEmail);
+    const sendPasswordReset = useCallback(async (email: string): Promise<void> => {
         clearAuthError();
-        if (user) {
-            try {
-                if (user.email) {
-                    const credential = EmailAuthProvider.credential(user.email, password);
-                    await reauthenticateWithCredential(user, credential);
-                    await verifyBeforeUpdateEmail(user, newEmail, {
-                        url: baseURL,
-                        handleCodeInApp: true,
-                    });
-                    return true;
-                } else {
-                    setUserEmail(prevUserEmail);
-                    setAuthError('User email is null');
-                    console.error('User email is null');
-                    return false;
-                }
-<<<<<<< HEAD
-            } catch (error) {
-                setUserEmail(prevUserEmail);
-                handleAuthError(error);
-                return false;
-            }
-        } else {
-            setUserEmail(prevUserEmail);
-            setAuthError('User is null');
-            console.error('User is null');
-            return false;
+        try {
+            await sendPasswordResetEmail(auth, email, {
+                url: baseURL,
+                handleCodeInApp: true,
+            });
+        } catch (error) {
+            handleAuthError(error);
+            throw error;
         }
-    }, [user, userEmail, clearAuthError]);
-=======
-                await verifyBeforeUpdateEmail(user, newEmail, {
-                    url: paperTakeUrl,
+    }, [clearAuthError, handleAuthError]);
+
+    const sendUserVerification = useCallback(async (): Promise<void> => {
+        clearAuthError();
+        try {
+            if (user) {
+                await sendEmailVerification(user, {
+                    url: baseURL,
                     handleCodeInApp: true,
                 });
             } else {
-                throw new Error('User is null');
+                throw new Error('User not found.');
             }
-        }), [authAction, user]);
->>>>>>> origin/main
+        } catch (error) {
+            handleAuthError(error);
+            throw error;
+        }
+    }, [clearAuthError, handleAuthError, user]);
 
-    const updateUserPassword = useCallback((newPassword: string, password: string) =>
-        authAction(async () => {
+    const updateUserDisplayName = useCallback(async (newDisplayName: string): Promise<void> => {
+        clearAuthError();
+        try {
             if (user) {
-                if (user.email) {
-                    const credential = EmailAuthProvider.credential(user.email, password);
-                    await reauthenticateWithCredential(user, credential);
-                } else {
-                    throw new Error('User email is null');
-                }
-                await updatePassword(user, newPassword);
-                return true;
+                await updateProfile(user, { displayName: newDisplayName });
+                setUserDisplayName(newDisplayName);
             } else {
-                throw new Error('User is null');
+                throw new Error('User not found.');
             }
-        }), [authAction, user]);
+        } catch (error) {
+            handleAuthError(error);
+            throw error;
+        }
+    }, [clearAuthError, handleAuthError, user]);
+
+    const updateUserEmail = useCallback(async (newEmail: string, password: string): Promise<void> => {
+        clearAuthError();
+        try {
+            if (user) {
+                const credential = EmailAuthProvider.credential(user.email!, password);
+                await reauthenticateWithCredential(user, credential);
+                await verifyBeforeUpdateEmail(user, newEmail, {
+                    url: baseURL,
+                    handleCodeInApp: true,
+                });
+            } else {
+                throw new Error('User not found.');
+            }
+        } catch (error) {
+            handleAuthError(error);
+            throw error;
+        }
+    }, [clearAuthError, handleAuthError, user]);
+
+    // const updateUserPassword = useCallback(async (newPassword: string, password: string): Promise<void> => {
+    //     clearAuthError();
+    //     try {
+    //         if (user) {
+    //             const credential = EmailAuthProvider.credential(user.email!, password);
+    //             await reauthenticateWithCredential(user, credential);
+    //             await updatePassword(user, newPassword);
+    //         } else {
+    //             throw new Error('User not found.');
+    //         }
+    //     } catch (error) {
+    //         handleAuthError(error);
+    //         throw error;
+    //     }
+    // }, [clearAuthError, handleAuthError, user]);
 
     const contextValue = useMemo(() => ({
         authError,
@@ -335,40 +248,33 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         user,
         userDisplayName,
         userEmail,
+        clearAuthError,
         createUserAccount,
         deleteUserAccount,
-        login,
+        logIn,
         logOut,
-<<<<<<< HEAD
-        resetPassword,
-=======
+        sendPasswordReset,
         sendUserVerification,
->>>>>>> origin/main
-        setAuthError,
         updateUserDisplayName,
-        updateUserPassword,
         updateUserEmail,
+        // updateUserPassword,
     }), [
         authError,
         isLoadingAuth,
         user,
         userDisplayName,
         userEmail,
+        clearAuthError,
         createUserAccount,
         deleteUserAccount,
-        login,
+        logIn,
         logOut,
-<<<<<<< HEAD
-        resetPassword,
-=======
+        sendPasswordReset,
         sendUserVerification,
->>>>>>> origin/main
-        setAuthError,
         updateUserDisplayName,
-        updateUserPassword,
         updateUserEmail,
+        // updateUserPassword,
     ]);
-
 
     return (
         <AuthContext.Provider value={contextValue}>

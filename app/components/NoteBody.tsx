@@ -1,6 +1,22 @@
 'use client';
 
 import { TextField } from '@mui/material';
+import { styled } from '@mui/material/styles';
+
+
+const StyledTextField = styled(TextField)({
+    width: '100%',
+    '& .MuiInputBase-input': {
+        fontFamily: 'monospace',
+        fontWeight: 'lighter',
+        color: 'inherit',
+    },
+    '& .MuiOutlinedInput-root': {
+        '& fieldset': { border: 'none' },
+        '&:hover fieldset': { border: 'none' },
+        '&.Mui-focused fieldset': { border: 'none' },
+    },
+});
 
 interface NoteBodyProps {
     content: string;
@@ -34,37 +50,31 @@ export default function NoteBody({
         }
     };
 
+
+
     return (
         <>
             {((initialOperation === "create" || content.length > 0 || isEditMode) && (
-                    <TextField
-                        inputProps={{
-                            autoComplete: 'off',
-                            readOnly: readOnlyMode,
-                            style:
-                            {
-                                fontSize: 'normal',
-                                fontWeight: 'lighter',
-                                fontFamily: 'monospace',
-                                color: 'inherit',
-                                cursor: 'default',
-                            },
-                        }}
-                        multiline
-                        onChange={handleContentChange}
-                        onClick={handleClick}
-                        onFocus={handleFocus}
-                        placeholder={placeholderText}
-                        sx={{
-                            width: '100%',
-                            '& .MuiOutlinedInput-root': {
-                                '& fieldset': { border: 'none' },
-                                '&:hover fieldset': { border: 'none' },
-                                '&.Mui-focused fieldset': { border: 'none' },
-                            },
-                        }}
-                        value={content}
-                    />
+                <StyledTextField
+                    inputProps={{
+                        readOnly: readOnlyMode,
+                    }}
+                    autoComplete='off'
+                    multiline
+                    onChange={handleContentChange}
+                    onClick={handleClick}
+                    onFocus={handleFocus}
+                    placeholder={placeholderText}
+                    sx={{
+                        '& .MuiInputBase-input': {
+                            cursor: isEditMode ? 'text' : 'default',
+                        },
+                        '& .MuiOutlinedInput-root': {
+                            cursor: isEditMode ? 'text' : 'default',
+                        },
+                    }}
+                    value={content}
+                />
             ))}
         </>
     );

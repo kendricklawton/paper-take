@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useState } from 'react';
 import styles from './Project.module.css';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
@@ -100,7 +102,7 @@ const ProjectBody: React.FC = () => {
                             className={styles.column}
                         >
                             <h3>{columnHeaders[columnIndex]}</h3>
-                            {columns[columnIndex].map((task) => (
+                            {columns[columnIndex].map(task => (
                                 <div
                                     key={task.id}
                                     draggable

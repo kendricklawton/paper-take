@@ -1,49 +1,7 @@
-export class NestedNote {
-    id: string;
-    title: string;
-    content: string;
-
-    constructor(
-        id: string,
-        title: string,
-        content: string
-    ) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-    }
-
-    static fromJSON(jsonString: string): NestedNote | null {
-        try {
-            const {
-                id, title,
-                content
-            } = JSON.parse(jsonString);
-
-            // Todo - Add Error Handling
-
-            return new NestedNote(
-                id,
-                title,
-                content
-            );
-        } catch (error) {
-            console.error('Failed to parse JSON:', error);
-            return null;
-        }
-    }
-
-    toJson(): string {
-        return JSON.stringify({
-            id: this.id,
-            title: this.title,
-            content: this.content
-        });
-    }
-}
+import { Timestamp } from "firebase/firestore"; 
 
 export class Note {
-    createdAt: Date | undefined;
+    createdAt: Timestamp | undefined;
     id: string;
     title: string;
     content: string;
@@ -51,11 +9,10 @@ export class Note {
     isPinned: boolean;
     isTrash: boolean;
     images: string[];
-    // nestedNotes: NestedNote[];
     reminder?: Date;
 
     constructor(
-        createdAt: Date | undefined,
+        createdAt: Timestamp | undefined,
         id: string,
         title: string,
         content: string,
@@ -63,7 +20,6 @@ export class Note {
         isPinned: boolean,
         isTrash: boolean,
         images: string[] = [],
-        // nestedNotes: NestedNote[] = [],
         reminder?: Date
     ) {
         this.createdAt = createdAt;
@@ -74,7 +30,6 @@ export class Note {
         this.isPinned = isPinned;
         this.isTrash = isTrash;
         this.images = images;
-        // this.nestedNotes = nestedNotes;
         this.reminder = reminder;
     }
 
@@ -82,18 +37,10 @@ export class Note {
         try {
             const { createdAt, id, title, content, isArchived,
                 isPinned, isTrash, reminder, images = [],
-                // nestedNotes = []
             } = JSON.parse(jsonString);
 
-            // Todo - Add Error Handling
-
-            // const parsedNestedNotes = nestedNotes
-            //     .map((nestedNote: NestedNote) => NestedNote
-            //         .fromJSON(JSON.stringify(nestedNote)))
-            //     .filter((note: NestedNote | null) => note !== null) as NestedNote[];
-
             return new Note(
-                createdAt ? new Date(createdAt) : undefined,
+                createdAt,
                 id,
                 title,
                 content,
@@ -101,7 +48,6 @@ export class Note {
                 isPinned,
                 isTrash,
                 images,
-                // parsedNestedNotes,
                 reminder ? new Date(reminder) : undefined
             );
         } catch (error) {
@@ -112,7 +58,7 @@ export class Note {
 
     toJSON(): string {
         return JSON.stringify({
-            createdAt: this.createdAt?.toISOString(),
+            createdAt: this.createdAt,
             id: this.id,
             title: this.title,
             content: this.content,
@@ -120,14 +66,13 @@ export class Note {
             isPinned: this.isPinned,
             isTrash: this.isTrash,
             images: this.images,
-            // nestedNotes: this.nestedNotes.map(nestedNote => nestedNote.toJson()),
             reminder: this.reminder?.toISOString() || null
         });
     }
 }
 
 export class Task {
-    createdAt: Date | undefined;
+    createdAt: Timestamp | undefined;
     id: string;
     title: string;
     description: string;
@@ -135,7 +80,7 @@ export class Task {
     status: 'new' | 'active' | 'closed';
 
     constructor(
-        createdAt: Date | undefined,
+        createdAt: Timestamp | undefined,
         id: string,
         title: string,
         description: string,
@@ -174,7 +119,7 @@ export class Task {
             }
 
             return new Task(
-                createdAt ? new Date(createdAt) : undefined,
+                createdAt,
                 id,
                 title,
                 description,
@@ -189,7 +134,7 @@ export class Task {
 
     toJSON(): string {
         return JSON.stringify({
-            createdAt: this.createdAt?.toISOString(),
+            createdAt: this.createdAt,
             id: this.id,
             title: this.title,
             description: this.description,
@@ -200,7 +145,7 @@ export class Task {
 }
 
 export class Project {
-    createdAt: Date | undefined;
+    createdAt: Timestamp | undefined;
     id: string;
     title: string;
     description: string;
@@ -211,7 +156,7 @@ export class Project {
     tasks: Task[];
 
     constructor(
-        createdAt: Date | undefined,
+        createdAt: Timestamp | undefined,
         id: string,
         title: string,
         description: string,
@@ -254,7 +199,7 @@ export class Project {
             .filter((task: Task) => task !== null) as Task[];
 
             return new Project(
-                createdAt ? new Date(createdAt) : undefined,
+                createdAt,
                 id,
                 title,
                 description,
@@ -272,7 +217,7 @@ export class Project {
 
     toJSON(): string {
         return JSON.stringify({
-            createdAt: this.createdAt?.toISOString(),
+            createdAt: this.createdAt,
             id: this.id,
             title: this.title,
             description: this.description,

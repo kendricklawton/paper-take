@@ -3,8 +3,6 @@ html,
 body {
   margin: 0;
   padding: 0;
-  min-width: 380px;
-  min-height: 100vh;
   -ms-user-select: none;
   -moz-user-select: none;
   -webkit-user-select: none;
@@ -12,7 +10,7 @@ body {
   font-family: monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: white;
+  /* background-color: black; */
 }
 
 /* Typography */
@@ -26,15 +24,10 @@ p {
   padding: 0;
   margin: 0;
   font-weight: lighter;
+  color: #000;
 }
 
-button,
-input,
-p {
-  font-size: normal;
-}
-
-footer {
+/* footer {
   position: fixed;
   bottom: 0;
   padding: 1rem;
@@ -43,7 +36,10 @@ footer {
   justify-content: center;
   align-items: center;
   width: 100%;
-  background-color: white;
+} */
+
+#icon {
+  color: gray;
 }
 
 /* Scrollbar Styles */
@@ -55,11 +51,6 @@ footer {
 ::-webkit-scrollbar-thumb {
   background: #888;
 }
-
-.noScroll {
-  overflow: hidden;
-}
-
 
 /* Dark Mode Styles */
 @media (prefers-color-scheme: dark) {
@@ -81,6 +72,10 @@ footer {
   p {
     color: #ffffff;
   }
+
+  /* #icon {
+        color: #ffffff;
+      } */
 
   ::-webkit-scrollbar-thumb {
     background: #555;

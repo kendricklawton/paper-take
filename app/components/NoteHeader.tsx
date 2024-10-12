@@ -1,6 +1,24 @@
 'use client';
 
-import { TextField } from '@mui/material';
+import { styled, TextField } from '@mui/material';
+
+
+const StyledTextField = styled(TextField)({
+    width: '100%',
+    '& .MuiInputBase-input': {
+        fontSize: 'large',
+        fontFamily: 'monospace',
+        fontWeight: 'lighter',
+        color: 'inherit',
+        // cursor: isEditMode ? 'text' : 'default',
+    },
+    '& .MuiOutlinedInput-root': {
+        '& fieldset': { border: 'none' },
+        '&:hover fieldset': { border: 'none' },
+        '&.Mui-focused fieldset': { border: 'none' },
+        // cursor: isEditMode ? 'text' : 'default',
+    },
+});
 
 export interface NoteHeaderProps {
     initialOperation: string,
@@ -22,6 +40,7 @@ export default function NoteHeader({
     const readOnlyMode = initialOperation === 'read' && !isModalMode;
     const placeholderText = 'Title...';
 
+
     const handleFocus = () => {
         if (!readOnlyMode) {
             toggleModeTrue();
@@ -37,33 +56,25 @@ export default function NoteHeader({
     return (
         <>
             {(isEditMode || title.length > 0) && (            
-                <TextField
+                <StyledTextField
                     autoComplete='off'
                     inputProps={{
                         readOnly: readOnlyMode,
-                        style:
-                        {
-                            fontSize: 'large',
-                            fontWeight: 'lighter',
-                            fontFamily: 'monospace',
-                            color: 'inherit',
-                            cursor: 'default',
-                        },
                     }}
                     multiline
                     onChange={handleTitleChange}
                     onClick={initialOperation === 'create' ? undefined : handleClick}
                     onFocus={handleFocus}
                     placeholder={placeholderText}
+                    value={title}
                     sx={{
-                        width: '100%',
+                        '& .MuiInputBase-input': {
+                            cursor: isEditMode ? 'text' : 'default',
+                        },
                         '& .MuiOutlinedInput-root': {
-                            '& fieldset': { border: 'none' },
-                            '&:hover fieldset': { border: 'none' },
-                            '&.Mui-focused fieldset': { border: 'none' },
+                            cursor: isEditMode ? 'text' : 'default',
                         },
                     }}
-                    value={title}
                 />
 
             )}

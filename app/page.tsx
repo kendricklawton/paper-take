@@ -1,12 +1,15 @@
 'use client'
 
+import React, 
+{ 
+    useState,
+} from 'react';
 import styles from "./page.module.css";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { useAppContext } from "./providers/AppProvider";
 import NoteGUI from "./components/NoteGUI";
 import ProjectGUI from "./components/ProjectGUI";
 import { Note, Project } from "./models";
-import { v4 as uuidv4 } from 'uuid';
 
 const toggleButtonStyles = {
     fontSize: 'x-large',
@@ -18,43 +21,78 @@ const toggleButtonStyles = {
     textTransform: 'none'
 };
 
-const Notes =()=> {
-        const { notes } = useAppContext();
-        const activeNotes = notes.filter(note => !note.isArchived && !note.isTrash);
+const Notes: React.FC = () => {
+    const { notes, noteService } = useAppContext();
+    const activeNotes = notes.filter(note => !note.isArchived && !note.isTrash);
+    const [draggingNoteIndex, setDraggingNoteIndex] = useState<number | null>(null);
 
-        return (
-            <>
-                <NoteGUI operation={'create'} note={new Note(
-                    new Date(),
-                    uuidv4(),
-                    '',
-                    '',
-                    false,
-                    false,
-                    false
-                )} />
-                {activeNotes.length === 0 ? (
-                    <div className={styles.pageText}>
-                        <p>Notes you create will appear here</p>
-                    </div>
-                ) :
-                    (
-                        activeNotes.map(note => (
-                            <NoteGUI key={note.id} operation={'read'} note={note} />
-                        ))
-                    )}
-            </>
-        );
-    }
-const Projects =()=> {
+    const handleDragStart = (index: number) => {
+        setDraggingNoteIndex(index);
+    };
+
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Drag Over Index:', index);
+    };
+
+    const handleDrop = async (index: number) => {
+        if (draggingNoteIndex !== null) {
+            const newNotes = [...activeNotes];
+            const [draggingNote] = newNotes.splice(draggingNoteIndex, 1);
+            newNotes.splice(index, 0, draggingNote);
+            noteService(newNotes);
+        }
+        setDraggingNoteIndex(null);
+    };
+
+    return (
+        <>
+            <NoteGUI operation={'create'} note={new Note(
+                undefined,
+                '',
+                '',
+                '',
+                false,
+                false,
+                false
+            )} />
+            {activeNotes.length === 0 ? (
+                <div className={styles.pageText}>
+                    <p>Notes you create will appear here</p>
+                </div>
+            ) : (
+                activeNotes.map((note, index) => (
+                    <React.Fragment key={index}>
+                        <div 
+                        className={styles.spacer}>
+                        </div>
+                        <NoteGUI
+                            key={note.id}
+                            operation={'read'}
+                            note={note}
+                            draggable={true}
+                            handleDragOver={handleDragOver}
+                            handleDrop={handleDrop}
+                            noteIndex={index}
+                            handleDragStart={handleDragStart}
+                        />
+                    </React.Fragment>
+                ))
+            )}
+        </>
+    );
+};
+
+const Projects = () => {
     const { projects } = useAppContext();
     const activeProjects = projects.filter(project => !project.isArchived && !project.isTrash);
 
     return (
         <>
             <ProjectGUI operation={'create'} project={new Project(
-                new Date(),
-                uuidv4(),
+                undefined,
+                '',
                 'New Project',
                 '',
                 undefined,
@@ -108,6 +146,9 @@ export default function Home() {
                     Projects
                 </ToggleButton>
             </ToggleButtonGroup>
+            <div style={{
+                height: '1rem',
+            }} />
             {
                 currentList === 'notes'
                     ?
@@ -118,3 +159,4 @@ export default function Home() {
         </main>
     );
 }
+

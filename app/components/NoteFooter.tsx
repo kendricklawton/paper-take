@@ -15,14 +15,13 @@ import styles from "./GUI.module.css"
 
 interface NoteFooterProps {
     contentArray: string[];
+    initialOperation: 'read' | 'create';
     isArchived: boolean;
     isEditMode: boolean;
     isNoteOptionsMenuOpen: boolean;
     isTrash: boolean;
-    initialOperation: 'read' | 'create';
     noteOptionsMenuRef: React.RefObject<HTMLDivElement>;
     noteOptionsMenuRefButton: React.RefObject<HTMLButtonElement>;
-    nestedIndex: React.MutableRefObject<number>;
     index: React.MutableRefObject<number>;
     handleDeleteNote: () => void;
     handleRedo: (event: React.MouseEvent<HTMLButtonElement>) => void;

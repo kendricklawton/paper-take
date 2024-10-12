@@ -2,8 +2,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-    padding-left: 1rem;
-      padding-right: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   padding-top: 5rem;
   padding-bottom: 5rem;
 }
@@ -58,11 +58,12 @@
 
 .accountContainerHeader,
 .accountContainerItem {
+
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 2rem;
+  padding: 1rem;
 }
 
 .accountContainerItem {
@@ -245,10 +246,6 @@
   cursor: pointer;
 }
 
-
-
-
-
 .projectHeader {
   display: flex;
   flex-direction: row;
@@ -259,4 +256,24 @@
 .textField {
   width: 100%;
   max-width: 600px;
+}
+
+.noteContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.draggableContainer {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.spacer {
+  height: 1rem;
 }
