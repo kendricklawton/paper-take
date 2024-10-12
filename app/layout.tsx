@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "./components/Header";
 import ProviderWrapper from "./providers/ProviderWrapper";
-import LoginModal from "./components/LoginModal";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.papertake.io"),
@@ -43,7 +42,6 @@ export default function RootLayout({
       <body>
         <ProviderWrapper>
           <Header />
-          <LoginModal />
           {children}
           {/* <Information /> */}
         </ProviderWrapper>

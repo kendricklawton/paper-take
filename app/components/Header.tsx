@@ -27,7 +27,7 @@ export default function Header() {
     const { isLoadingAuth, logOut, user } = useAuthContext();
     const {
         searchTerm, handleSearch, handleCloseSearch, isLoadingApp,
-        isLoginModalOpen, setIsLoginModalOpen, fetchData, setNotes
+        fetchData
     } = useAppContext();
 
     // State Variables
@@ -38,6 +38,7 @@ export default function Header() {
     const [isScrolled, setIsScrolled] = useState(false);
 
     const pathname = usePathname();
+
     const router = useRouter();
 
     const accountMenuRef = useRef<HTMLDivElement>(null);
@@ -48,7 +49,6 @@ export default function Header() {
     const settingsButtonRef = useRef<HTMLButtonElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    // Handlers
     const handleOnFocusSearch = () => router.push('/search');
     const handleSearchButton = () => {
         router.push('/search');
@@ -56,21 +56,11 @@ export default function Header() {
             inputRef.current.focus();
         }
     };
-    const handleLogin = () => {
-        setIsLoginModalOpen(true);
-        setIsAccountMenuOpen(false);
-    };
-    
-    const handleLogOut = async () => {
-        if (pathname === '/account') {
-            router.push('/');
-        }
 
+    const handleLogOut = async () => {
         try {
             await logOut();
-            setNotes([]);
             setIsAccountMenuOpen(false);
-            setIsLoginModalOpen(true);
         } catch (error) {
             console.log(error);
         }
@@ -81,7 +71,6 @@ export default function Header() {
         window.scrollTo({ top: 0 });
     };
 
-    // Effects
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (navMenuRef.current && !navMenuRef.current.contains(event.target as Node)) {
@@ -150,7 +139,7 @@ export default function Header() {
         }
     }, [handleCloseSearch, pathname]);
 
-    if (isLoginModalOpen) {
+    if (pathname === '/login') {
         return null;
     }
 
@@ -159,17 +148,13 @@ export default function Header() {
             {/* Nav Leading */}
             <div className={styles.headerLeading}>
                 <div className={styles.navAnchor}>
-                    <IconButton ref={navButtonRef} onClick={() => setIsNavMenuOpen(prev => !prev)}
-                        sx={{
-                            color: 'gray'
-                        }}
-                        >
+                    <IconButton ref={navButtonRef} onClick={() => setIsNavMenuOpen(prev => !prev)} sx={{ color: 'gray' }}>
                         {isNavMenuOpen ? <Close /> : <MenuOpen />}
                     </IconButton>
                     {isNavMenuOpen && (
                         <nav className={styles.menu} ref={navMenuRef}>
                             <Link className={pathname === '/' ? styles.navLinkActive : styles.navLink} href='/'>
-                                {pathname === '/' ? <Lightbulb /> : <LightbulbOutlined/>} Ideas
+                                {pathname === '/' ? <Lightbulb /> : <LightbulbOutlined />} Ideas
                             </Link>
                             {/* <Link className={pathname === '/notes' ? styles.navLinkActive : styles.navLink} href='/notes'>
                                 {pathname === '/notes' ? <Note /> : <NoteOutlined />} Notes
@@ -194,11 +179,7 @@ export default function Header() {
                 </div>
                 {/* Nav Input */}
                 <div className={styles.searchInputContainer}>
-                    <IconButton onClick={handleSearchButton}
-                        sx={{
-                            color: 'gray'
-                        }}
-                    >
+                    <IconButton onClick={handleSearchButton} sx={{ color: 'gray' }}>
                         <Search />
                     </IconButton>
                     <input
@@ -213,11 +194,7 @@ export default function Header() {
                         ref={inputRef}
                     />
                     {pathname === '/search' && (
-                        <IconButton onClick={handleCloseButton}
-                            sx={{
-                                color: 'gray'
-                            }}
-                        >
+                        <IconButton onClick={handleCloseButton} sx={{ color: 'gray' }}>
                             <Close />
                         </IconButton>
                     )}
@@ -225,23 +202,19 @@ export default function Header() {
             </div>
             {/* Nav Trailing */}
             <div className={styles.headerTrailing}>
-                {(isLoadingApp || isLoadingAuth) ? (
-                    <IconButton
-                        sx={{
-                            color: 'gray'
-                        }}
-                    >
-                        <CircularProgress size={20} />
-                    </IconButton>
-                ) : (
-                    <IconButton onClick={fetchData}
-                            sx={{
-                                color: 'gray'
-                            }}
-                    >
-                        <Refresh />
-                    </IconButton>
-                )}
+                {
+                    user && (
+                        (isLoadingApp || isLoadingAuth) ? (
+                            <IconButton sx = {{ color: 'gray' }}>
+                                <CircularProgress size={20} />
+                            </IconButton>
+                        ) : (
+                            <IconButton onClick={fetchData} sx={{ color: 'gray'}}>
+                                <Refresh />
+                            </IconButton>
+                        )
+                    )
+                }
                 {/* <div className={styles.settingsAnchor}>
                     <IconButton
                         ref={settingsButtonRef}
@@ -269,30 +242,25 @@ export default function Header() {
                         sx={{
                             color: 'gray'
                         }}
-                        >
+                    >
                         {isAccountMenuOpen ? <Circle /> : <CircleOutlined />}
                     </IconButton>
                     {isAccountMenuOpen && (
                         <nav className={styles.menu} ref={accountMenuRef}>
                             {user && (
                                 <Link className={styles.navLink}
-                                    // ref={archiveLinkRef} 
                                     onClick={() => setIsAccountMenuOpen(false)} href='/account'>
                                     <AccountBoxOutlined /> Account
                                 </Link>
                             )}
                             {user ? (
-                                <div className={styles.navLink}
-                                    // ref={logOutRef} 
-                                    onClick={handleLogOut}>
+                                <Link className={styles.navLink} href='/login' onClick={handleLogOut}>
                                     <LogoutOutlined /> Log Out
-                                </div>
+                                </Link>
                             ) : (
-                                <div className={styles.navLink}
-                                    // ref={loginRef} 
-                                    onClick={handleLogin}>
+                                    <Link className={styles.navLink} href='/login' onClick={() => setIsAccountMenuOpen(false)}>
                                     <LoginOutlined /> Login
-                                </div>
+                                </Link>
                             )}
                         </nav>
                     )}
