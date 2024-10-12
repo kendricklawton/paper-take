@@ -10,7 +10,6 @@
     padding-top: 5rem;
     padding-bottom: 5rem;
     background-color: rgba(0, 0, 0, 0.7);
-    /* justify-content: center; */
     z-index: 5;
     padding-left: 1rem;
     padding-right: 1rem;
@@ -77,15 +76,69 @@
     -moz-user-select: none;
     -webkit-user-select: none;
     user-select: none;
-    /* outline: none; */
-    /* border: none; */
     box-shadow: 0 0px 0px rgba(0,0,0,0);
 }
+
 .create:hover,
 .read:hover,
 .noteEdit:hover {
     box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
 }
+
+.footerWrapper {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.footerContainer,
+.footerContainerRead {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.footerLeading {
+    display: flex;
+    flex-direction: row;
+}
+
+.menu {
+    background-color: 'white';
+    box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
+    display: flex;
+    flex-direction: column;
+    top: 44px;
+    position: absolute;
+    z-index: 4;
+}
+
+.menuItem {
+    padding: 1rem;
+    align-items: center;
+    color: inherit;
+}
+
+.menuItem:hover {
+    background-color: gray;
+}
+
+@media (prefers-color-scheme: dark) {
+    .create,
+    .read,
+    .noteEdit
+    .menu {
+        color: inherit;
+        background-color: #121212;
+        border: 0.5px solid gray;
+    }
+}      
+
+
+/* Project Styles */
 
 .projectEdit {
     width: 100%;
@@ -111,61 +164,4 @@
     align-items: center;
     justify-content: flex-end;
     width: 100%;
-}
-
-.footerWrapper {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-}
-
-.footerContainer,
-.footerContainerRead {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.footerLeading {
-    display: flex;
-    flex-direction: row;
-}
-
-.noteOptionsMenu {
-    background-color: 'white';
-    box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
-    display: flex;
-    flex-direction: column;
-    top: 44px;
-    position: absolute;
-    z-index: 4;
-}
-
-.menuItem {
-    padding: 1rem;
-    background-color: inherit;
-    align-items: center;
-    color: inherit;
-}
-
-.menuItem:hover {
-    background-color: gray;
-}
-
-@media (prefers-color-scheme: dark) {
-    .create,
-    .read,
-    .noteEdit
-    .noteOptionsMenu {
-        color: inherit;
-        background-color: #121212;
-        border: 0.5px solid gray;
-    }
-
-    .textField {
-        color: white;
-    }
 }

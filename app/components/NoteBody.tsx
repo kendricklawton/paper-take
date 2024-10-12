@@ -1,7 +1,5 @@
 'use client';
 
-
-import styles from "./GUI.module.css";
 import { TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -15,6 +13,11 @@ const StyledTextField = styled(TextField)({
         '& fieldset': { border: 'none' },
         '&:hover fieldset': { border: 'none' },
         '&.Mui-focused fieldset': { border: 'none' },
+    },
+    '@media (prefers-color-scheme: dark)': {
+        '& .MuiInputBase-input': {
+            color: 'white', 
+        }
     },
 });
 
@@ -65,7 +68,6 @@ export default function NoteBody({
                     onClick={handleClick}
                     onFocus={handleFocus}
                     placeholder={placeholderText}
-                    className={styles.textField}
                     sx={{
                         '& .MuiInputBase-input': {
                             cursor: isEditMode ? 'text' : 'default',

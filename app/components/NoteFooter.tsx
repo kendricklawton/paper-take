@@ -48,7 +48,6 @@ export default function NoteFooter({
     toggleArchive,
     toggleDelete
 }: NoteFooterProps) {
-
     return (
         <>
             {isTrash && (
