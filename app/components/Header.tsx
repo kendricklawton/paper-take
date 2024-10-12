@@ -159,7 +159,11 @@ export default function Header() {
             {/* Nav Leading */}
             <div className={styles.headerLeading}>
                 <div className={styles.navAnchor}>
-                    <IconButton ref={navButtonRef} onClick={() => setIsNavMenuOpen(prev => !prev)}>
+                    <IconButton ref={navButtonRef} onClick={() => setIsNavMenuOpen(prev => !prev)}
+                        sx={{
+                            color: 'gray'
+                        }}
+                        >
                         {isNavMenuOpen ? <Close /> : <MenuOpen />}
                     </IconButton>
                     {isNavMenuOpen && (
@@ -190,7 +194,11 @@ export default function Header() {
                 </div>
                 {/* Nav Input */}
                 <div className={styles.searchInputContainer}>
-                    <IconButton onClick={handleSearchButton}>
+                    <IconButton onClick={handleSearchButton}
+                        sx={{
+                            color: 'gray'
+                        }}
+                    >
                         <Search />
                     </IconButton>
                     <input
@@ -205,7 +213,11 @@ export default function Header() {
                         ref={inputRef}
                     />
                     {pathname === '/search' && (
-                        <IconButton onClick={handleCloseButton}>
+                        <IconButton onClick={handleCloseButton}
+                            sx={{
+                                color: 'gray'
+                            }}
+                        >
                             <Close />
                         </IconButton>
                     )}

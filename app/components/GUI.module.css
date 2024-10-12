@@ -84,7 +84,7 @@
 .create:hover,
 .read:hover,
 .noteEdit:hover {
-    /* box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2); */
+    box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
 }
 
 .projectEdit {
@@ -135,7 +135,7 @@
 }
 
 .noteOptionsMenu {
-    background-color: white;
+    background-color: 'white';
     box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
     display: flex;
     flex-direction: column;
@@ -148,6 +148,7 @@
     padding: 1rem;
     background-color: inherit;
     align-items: center;
+    color: inherit;
 }
 
 .menuItem:hover {
@@ -158,12 +159,12 @@
 
     .create,
     .read,
-    .noteEdit {
+    .noteEdit
+    .noteOptionsMenu {
         background-color: #121212;
-        border: 0.5px solid gray;
     }
 
-    .menuItem {
+    .noteOptionsMenu {
         border: 0.5px solid gray;
     }
 }
