@@ -128,15 +128,19 @@ export default function Login() {
         setPassword('');
     }
 
-    const handleClose = () => {
+    const handleContinueWithoutAccount = (event: React.FormEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        clearValues();
+        router.back();
+    };
+
+    const handleCloseButton = (event: React.FormEvent<HTMLButtonElement>) => {
+        event.preventDefault();
         clearValues();
         router.push('/');
     };
 
-    const handleCloseButton = () => {
-        clearValues();
-        router.back();
-    }
+
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -152,7 +156,6 @@ export default function Login() {
                 await sendPasswordReset(email);
                 alert('If the email address is registered, a password reset link will be sent to it.');
                 setEmail('');
-                // setIsLoginHelp(false);
             } else if (isLogin) {
                 if (!password.trim()) {
                     setErrors({ ...errors, password: 'Password is required' });
@@ -160,7 +163,8 @@ export default function Login() {
                 }
 
                 await logIn(email, password);
-                handleClose();
+                clearValues();
+                router.push('/');
             } else if (!isLogin && !isLoginHelp) {
                 if (!email.trim()) {
                     setErrors({ ...errors, email: 'Email is required' });
@@ -180,7 +184,6 @@ export default function Login() {
                 }
 
                 await createUserAccount(email, password);
-                handleClose();
                 alert('Account created successfully. Please check your email for a verification link.');
 
             }
@@ -202,7 +205,7 @@ export default function Login() {
     return (
         <div className={styles.page}>
             <div className={styles.closeButtonContainer}>
-                <IconButton onClick={handleCloseButton}> 
+                <IconButton onClick={handleCloseButton} sx={{ color: 'gray'}}> 
                     <Close/>
                 </IconButton>
             </div>
@@ -280,7 +283,7 @@ export default function Login() {
                     </div>
                     {!isLoginHelp && (
                         <div className={styles.formLogin}>
-                            <StyledButton className={styles.button} onClick={handleClose} startIcon={<Policy />}>
+                            <StyledButton className={styles.button} onClick={handleContinueWithoutAccount} startIcon={<Policy />}>
                                 Continue without an account
                             </StyledButton>
                         </div>
