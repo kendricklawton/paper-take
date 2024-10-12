@@ -144,6 +144,15 @@
         background-color: #121212;
     }
 
+    .searchInputContainer {
+        background-color: #4d4d4d;
+    }
+
+    .header, 
+    .headerScrolled {
+        border-bottom: 0.5px solid gray;
+    }
+
     .menu {
         border: 0.5px solid gray;
     }

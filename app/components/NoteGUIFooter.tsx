@@ -74,10 +74,8 @@ export default function NoteFooter({
 
             {((isEditMode && !isTrash) || (initialOperation === 'read' && !isTrash)) && (
                 <div className={styles.footerWrapper} >
-
                     <div className={styles.footerContainer}>
                         <div className={styles.footerLeading}>
-
                             <div>
                                 <IconButton
                                     ref={noteOptionsMenuRefButton}
@@ -109,7 +107,6 @@ export default function NoteFooter({
                                 </IconButton>
                             )}
                             {isEditMode && (
-
                                 <>
                                     <IconButton
                                         aria-label="Undo"
@@ -133,9 +130,7 @@ export default function NoteFooter({
                                         <RedoOutlined
                                         />
                                     </IconButton>
-
                                 </>
-
                             )}
                         </div>
                         {isEditMode ? (

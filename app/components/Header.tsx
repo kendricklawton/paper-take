@@ -226,11 +226,19 @@ export default function Header() {
             {/* Nav Trailing */}
             <div className={styles.headerTrailing}>
                 {(isLoadingApp || isLoadingAuth) ? (
-                    <IconButton>
+                    <IconButton
+                        sx={{
+                            color: 'gray'
+                        }}
+                    >
                         <CircularProgress size={20} />
                     </IconButton>
                 ) : (
-                    <IconButton onClick={fetchData}>
+                    <IconButton onClick={fetchData}
+                            sx={{
+                                color: 'gray'
+                            }}
+                    >
                         <Refresh />
                     </IconButton>
                 )}
