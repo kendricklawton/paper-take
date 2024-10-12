@@ -9,7 +9,6 @@ const StyledTextField = styled(TextField)({
     '& .MuiInputBase-input': {
         fontFamily: 'monospace',
         fontWeight: 'lighter',
-        color: 'inherit',
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': { border: 'none' },
@@ -66,6 +65,7 @@ export default function NoteBody({
                     onFocus={handleFocus}
                     placeholder={placeholderText}
                     sx={{
+                        color: 'inherit',
                         '& .MuiInputBase-input': {
                             cursor: isEditMode ? 'text' : 'default',
                         },

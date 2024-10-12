@@ -68,6 +68,7 @@ export default function NoteHeader({
                     placeholder={placeholderText}
                     value={title}
                     sx={{
+                        color: 'inherit',
                         '& .MuiInputBase-input': {
                             cursor: isEditMode ? 'text' : 'default',
                         },

@@ -18,14 +18,17 @@ const StyledTextField = styled(TextField)({
     '& .MuiInputBase-input': {
         fontFamily: 'monospace',
         fontWeight: 'lighter',
+        color: 'inherit',
     },
     '& label': {
         fontFamily: 'monospace',
         fontWeight: 'lighter',
+        color: 'inherit',
     },
     '& label.Mui-focused': {
         fontFamily: 'monospace',
         fontWeight: 'lighter',
+        color: 'inherit',
     },
 });
 
@@ -171,16 +174,14 @@ const LoginModal: React.FC = () => {
                                     variant="standard"
                                     label="Password"
                                     autoComplete='off'
-                                    InputProps={{
-                                        endAdornment: (
-                                            <InputAdornment position="end">
-                                                {showPassword ? (
-                                                    <VisibilityOffOutlined onClick={handleClickShowPassword} />
-                                                ) : (
-                                                    <VisibilityOutlined onClick={handleClickShowPassword} />
-                                                )}
-                                            </InputAdornment>
-                                        ),
+                                    slotProps={{
+                                        input: {
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    {showPassword ? <VisibilityOffOutlined onClick={handleClickShowPassword} /> : <VisibilityOutlined onClick={handleClickShowPassword} />}
+                                                </InputAdornment>
+                                            ),
+                                        },
                                     }}
                                 />
                             )}
@@ -193,7 +194,9 @@ const LoginModal: React.FC = () => {
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                     variant="standard"
                                     label="Confirm Password"
-                                    sx={{ width: '100%' }}
+                                    sx={{ width: '100%',
+                                        color: 'inherit',
+                                     }}
                                 />
                             )}
                             {errors.confirmPassword && (<p aria-live="polite" className={styles.textError}>{errors.confirmPassword}</p>)}
