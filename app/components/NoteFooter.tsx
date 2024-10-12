@@ -55,11 +55,17 @@ export default function NoteFooter({
                 <div className={styles.footerWrapper}>
                     <div className={styles.footerContainer}>
                         <div>
-                            <IconButton aria-label="Delete note forever" onClick={() => handleDeleteNote()}>
-                                <DeleteForeverOutlined className={styles.icon} />
+                            <IconButton aria-label="Delete note forever" onClick={() => handleDeleteNote()}
+                                sx={{
+                                    color: 'gray'
+                                }}
+                                >
+                                <DeleteForeverOutlined />
                             </IconButton>
-                            <IconButton aria-label="Restore from trash" onClick={() => toggleDelete()}>
-                                <RestoreFromTrashOutlined className={styles.icon} />
+                            <IconButton sx={{
+                                color: 'gray'
+                            }} aria-label="Restore from trash" onClick={() => toggleDelete()}>
+                                <RestoreFromTrashOutlined />
                             </IconButton>
                         </div>
                     </div>
@@ -72,21 +78,26 @@ export default function NoteFooter({
                         <div className={styles.footerLeading}>
                             <div>
                                 <IconButton
+                                    sx={{
+                                        color: 'gray'
+                                    }}
                                     ref={noteOptionsMenuRefButton}
                                     className={styles.noteOptionsMenuButton}
                                     onClick={() => setIsNoteOptionsMenu(!isNoteOptionsMenuOpen)}
                                 >
-                                    <MoreVert className={styles.icon} />
+                                    <MoreVert />
                                 </IconButton>
                                 {isNoteOptionsMenuOpen && (
-                                    <div className={styles.noteOptionsMenu} ref={noteOptionsMenuRef}>
+                                    <div className={styles.menu} ref={noteOptionsMenuRef}>
                                         <div className={styles.menuItem} onClick={toggleDelete}>Delete Note</div>
                                     </div>
                                 )}
                             </div>
                             {initialOperation !== 'create' && (
-                                <IconButton aria-label="Archive" onClick={() => toggleArchive()}>
-                                    {isArchived ? <Archive className={styles.icon} /> : <ArchiveOutlined className={styles.icon} />}
+                                <IconButton sx={{
+                                    color: 'gray'
+                                }} aria-label="Archive" onClick={() => toggleArchive()}>
+                                    {isArchived ? <Archive /> : <ArchiveOutlined />}
                                 </IconButton>
                             )}
                             {isEditMode && (

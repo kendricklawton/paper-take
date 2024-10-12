@@ -1,7 +1,7 @@
 'use client';
 
+import styles from "./GUI.module.css";
 import { styled, TextField } from '@mui/material';
-
 
 const StyledTextField = styled(TextField)({
     width: '100%',
@@ -10,13 +10,11 @@ const StyledTextField = styled(TextField)({
         fontFamily: 'monospace',
         fontWeight: 'lighter',
         color: 'inherit',
-        // cursor: isEditMode ? 'text' : 'default',
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': { border: 'none' },
         '&:hover fieldset': { border: 'none' },
         '&.Mui-focused fieldset': { border: 'none' },
-        // cursor: isEditMode ? 'text' : 'default',
     },
 });
 
@@ -67,8 +65,8 @@ export default function NoteHeader({
                     onFocus={handleFocus}
                     placeholder={placeholderText}
                     value={title}
+                    className={styles.textField}
                     sx={{
-                        color: 'inherit',
                         '& .MuiInputBase-input': {
                             cursor: isEditMode ? 'text' : 'default',
                         },
