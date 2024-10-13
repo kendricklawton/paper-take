@@ -88,6 +88,8 @@
     text-decoration: none;
     z-index: 3;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 .navLink:hover {

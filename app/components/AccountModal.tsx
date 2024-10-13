@@ -218,7 +218,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                                     input: {
                                         endAdornment: (
                                             <InputAdornment position="end">
-                                                {showPassword ? <VisibilityOffOutlined onClick={handleClickShowPassword} /> : <VisibilityOutlined onClick={handleClickShowPassword} />}
+                                                {showPassword ? <VisibilityOffOutlined onClick={handleClickShowPassword} sx={{ color: 'gray' }} /> : <VisibilityOutlined onClick={handleClickShowPassword} sx={{ color: 'gray' }} />}
                                             </InputAdornment>
                                         ),
                                     },

@@ -66,7 +66,6 @@ export const FormTextField = styled(TextField)({
     '& label': {
         fontFamily: 'monospace',
         fontWeight: 'lighter',
-        color: 'inherit',
     },
     '& label.Mui-focused': {
         fontFamily: 'monospace',
@@ -86,10 +85,10 @@ export const FormTextField = styled(TextField)({
             color: 'white',
         },
         '& label': {
-            color: 'white',
+            color: 'gray',
         },
         '& label.Mui-focused': {
-            color: 'white',
+            color: 'gray',
         },
         '& .MuiOutlinedInput-root': {
             '& fieldset': {
