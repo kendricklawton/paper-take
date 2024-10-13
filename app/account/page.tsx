@@ -7,7 +7,7 @@ import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos';
 import AccountModal from '../components/AccountModal';
 
 export default function Account() {
-    const { user, userDisplayName, userEmail} = useAuthContext();
+    const { user, userDisplayName, userEmail } = useAuthContext();
     const [method, setMethod] = useState('');
     const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
 
@@ -44,19 +44,22 @@ export default function Account() {
         <div className={styles.page}>
             <div className={styles.wrapperAccount}>
                 <div className={styles.container}>
-                    
-                        <div className={styles.containerItemHeader}>
-                            <h1>Personal Info</h1>
-                        </div>
-                    
+                    <div className={styles.containerItemHeader}>
+                        <h1>Personal Info</h1>
+                    </div>
                     {
-                        user?.emailVerified === false &&
+                        user?.emailVerified === false && (
                         <div className={styles.containerItem} onClick={pushToSendVerification}>
-                            <p className={styles.textError}>Account Needs Email Verification!</p>
-                            <ArrowForwardIos style={{
-                                color: 'red'
-                            }} />
+                            <div className={styles.containerItemLeading}>
+                                <p className={styles.textError}>Account Needs Email Verification!</p>
+                            </div>
+                            <div className={styles.containerItemTrailing}>
+                                <ArrowForwardIos style={{
+                                    color: 'red'
+                                }} />
+                            </div>
                         </div>
+                        )
                     }
                     <div className={styles.containerItem} onClick={pushToEmail} >
                         <div className={styles.containerItemLeading}>
@@ -78,9 +81,9 @@ export default function Account() {
                     </div>
                 </div>
                 <div className={styles.container}>
-                        <div className={styles.containerItemHeader}>
-                            <h1>Data & Security</h1>
-                        </div>
+                    <div className={styles.containerItemHeader}>
+                        <h1>Data & Security</h1>
+                    </div>
                     <div className={styles.containerItem} onClick={pushToPassword}>
                         <div className={styles.containerItemLeading}>
                             <p>Password</p>

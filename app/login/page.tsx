@@ -18,10 +18,11 @@ import {
 } from '@mui/icons-material';
 import styles from '../page.module.css';
 import { FormButton, FormTextField } from '../components/Styled';
+import React from 'react';
 
 export default function Login() {
     const
-        {   authError,
+        { authError,
             clearAuthError,
             createUserAccount,
             logIn,
@@ -115,7 +116,7 @@ export default function Login() {
                     setErrors({ ...errors, confirmPassword: 'Passwords do not match' });
                     return;
                 }
-
+                
                 await createUserAccount(email, password);
                 alert('Account created successfully. Please check your email for a verification link.');
             }
@@ -208,7 +209,7 @@ export default function Login() {
                         </FormButton>
                     </form>
                     {!isLoginHelp && (
-                        <>
+                        <React.Fragment>
                             <div className={styles.divider}>
                                 <Divider orientation='vertical'>OR</Divider>
                             </div>
@@ -220,7 +221,7 @@ export default function Login() {
                                     Continue without an account
                                 </FormButton>
                             </div>
-                        </>
+                        </React.Fragment>
                     )}
                 </div>
                 {(!isLogin && !isLoginHelp) && (
@@ -229,24 +230,26 @@ export default function Login() {
                     </p>
                 )}
                 {isLoginHelp && (
-                    <>
+                    <React.Fragment>
                         <p className={styles.textTerms}>
                             Enter your email to receive a password reset link
                         </p>
                         <p className={styles.textTerms}>
                             For any other issues, please contact <Link href="mailto:support@machinename.dev?subject=Support%20Request&body=Please%20describe%20your%20issue%20here." className={styles.textTerms}>support</Link>
                         </p>
-                    </>
+                    </React.Fragment>
                 )}
                 <div className={styles.textButtonContainer}>
-                    {
-                        !isLoginHelp && (
-                            <Button type="button" className={styles.textButton} onClick={handleSwitch}>
-                                {isLogin ? 'Create an account' : 'Already have an account?'}
-                            </Button>
-                        )
-                    }
-                    <Button type="button" className={styles.textButton} onClick={toggleLoginHelp}>
+                    {!isLoginHelp && (
+                        <Button type="button" sx={{
+                            borderRadius: '0px',
+                        }} onClick={handleSwitch}>
+                            {isLogin ? 'Create an account' : 'Already have an account?'}
+                        </Button>
+                    )}
+                    <Button type="button" sx={{
+                        borderRadius: '0px',
+                    }} onClick={toggleLoginHelp}>
                         {isLoginHelp ? 'Back' : 'Log in Help'}
                     </Button>
                 </div>

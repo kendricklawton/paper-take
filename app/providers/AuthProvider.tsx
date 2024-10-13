@@ -47,7 +47,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const baseURL = 'http://papertake.io';
+    // const baseURL = 'http://papertake.io';
     const [authError, setAuthError] = useState<string>('');
     const [user, setUser] = useState<User | null>(null);
     const [userDisplayName, setUserDisplayName] = useState<string>('');
@@ -111,10 +111,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             await sendEmailVerification(
                 userCredential.user,
-                {
-                    url: baseURL,
-                    handleCodeInApp: true
-                }
+                // {
+                //     url: baseURL,
+                //     handleCodeInApp: true
+                // }
             );
             setUser(userCredential.user);
         } catch (error) {
@@ -165,10 +165,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const sendPasswordReset = useCallback(async (email: string): Promise<void> => {
         clearAuthError();
         try {
-            await sendPasswordResetEmail(auth, email, {
-                url: baseURL,
-                handleCodeInApp: true,
-            });
+            await sendPasswordResetEmail(auth, email, 
+            //     {
+            //     url: baseURL,
+            //     handleCodeInApp: true,
+            // }
+        );
         } catch (error) {
             handleAuthError(error);
             throw error;
@@ -179,10 +181,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         clearAuthError();
         try {
             if (user) {
-                await sendEmailVerification(user, {
-                    url: baseURL,
-                    handleCodeInApp: true,
-                });
+                await sendEmailVerification(user,
+                //      {
+                //     url: baseURL,
+                //     handleCodeInApp: true,
+                // }
+            );
             } else {
                 throw new Error('User not found.');
             }
@@ -213,10 +217,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             if (user) {
                 const credential = EmailAuthProvider.credential(user.email!, password);
                 await reauthenticateWithCredential(user, credential);
-                await verifyBeforeUpdateEmail(user, newEmail, {
-                    url: baseURL,
-                    handleCodeInApp: true,
-                });
+                await verifyBeforeUpdateEmail(user, newEmail,
+                //      {
+                //     url: baseURL,
+                //     handleCodeInApp: true,
+                // }
+            );
             } else {
                 throw new Error('User not found.');
             }
