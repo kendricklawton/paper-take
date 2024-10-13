@@ -1,9 +1,6 @@
 'use client'
 
-import React, 
-{ 
-    useState,
-} from 'react';
+import React, { useState } from 'react';
 import styles from "./page.module.css";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { useAppContext } from "./providers/AppProvider";
@@ -48,7 +45,7 @@ const Notes: React.FC = () => {
     };
 
     return (
-        <>
+        <React.Fragment>
             <NoteGUI operation={'create'} note={new Note(
                 undefined,
                 '',
@@ -65,9 +62,7 @@ const Notes: React.FC = () => {
             ) : (
                 activeNotes.map((note, index) => (
                     <React.Fragment key={index}>
-                        <div 
-                        className={styles.spacer}>
-                        </div>
+                        <div className={styles.spacer} />
                         <NoteGUI
                             key={note.id}
                             operation={'read'}
@@ -81,7 +76,7 @@ const Notes: React.FC = () => {
                     </React.Fragment>
                 ))
             )}
-        </>
+        </React.Fragment>
     );
 };
 
@@ -90,7 +85,7 @@ const Projects = () => {
     const activeProjects = projects.filter(project => !project.isArchived && !project.isTrash);
 
     return (
-        <>
+        <React.Fragment>
             <ProjectGUI operation={'create'} project={new Project(
                 undefined,
                 uuidv4(),
@@ -112,7 +107,7 @@ const Projects = () => {
                         <ProjectGUI key={project.id} operation={'read'} project={project} />
                     ))
                 )}
-        </>
+        </React.Fragment>
     );
 }
 
@@ -131,7 +126,7 @@ export default function Home() {
     return (
         <main className={styles.page}>
             <ToggleButtonGroup
-                color="primary"
+                color='primary'
                 value={currentList}
                 exclusive={true}
                 onChange={handleChange}
@@ -147,9 +142,7 @@ export default function Home() {
                     Projects
                 </ToggleButton>
             </ToggleButtonGroup>
-            <div style={{
-                height: '1rem',
-            }} />
+            <div className={styles.spacer} />
             {
                 currentList === 'notes'
                     ?

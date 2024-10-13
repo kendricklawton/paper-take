@@ -1,26 +1,6 @@
 'use client';
 
-import { styled, TextField } from '@mui/material';
-
-const StyledTextField = styled(TextField)({
-    width: '100%',
-    '& .MuiInputBase-input': {
-        color: 'black',
-        fontSize: 'normal',
-        fontFamily: 'monospace',
-        fontWeight: 'lighter',
-    },
-    '& .MuiOutlinedInput-root': {
-        '& fieldset': { border: 'none' },
-        '&:hover fieldset': { border: 'none' },
-        '&.Mui-focused fieldset': { border: 'none' },
-    },
-    '@media (prefers-color-scheme: dark)': {
-        '& .MuiInputBase-input': {
-            color: 'white', 
-        }
-    },
-});
+import { NoteBodyTextField } from "./Styled";
 
 interface NoteBodyProps {
     content: string;
@@ -54,12 +34,10 @@ export default function NoteBody({
         }
     };
 
-
-
     return (
         <>
             {((initialOperation === "create" || content.length > 0 || isEditMode) && (
-                <StyledTextField
+                <NoteBodyTextField
                     inputProps={{
                         readOnly: readOnlyMode,
                     }}

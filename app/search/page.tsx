@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react';
 import { useAppContext } from '../providers/AppProvider';
 import NoteGUI from "../components/NoteGUI";
 import styles from "../page.module.css";
@@ -17,12 +18,10 @@ export default function Search() {
                 </div>
             ) : (
                 searchNotes.map(note => (
-                    <>
-                        <div style={{
-                            height: '1rem'
-                        }} key={note.id} />
+                    <React.Fragment key={note.id}>
+                        <div className={styles.spacer} key={note.id} />
                         <NoteGUI note={note as Note} operation='read' key={note.id} />
-                    </>
+                    </React.Fragment>
                 ))
             )}
         </div>

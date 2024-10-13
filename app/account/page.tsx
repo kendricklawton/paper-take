@@ -7,10 +7,10 @@ import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos';
 import AccountModal from '../components/AccountModal';
 
 export default function Account() {
-    const { user, userDisplayName } = useAuthContext();
+    const { user, userDisplayName, userEmail} = useAuthContext();
     const [method, setMethod] = useState('');
     const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
-    
+
     const pushToDeleteAccount = () => {
         if (user?.emailVerified === false) {
             alert("You must verify your current email before making account changes.");
@@ -42,67 +42,63 @@ export default function Account() {
 
     return (
         <div className={styles.page}>
-            <div className={styles.wrapper}>
-                <div className={styles.accountContainer}>
-                    <div className={styles.accountContainerHeader}>
-                        <h1>Personal Info</h1>
-                    </div>
+            <div className={styles.wrapperAccount}>
+                <div className={styles.container}>
+                    
+                        <div className={styles.containerItemHeader}>
+                            <h1>Personal Info</h1>
+                        </div>
+                    
                     {
                         user?.emailVerified === false &&
-                        <div className={styles.accountContainerItem} onClick={pushToSendVerification}>
-                            <p style={{
-                                color: 'red'
-                            }}>Account Needs Email Verification!</p>
+                        <div className={styles.containerItem} onClick={pushToSendVerification}>
+                            <p className={styles.textError}>Account Needs Email Verification!</p>
                             <ArrowForwardIos style={{
                                 color: 'red'
                             }} />
                         </div>
                     }
-                    <div className={styles.accountContainerItem} onClick={pushToEmail} >
-                        <div className={styles.accountContainerItemLeading}>
+                    <div className={styles.containerItem} onClick={pushToEmail} >
+                        <div className={styles.containerItemLeading}>
                             <p>Email</p>
+                            <p>{userEmail}</p>
                         </div>
-                        {
-                            user?.email
-                                ?
-                                <div className={styles.accountContainerItemTrailing}>
-                                    {user?.email}
-                                    <ArrowForwardIos />
-                                </div>
-                                :
-                                <ArrowForwardIos />
-                        }
+                        <div className={styles.containerItemTrailing}>
+                            <ArrowForwardIos />
+                        </div>
                     </div>
-                    <div className={styles.accountContainerItem} onClick={pushToDisplayName} >
-                        <div className={styles.accountContainerItemLeading}>
-                            <p>Display Name </p>
+                    <div className={styles.containerItem} onClick={pushToDisplayName} >
+                        <div className={styles.containerItemLeading}>
+                            <p>Display name</p>
+                            <p>{userDisplayName}</p>
                         </div>
-                        {
-                            userDisplayName
-                                ?
-                                <div className={styles.accountContainerItemTrailing}>
-                                    {userDisplayName}
-                                    <ArrowForwardIos />
-                                </div>
-                                :
-                                <ArrowForwardIos />
-                        }
+                        <div className={styles.containerItemTrailing}>
+                            <ArrowForwardIos />
+                        </div>
                     </div>
                 </div>
-                <div className={styles.accountContainer}>
-                    <div className={styles.accountContainerHeader}>
-                        <h1>Data & Security</h1>
+                <div className={styles.container}>
+                        <div className={styles.containerItemHeader}>
+                            <h1>Data & Security</h1>
+                        </div>
+                    <div className={styles.containerItem} onClick={pushToPassword}>
+                        <div className={styles.containerItemLeading}>
+                            <p>Password</p>
+                        </div>
+                        <div className={styles.containerItemTrailing}>
+                            <ArrowForwardIos />
+                        </div>
                     </div>
-                    <div className={styles.accountContainerItem} onClick={pushToPassword}>
-                        <p>Password</p>
-                        <ArrowForwardIos />
+                    <div className={styles.containerItem} onClick={pushToDeleteAccount}>
+                        <div className={styles.containerItemLeading}>
+                            <p>Delete Account</p>
+                        </div>
+                        <div className={styles.containerItemTrailing}>
+                            <ArrowForwardIos />
+                        </div>
                     </div>
-                    <div className={styles.accountContainerItem} onClick={pushToDeleteAccount}>
-                        <p>Delete Account</p>
-                        <ArrowForwardIos />
-                    </div>
+                    <AccountModal isOpen={isAccountModalOpen} onClose={() => setIsAccountModalOpen(false)} method={method} />
                 </div>
-                <AccountModal isOpen={isAccountModalOpen} onClose={() => setIsAccountModalOpen(false)} method={method} />
             </div>
         </div>
     );

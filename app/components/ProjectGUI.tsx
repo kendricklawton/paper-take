@@ -1,13 +1,33 @@
 'use client';
 
 // import { useState } from 'react';
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation'
 // import { useAppContext } from '../providers/AppProvider';
 import {
     Project,
 } from '../models';
 import styles from "./GUI.module.css"
-import { TextField } from '@mui/material';
+import { styled, TextField } from '@mui/material';
+
+const StyledTextField = styled(TextField)({
+    width: '100%',
+    '& .MuiInputBase-input': {
+        fontSize: 'normal',
+        fontFamily: 'monospace',
+        fontWeight: 'lighter',
+        cursor: 'default',
+    },
+    '& .MuiOutlinedInput-root': {
+        '& fieldset': { border: 'none' },
+        '&:hover fieldset': { border: 'none' },
+        '&.Mui-focused fieldset': { border: 'none' },
+    },
+    '@media (prefers-color-scheme: dark)': {
+        '& .MuiInputBase-input': {
+            color: 'white',
+        }
+    },
+});
 
 interface ProjectGUIProps {
     operation: 'read' | 'create';
@@ -29,39 +49,23 @@ const ProjectGUI: React.FC<ProjectGUIProps> = ({ operation, project }) => {
     // const [title, setTitle] = useState(project.title);
     // const [description, setDescription] = useState(project.description);
 
-    const router = useRouter();
+    // const router = useRouter();
 
-    const handleClick = () => {
-        router.push(`/projects/${project.id}`);
-    };
+    // const handleClick = () => {
+    //     router.push(`/projects/${project.id}`);
+    // };
 
     return (
         <div className={styles.container}>
             <form className={initialOperation === 'create' ? styles.create : styles.read}>
                 <div className={styles.infoContainerRead}>
-                    <TextField
+                    <StyledTextField
+                        autoComplete='off'
                         inputProps={{
-                            autoComplete: 'off',
                             readOnly: true,
-                            style:
-                            {
-                                fontSize: 'normal',
-                                fontWeight: 'lighter',
-                                fontFamily: 'monospace',
-                                color: 'inherit',
-                                cursor: 'default',
-                            },
                         }}
-                        onClick={handleClick}
+                        // onClick={handleClick}
                         placeholder={'Create a project...'}
-                        sx={{
-                            width: '100%',
-                            '& .MuiOutlinedInput-root': {
-                                '& fieldset': { border: 'none' },
-                                '&:hover fieldset': { border: 'none' },
-                                '&.Mui-focused fieldset': { border: 'none' },
-                            },
-                        }}
                         value={initialOperation === 'read' ? project.title : ''}
                     />
                 </div>

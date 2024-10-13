@@ -1,25 +1,6 @@
 'use client';
 
-import { styled, TextField } from '@mui/material';
-
-const StyledTextField = styled(TextField)({
-    width: '100%',
-    '& .MuiInputBase-input': {
-        fontSize: 'large',
-        fontFamily: 'monospace',
-        fontWeight: 'lighter',
-    },
-    '& .MuiOutlinedInput-root': {
-        '& fieldset': { border: 'none' },
-        '&:hover fieldset': { border: 'none' },
-        '&.Mui-focused fieldset': { border: 'none' },
-    },
-    '@media (prefers-color-scheme: dark)': {
-        '& .MuiInputBase-input': {
-            color: 'white',
-        }
-    },
-});
+import { NoteHeaderTextField } from './Styled';
 
 export interface NoteHeaderProps {
     title: string,
@@ -41,7 +22,6 @@ export default function NoteHeader({
     const readOnlyMode = initialOperation === 'read' && !isModalMode;
     const placeholderText = 'Title...';
 
-
     const handleFocus = () => {
         if (!readOnlyMode) {
             toggleModeTrue();
@@ -57,7 +37,7 @@ export default function NoteHeader({
     return (
         <>
             {(isEditMode || title.length > 0) && (            
-                <StyledTextField
+                <NoteHeaderTextField
                     autoComplete='off'
                     inputProps={{
                         readOnly: readOnlyMode,

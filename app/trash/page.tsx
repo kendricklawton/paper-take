@@ -1,5 +1,6 @@
 'use client'
 
+import React from "react";
 import NoteGUI from "../components/NoteGUI";
 // import ProjectGUI from "../components/ProjectGUI";
 import styles from "../page.module.css";
@@ -15,7 +16,10 @@ export default function Trash() {
                 <div className={styles.pageTitle}><p>Empty Trash</p></div>
             ) : (
                 trashNotes.map(note => (
-                    <NoteGUI operation={'read'} note={note} key={note.id} />
+                    <React.Fragment key={note.id}>
+                        <div className={styles.spacer} key={note.id} />
+                        <NoteGUI note={note} operation='read' key={note.id} />
+                    </React.Fragment>
                 ))
             )}
         </div >

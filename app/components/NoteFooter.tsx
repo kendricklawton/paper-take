@@ -18,15 +18,19 @@ interface NoteFooterProps {
     initialOperation: 'read' | 'create';
     isArchived: boolean;
     isEditMode: boolean;
-    isNoteOptionsMenuOpen: boolean;
+    isFontMenuOpen: boolean;
+    isOptionsMenuOpen: boolean;
     isTrash: boolean;
-    noteOptionsMenuRef: React.RefObject<HTMLDivElement>;
-    noteOptionsMenuRefButton: React.RefObject<HTMLButtonElement>;
+    optionsMenuRef: React.RefObject<HTMLDivElement>;
+    optionsMenuRefButton: React.RefObject<HTMLButtonElement>;
+    fontMenuRef: React.RefObject<HTMLDivElement>;
+    fontMenuRefButton: React.RefObject<HTMLButtonElement>;
     index: React.MutableRefObject<number>;
     handleDeleteNote: () => void;
     handleRedo: (event: React.MouseEvent<HTMLButtonElement>) => void;
     handleUndo: (event: React.MouseEvent<HTMLButtonElement>) => void;
-    setIsNoteOptionsMenu: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsFontMenu: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsOptionsMenu: React.Dispatch<React.SetStateAction<boolean>>;
     toggleArchive: () => void;
     toggleDelete: () => void;
 }
@@ -35,16 +39,20 @@ export default function NoteFooter({
     contentArray,
     isArchived,
     isEditMode,
-    isNoteOptionsMenuOpen,
+    isFontMenuOpen,
+    isOptionsMenuOpen,
     isTrash,
     initialOperation,
-    noteOptionsMenuRef,
-    noteOptionsMenuRefButton,
+    fontMenuRef,
+    fontMenuRefButton,
+    optionsMenuRef,
+    optionsMenuRefButton,
     index,
     handleDeleteNote,
     handleRedo,
     handleUndo,
-    setIsNoteOptionsMenu,
+    setIsFontMenu,
+    setIsOptionsMenu,
     toggleArchive,
     toggleDelete
 }: NoteFooterProps) {
@@ -79,27 +87,40 @@ export default function NoteFooter({
                                     sx={{
                                         color: 'gray'
                                     }}
-                                    ref={noteOptionsMenuRefButton}
-                                    className={styles.noteOptionsMenuButton}
-                                    onClick={() => setIsNoteOptionsMenu(!isNoteOptionsMenuOpen)}
+                                    ref={optionsMenuRefButton}
+                                    className={styles.menuButton}
+                                    onClick={() => setIsOptionsMenu(prev => !prev)}
                                 >
                                     <MoreVert />
                                 </IconButton>
-                                {isNoteOptionsMenuOpen && (
-                                    <div className={styles.menu} ref={noteOptionsMenuRef}>
+                                {isOptionsMenuOpen && (
+                                    <div className={styles.menu} ref={optionsMenuRef}>
                                         <div className={styles.menuItem} onClick={toggleDelete}>Delete Note</div>
                                     </div>
                                 )}
                             </div>
                             {initialOperation !== 'create' && (
-                                <IconButton sx={{
-                                    color: 'gray'
-                                }} aria-label="Archive" onClick={() => toggleArchive()}>
+                                <IconButton sx={{ color: 'gray' }} aria-label="Archive" onClick={() => toggleArchive()}>
                                     {isArchived ? <Archive /> : <ArchiveOutlined />}
                                 </IconButton>
                             )}
                             {isEditMode && (
                                 <>
+                                    <div>
+                                        <IconButton
+                                            sx={{ color: 'gray'}}
+                                            ref={fontMenuRefButton}
+                                            className={styles.menuButton}
+                                            onClick={() => setIsFontMenu(prev => !prev)}
+                                        >
+                                            <MoreVert />
+                                        </IconButton>
+                                        {isFontMenuOpen && (
+                                            <div className={styles.menu} ref={fontMenuRef}>
+                                                <div className={styles.menuItem} onClick={toggleDelete}>Delete Note</div>
+                                            </div>
+                                        )}
+                                    </div>
                                     <IconButton
                                         aria-label="Undo"
                                         onClick={handleUndo}

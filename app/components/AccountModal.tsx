@@ -1,27 +1,12 @@
 'use client'
 
 import React, { useState } from 'react';
-import { styled } from '@mui/material/styles';
 import { useRouter } from 'next/navigation'
-import styles from './Modal.module.css';
+import styles from "../page.module.css";
 import { useAuthContext } from '../providers/AuthProvider';
-import { Button, InputAdornment, TextField } from '@mui/material';
-import { VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material';
-
-const StyledTextField = styled(TextField)({
-    '& .MuiInputBase-input': {
-        fontFamily: 'monospace',
-        fontWeight: 'lighter',
-    },
-    '& label': {
-        fontFamily: 'monospace',
-        fontWeight: 'lighter',
-    },
-    '& label.Mui-focused': {
-        fontFamily: 'monospace',
-        fontWeight: 'lighter',
-    },
-});
+import { IconButton, InputAdornment } from '@mui/material';
+import { Close, VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material';
+import { FormButton, FormTextField } from './Styled';
 
 interface AccountModalProps {
     isOpen: boolean;
@@ -32,7 +17,7 @@ interface AccountModalProps {
 const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) => {
     const Router = useRouter();
 
-    const { authError, user, clearAuthError, sendPasswordReset, updateUserDisplayName, updateUserEmail,
+    const { authError, user, userDisplayName, userEmail, clearAuthError, sendPasswordReset, updateUserDisplayName, updateUserEmail,
         deleteUserAccount } = useAuthContext();
 
     const [deleteAccount, setDeleteAccount] = useState('');
@@ -46,7 +31,12 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
         setShowPassword(prev => !prev);
     };
 
-    const handleClose = () => {
+    const handleCloseButton = (event: React.FormEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        clearValues();
+    };
+
+    const clearValues = () => {
         clearAuthError();
         setDeleteAccount('');
         setEmail('');
@@ -59,7 +49,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
 
     const handleRemoveDisplayName = () => {
         updateUserDisplayName('');
-        handleClose();
+        clearValues();
     }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -74,17 +64,17 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                 }
                 await updateUserEmail(email, password);
 
-                handleClose();
+                clearValues();
                 alert('Please verify your new email address');
             } else if (method === "password") {
                 if (user?.email) {
                     await sendPasswordReset(user?.email);
-                    handleClose();
+                    clearValues();
                     alert('Password reset link sent to your email');
                 }
             } else if (method === "delete") {
                 await deleteUserAccount(password);
-                handleClose();
+                clearValues();
                 Router.push('/');
                 alert('Account deleted successfully');
             } else if (method === "displayName") {
@@ -93,10 +83,10 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                     return;
                 }
                 await updateUserDisplayName(newDisplayName);
-                handleClose();
+                clearValues();
             }
         } catch (error) {
-            handleClose();
+            clearValues();
             alert('An error occurred: ' + error);
         }
     };
@@ -116,83 +106,107 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
         return false;
     };
 
+    const FormHeader: React.FC = (method) => {
+        switch (method) {
+            case 'email':
+                return (
+                    <React.Fragment>
+                        <h1>Update email</h1>
+                        <p>Current Email: {userEmail}</p>
+                    </React.Fragment>
+                );
+            case 'password':
+                return (
+                    <React.Fragment>
+                        <h1>Reset password</h1>
+                        <p>Password reset link will be sent to the following email &apos;{userEmail}&apos;.</p>
+                        <p>To verify, type your email below.</p>
+                    </React.Fragment>
+                );
+            case 'delete':
+                return (
+                    <React.Fragment>
+                        <h1>Delete account</h1>
+                        <p>We will promptly remove your account and all related information associated with the following email &apos;{userEmail}&apos;.</p>
+                        <p>To verify, type &apos;delete-my-account&apos; below and enter your password. Please note that this is a permanent action.</p>
+                    </React.Fragment>
+                );
+            case 'displayName':
+                return (
+                    <React.Fragment>
+                        <h1>Update display name</h1>
+                        <p>Current display name: {userDisplayName ? userDisplayName : 'N/A'}</p>
+                    </React.Fragment>
+                );
+            case 'verification':
+                return (
+                    <React.Fragment>
+                        <h1>Send email verification</h1>
+                        <p>Current email: {userEmail ? userEmail : 'N/A'}</p>
+                    </React.Fragment>
+                );
+            default:
+                return null;
+        }
+    };
+
     return (
         isOpen && (
-            <div className={styles.containerModalAccount}>
-                <div className={styles.containerAccount}>
-                    <form className={styles.formAccount} onSubmit={handleSubmit}>
+            <div className={styles.modal}>
+                <div className={styles.closeButtonContainer}>
+                    <IconButton onClick={handleCloseButton} sx={{ color: 'gray' }}>
+                        <Close />
+                    </IconButton>
+                </div>
+                <div className={styles.wrapperAccount}>
+                    {FormHeader(method)}
+                    <form className={styles.form} onSubmit={handleSubmit}>
                         {method === "email" && (
-                            <div className={styles.formAccountContainer}>
-                                <h1>Update Email</h1>
-                                <p>Current Email: {user?.email}</p>
-                                <StyledTextField
-                                    type="email"
-                                    id="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    variant="standard"
-                                    label="Email"
-                                    autoComplete='off'
-                                />
-                                {errors.email && (<p className={styles.textError} aria-live="polite">{errors.email}</p>)}
-                            </div>
+                            <FormTextField
+                                type="email"
+                                id="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                variant="standard"
+                                label="Email"
+                                autoComplete='off'
+                            />
                         )}
                         {method === "password" && (
-                            <div className={styles.formAccountContainer}>
-                                <h1>Update Password</h1>
-                                <p>Password reset link will be sent to the following email &apos;{user?.email}&apos;.</p>
-                                <p>To verify, type your email below.</p>
-                                <StyledTextField
-                                    type='text'
-                                    id="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    variant="standard"
-                                    label="Email"
-                                    autoComplete='off'
-                                />
-                                {errors.email && (<p className={styles.textError} aria-live="polite">{errors.email}</p>)}
-                            </div>
+                            <FormTextField
+                                type='text'
+                                id="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                variant="standard"
+                                label="Email"
+                                autoComplete='off'
+                            />
                         )}
                         {method === "delete" && (
-                            <div className={styles.formAccountContainer}>
-                                <h1>Delete Account</h1>
-                                <p>We will promptly remove your account and all related information assoicated with the following email &apos;{user?.email}&apos;.</p>
-                                <p>To verify, type &apos;delete-my-account&apos; below and enter your password. Please note that this is a permanent action.</p>
-                                <StyledTextField
-                                    type="text"
-                                    id="deleteAccount"
-                                    value={deleteAccount}
-                                    onChange={(event) => setDeleteAccount(event.target.value)}
-                                    placeholder="delete-my-account"
-                                    autoComplete='off'
-                                    variant="standard"
-                                />
-                            </div>
+                            <FormTextField
+                                type="text"
+                                id="deleteAccount"
+                                value={deleteAccount}
+                                onChange={(event) => setDeleteAccount(event.target.value)}
+                                placeholder="delete-my-account"
+                                autoComplete='off'
+                                variant="standard"
+                            />
                         )}
                         {method === "displayName" && (
-                            <div className={styles.formAccountContainer}>
-                                <h1>Update Display Name</h1>
-                                <p>Current Display Name: {user?.displayName ? user?.displayName : 'N/A'}</p>
-                                <StyledTextField
-                                    type="text"
-                                    id="newDisplayName"
-                                    value={newDisplayName}
-                                    onChange={(event) => setNewDisplayName(event.target.value)}
-                                    autoComplete='off'
-                                    variant="standard"
-                                    label="New Display Name"
-                                />
-                            </div>
-                        )}
-                        {method === "verification" && (
-                            <div className={styles.formAccountContainer}>
-                            <p>Current Email: {user?.email ? user?.email : 'N/A'}</p>
-                            </div>
+                            <FormTextField
+                                type="text"
+                                id="displayName"
+                                value={newDisplayName}
+                                onChange={(event) => setNewDisplayName(event.target.value)}
+                                autoComplete='off'
+                                variant="standard"
+                                label="Display name"
+                            />
                         )}
                         {method !== "displayName" && method !== "verification" && method !== "password" && (
-                            <div className={styles.formAccountContainer}>
-                            <StyledTextField
+                            <FormTextField
                                 type={showPassword ? 'text' : 'password'}
                                 id="password"
                                 value={password}
@@ -210,37 +224,32 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                                     },
                                 }}
                             />
-                            </div>
                         )}
-                        <div className={styles.formAccountContainer}>
-                        {
-                            errors.password && (<p className={styles.textError} aria-live="polite">{errors.password}</p>)
-                        }
-                        {
-                            authError && (<p className={styles.textError} aria-live="polite">{authError}</p>)
-                        }
-                        {
-                            method === "password" ?
-                                <Button className={styles.button} disabled={!isButtonEnabled()} type="submit">
-                                    Send
-                                </Button>
-                                :
-                                <Button className={styles.button} disabled={!isButtonEnabled()} type="submit">
-                                    {method === "verification" ? "Resend" : "Submit"}
-                                </Button>
-                        }
-
-                        {
-                            (method === "displayName" && user?.displayName) && (
-                                <Button className={styles.button} type="button" onClick={handleRemoveDisplayName}>
-                                    Remove Display Name
-                                </Button>
-                            )
-                        }
-                        <Button className={styles.button} onClick={handleClose} type="reset">
-                            Cancel
-                        </Button>
-                        </div>
+                        <React.Fragment>
+                            { errors.email && (<p className={styles.textError} aria-live="polite">{errors.email}</p>) }
+                            { errors.password && (<p className={styles.textError} aria-live="polite">{errors.password}</p>) }
+                            { authError && (<p className={styles.textError} aria-live="polite">{authError}</p>)}
+                            {
+                                method === "password" ?
+                                    <FormButton className={styles.button} disabled={!isButtonEnabled()} type="submit">
+                                        Send
+                                    </FormButton>
+                                    :
+                                    <FormButton className={styles.button} disabled={!isButtonEnabled()} type="submit">
+                                        {method === "verification" ? "Resend" : "Submit"}
+                                    </FormButton>
+                            }
+                            {
+                                ( method === "displayName" && user?.displayName ) && (
+                                    <FormButton className={styles.button} type="button" onClick={handleRemoveDisplayName}>
+                                        Remove Display Name
+                                    </FormButton>
+                                )
+                            }
+                            <FormButton className={styles.button} onClick={clearValues} type="reset">
+                                Cancel
+                            </FormButton>
+                        </React.Fragment>
                     </form>
                 </div>
             </div>

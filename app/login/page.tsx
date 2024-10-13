@@ -5,9 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation'
 import { useAuthContext } from '../providers/AuthProvider';
 import {
-    styled, Button,
-    //  Divider, 
-    InputAdornment, TextField,
+    Button,
+    InputAdornment,
     Divider,
     IconButton
 } from '@mui/material';
@@ -18,75 +17,11 @@ import {
     VisibilityOutlined,
 } from '@mui/icons-material';
 import styles from '../page.module.css';
-
-const StyledButton = styled(Button)({
-    width: '100%',
-    fontFamily: 'monospace',
-    fontWeight: 'lighter',
-    color: 'white',
-    backgroundColor: 'black',
-    borderRadius: '0px',
-
-    '&:disabled': {
-        backgroundColor: '#f0f0f0',
-        color: 'gray',
-        border: 'none',
-        cursor: 'not-allowed'
-    },
-    '@media (prefers-color-scheme: dark)': {
-        color: 'black',
-        backgroundColor: 'white',
-    },
-});
-
-const StyledTextField = styled(TextField)({
-    width: '100%',
-    '& .MuiInputBase-input': {
-        fontFamily: 'monospace',
-        fontWeight: 'lighter',
-        color: 'inherit',
-    },
-    '& label': {
-        fontFamily: 'monospace',
-        fontWeight: 'lighter',
-        color: 'inherit',
-    },
-    '& label.Mui-focused': {
-        fontFamily: 'monospace',
-        fontWeight: 'lighter',
-        color: 'inherit',
-    },
-    '@media (prefers-color-scheme: dark)': {
-        '& .MuiInput-underline': {
-            '&:before': {
-                borderBottom: '1px solid gray',
-            },
-            '&:hover:before': {
-                borderBottom: '2px solid gray',
-            }
-        },
-        '& .MuiInputBase-input': {
-            color: 'white',
-        },
-        '& label': {
-            color: 'white',
-        },
-        '& label.Mui-focused': {
-            color: 'white',
-        },
-        '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-                border: '1px solid gray',
-            },
-        },
-    },
-});
-
+import { FormButton, FormTextField } from '../components/Styled';
 
 export default function Login() {
     const
-        {
-            authError,
+        {   authError,
             clearAuthError,
             createUserAccount,
             logIn,
@@ -140,8 +75,6 @@ export default function Login() {
         router.push('/');
     };
 
-
-
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         clearAuthError();
@@ -185,7 +118,6 @@ export default function Login() {
 
                 await createUserAccount(email, password);
                 alert('Account created successfully. Please check your email for a verification link.');
-
             }
         } catch (error) {
             console.log('Error:', error);
@@ -205,15 +137,15 @@ export default function Login() {
     return (
         <div className={styles.page}>
             <div className={styles.closeButtonContainer}>
-                <IconButton onClick={handleCloseButton} sx={{ color: 'gray'}}> 
-                    <Close/>
+                <IconButton onClick={handleCloseButton} sx={{ color: 'gray' }}>
+                    <Close />
                 </IconButton>
             </div>
-            <div className={styles.containerLogin}>
+            <div className={styles.wrapperLogin}>
                 <h1>{isLoginHelp ? 'Log in help' : (isLogin ? 'Log into Paper Take' : 'Create an account')}</h1>
-                <div className={isLoginHelp ? styles.formContainerLoginHelp : styles.formContainerLogin}>
-                    <form className={styles.formLogin} onSubmit={handleSubmit}>
-                        <StyledTextField
+                <div className={isLoginHelp ? styles.loginHelp : styles.login}>
+                    <form className={styles.form} onSubmit={handleSubmit}>
+                        <FormTextField
                             type="email"
                             id="email"
                             value={email}
@@ -225,7 +157,7 @@ export default function Login() {
                         />
                         {errors.email && (<p aria-live="polite" className={styles.textError}>{errors.email}</p>)}
                         {!isLoginHelp && (
-                            <StyledTextField
+                            <FormTextField
                                 type={showPassword ? 'text' : 'password'}
                                 id="password"
                                 value={password}
@@ -256,7 +188,7 @@ export default function Login() {
                         )}
                         {errors.password && (<p aria-live="polite" className={styles.textError}>{errors.password}</p>)}
                         {(!isLogin && !isLoginHelp) && (
-                            <StyledTextField
+                            <FormTextField
                                 type={showPassword ? 'text' : 'password'}
                                 id="confirmPassword"
                                 value={confirmPassword}
@@ -271,22 +203,24 @@ export default function Login() {
                         )}
                         {errors.confirmPassword && (<p aria-live="polite" className={styles.textError}>{errors.confirmPassword}</p>)}
                         {authError && (<p className={styles.textError} aria-live="polite">{authError}</p>)}
-                        <StyledButton disabled={!isButtonEnabled()} type="submit">
+                        <FormButton disabled={!isButtonEnabled()} type="submit">
                             {isLoginHelp ? 'Send' : (isLogin ? 'Log in' : 'Create Account')}
-                        </StyledButton>
-                    </form> 
-                    <div className={styles.divider}>
-                        <Divider  orientation='vertical'>OR</Divider>
-                    </div>
-                    <div className={styles.dividerMobile}>
-                        <Divider orientation='horizontal'>OR</Divider>
-                    </div>
+                        </FormButton>
+                    </form>
                     {!isLoginHelp && (
-                        <div className={styles.formLogin}>
-                            <StyledButton className={styles.button} onClick={handleContinueWithoutAccount} startIcon={<Policy />}>
-                                Continue without an account
-                            </StyledButton>
-                        </div>
+                        <>
+                            <div className={styles.divider}>
+                                <Divider orientation='vertical'>OR</Divider>
+                            </div>
+                            <div className={styles.dividerMobile}>
+                                <Divider orientation='horizontal'>OR</Divider>
+                            </div>
+                            <div className={styles.form}>
+                                <FormButton className={styles.button} onClick={handleContinueWithoutAccount} startIcon={<Policy />}>
+                                    Continue without an account
+                                </FormButton>
+                            </div>
+                        </>
                     )}
                 </div>
                 {(!isLogin && !isLoginHelp) && (
@@ -304,13 +238,6 @@ export default function Login() {
                         </p>
                     </>
                 )}
-                {
-                    isLogin && (
-                            <p className={styles.textTerms}>
-                                Don&apos;t have an account?
-                            </p>
-                    )
-                }
                 <div className={styles.textButtonContainer}>
                     {
                         !isLoginHelp && (

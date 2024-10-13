@@ -1,5 +1,5 @@
 'use client'
-
+import React from "react";
 import styles from "../page.module.css";
 import NoteGUI from "../components/NoteGUI";
 import { useAppContext } from "../providers/AppProvider";
@@ -11,12 +11,13 @@ export default function Archive() {
     return (
         <div className={styles.page}>
             {archivedNotes.length === 0 ? (
-                <div className={styles.pageTitle}>
-                    <p>Empty Archive</p>
-                </div>
+                <div className={styles.pageTitle}><p>Empty Archive</p></div>
             ) : (
                 archivedNotes.map(note => (
-                    <NoteGUI note={note} operation='read' key={note.id} />
+                    <React.Fragment key={note.id}>
+                        <div className={styles.spacer} key={note.id} />
+                        <NoteGUI note={note} operation='read' key={note.id} />
+                    </React.Fragment>
                 ))
             )}
         </div>
