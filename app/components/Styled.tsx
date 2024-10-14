@@ -52,6 +52,8 @@ export const NoteHeaderTextField = styled(TextField)({
         fontSize: 'large',
         fontFamily: 'monospace',
         fontWeight: 'lighter',
+        WebkitTapHighlightColor: 'transparent',
+        touchAction: 'manipulation',
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': { border: 'none' },
@@ -70,6 +72,8 @@ export const NoteBodyTextField = styled(TextField)({
     '& .MuiInputBase-input': {
         fontFamily: 'monospace',
         fontWeight: 'lighter',
+        WebkitTapHighlightColor: 'transparent', 
+        touchAction: 'manipulation',
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': { border: 'none' },
@@ -81,6 +85,7 @@ export const NoteBodyTextField = styled(TextField)({
             color: 'white',
         }
     },
+    
 });
 
 export const FormButton = styled(Button)({
