@@ -13,10 +13,9 @@ import {
     AlarmAddOutlined,
     PushPinOutlined,
 } from '@mui/icons-material';
-import { Button } from '@mui/material';
 import styles from "./GUI.module.css"
 import React from 'react';
-import { BackgroundCircle, BackgroundIconButton, StyledIconButton } from './Styled';
+import { BackgroundCircle, BackgroundIconButton, StyledIconButton, StyledTextButton } from './Styled';
 
 interface NoteFooterProps {
     backgroundColor: '' | '#fff59c' | '#aaf0d1' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5';
@@ -160,7 +159,7 @@ export default function NoteFooter({
                                     )}
                                 </div>
                             </div>
-                            <Button sx={{ borderRadius: '0px' }} type="submit">Close</Button>
+                            <StyledTextButton sx={{ borderRadius: '0px' }} type="submit">Close</StyledTextButton>
                         </div>
                     </div>
                 )

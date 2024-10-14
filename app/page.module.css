@@ -13,7 +13,8 @@
 }
 
 .pageLogin {
-  padding-top: 10rem;
+  padding-top: 10%;
+  /* padding-top: 10rem; */
   justify-content: center;
 }
 
@@ -35,11 +36,11 @@
 .wrapperLogin {
   display: flex;
   align-items: center;
+  text-align: center;
   flex-direction: column;
   width: 100%;
   gap: 1rem;
 }
-
 
 .wrapperLogin {
   max-width: 800px;
@@ -64,8 +65,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding-top: 10rem;
+  padding-top: 10%;
+  /* padding-top: 10rem; */
   /* padding-bottom: 5rem; */
   padding-left: 1rem;
   padding-right: 1rem;
@@ -160,14 +161,6 @@
   height: 1rem;
 }
 
-.textButtonContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: center;
-  width: 100%;
-}
-
 .textError {
   color: red;
   font-size: small;
@@ -176,6 +169,12 @@
 .textTerms {
   color: gray;
   font-size: small;
+}
+
+.textButtonContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .information {

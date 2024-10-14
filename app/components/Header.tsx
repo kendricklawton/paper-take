@@ -110,7 +110,7 @@ export default function Header() {
     useEffect(() => {
         handleCloseSearch();
         switch (pathname) {
-            case '/':
+            case '/ideas':
                 setTitle('Paper Take');
                 break;
             case '/account':
@@ -139,7 +139,7 @@ export default function Header() {
         }
     }, [handleCloseSearch, pathname]);
 
-    if (pathname === '/login') {
+    if (pathname === '/') {
         return null;
     }
 
@@ -153,8 +153,8 @@ export default function Header() {
                     </StyledIconButton>
                     {isNavMenuOpen && (
                         <nav className={styles.menu} ref={navMenuRef}>
-                            <Link className={pathname === '/' ? styles.navLinkActive : styles.navLink} href='/'>
-                                {pathname === '/' ? <Lightbulb /> : <LightbulbOutlined />} Ideas
+                            <Link className={pathname === '/ideas' ? styles.navLinkActive : styles.navLink} href='/ideas'>
+                                {pathname === '/ideas' ? <Lightbulb /> : <LightbulbOutlined />} Ideas
                             </Link>
                             {/* <Link className={pathname === '/notes' ? styles.navLinkActive : styles.navLink} href='/notes'>
                                 {pathname === '/notes' ? <Note /> : <NoteOutlined />} Notes
@@ -203,17 +203,15 @@ export default function Header() {
             {/* Nav Trailing */}
             <div className={styles.headerTrailing}>
                 {
-                    user && (
-                        (isLoadingApp || isLoadingAuth) ? (
-                            <StyledIconButton>
-                                <CircularProgress size={20} />
-                            </StyledIconButton>
-                        ) : (
-                            <StyledIconButton onClick={fetchData}>
-                                <Refresh />
-                            </StyledIconButton>
-                        )
-                    )
+                    user && ((isLoadingApp || isLoadingAuth) ? (
+                        <StyledIconButton>
+                            <CircularProgress size={20} />
+                        </StyledIconButton>
+                    ) : (
+                        <StyledIconButton onClick={fetchData}>
+                            <Refresh />
+                        </StyledIconButton>
+                    ))
                 }
                 {/* <div className={styles.settingsAnchor}>
                     <StyledIconButton
@@ -248,11 +246,11 @@ export default function Header() {
                                 </Link>
                             )}
                             {user ? (
-                                <Link className={styles.navLink} href='/login' onClick={handleLogOut}>
+                                <Link className={styles.navLink} href='/' onClick={handleLogOut}>
                                     <LogoutOutlined /> Log Out
                                 </Link>
                             ) : (
-                                    <Link className={styles.navLink} href='/login' onClick={() => setIsAccountMenuOpen(false)}>
+                                <Link className={styles.navLink} href='/' onClick={() => setIsAccountMenuOpen(false)}>
                                     <LoginOutlined /> Login
                                 </Link>
                             )}

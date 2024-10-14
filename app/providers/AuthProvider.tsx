@@ -55,6 +55,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [isLoadingAuth, setIsAuthLoading] = useState<boolean>(true);
 
     useEffect(() => {
+        if (!auth) {
+            console.error('Auth is not defined');
+            setIsAuthLoading(false);
+            return;
+        }
+
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setUser(user);
             setIsAuthLoading(false);

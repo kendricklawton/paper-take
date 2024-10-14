@@ -108,41 +108,40 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
 
     const FormHeader: React.FC = (method) => {
         switch (method) {
-            case 'email':
+            case "email":
                 return (
                     <React.Fragment>
                         <h1>Update email</h1>
                         <p>Current Email: {userEmail}</p>
                     </React.Fragment>
                 );
-            case 'password':
+            case "password":
                 return (
                     <React.Fragment>
                         <h1>Reset password</h1>
-                        <p>Password reset link will be sent to the following email &apos;{userEmail}&apos;.</p>
-                        <p>To verify, type your email below.</p>
+                        <p>Password reset link will be sent to the following email &apos;{userEmail}&apos;. To verify, type your email below.</p>
                     </React.Fragment>
                 );
-            case 'delete':
+            case "delete":
                 return (
                     <React.Fragment>
                         <h1>Delete account</h1>
-                        <p>We will promptly remove your account and all related information associated with the following email &apos;{userEmail}&apos;.</p>
-                        <p>To verify, type &apos;delete-my-account&apos; below and enter your password. Please note that this is a permanent action.</p>
+                        <p>We will promptly remove your account and all related information associated with the following email &apos;{userEmail}&apos;. 
+                        To verify, type &apos;delete-my-account&apos; below and enter your password. Please note that this is a permanent action.</p>
                     </React.Fragment>
                 );
-            case 'displayName':
+            case "displayName":
                 return (
                     <React.Fragment>
                         <h1>Update display name</h1>
                         <p>Current display name: {userDisplayName ? userDisplayName : 'N/A'}</p>
                     </React.Fragment>
                 );
-            case 'verification':
+            case "verification":
                 return (
                     <React.Fragment>
-                        <h1>Send email verification</h1>
-                        <p>Current email: {userEmail ? userEmail : 'N/A'}</p>
+                        <h1>Email verification</h1>
+                        <p>Email verification link will be sent to the following email &apos;{userEmail}&apos;. To verify, type your email below.</p>
                     </React.Fragment>
                 );
             default:
@@ -150,6 +149,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
         }
     };
 
+    console.log(method);
     return (
         isOpen && (
             <div className={styles.modal}>
@@ -159,12 +159,25 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                     </IconButton>
                 </div>
                 <div className={styles.wrapperAccount}>
-                    {FormHeader(method)}
+                    {
+                        FormHeader(method)
+                    }
                     <form className={styles.form} onSubmit={handleSubmit}>
+                        {method === "verification" && (
+                            <FormTextField
+                                type="email"
+                                id="verification"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                variant="standard"
+                                label="Email"
+                                autoComplete='off'
+                            />
+                        )}
                         {method === "email" && (
                             <FormTextField
                                 type="email"
-                                id="email"
+                                id={method}
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 variant="standard"
@@ -174,8 +187,8 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                         )}
                         {method === "password" && (
                             <FormTextField
-                                type='text'
-                                id="email"
+                                type='email'
+                                id={method}
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 variant="standard"
@@ -186,7 +199,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                         {method === "delete" && (
                             <FormTextField
                                 type="text"
-                                id="deleteAccount"
+                                id={method}
                                 value={deleteAccount}
                                 onChange={(event) => setDeleteAccount(event.target.value)}
                                 placeholder="delete-my-account"
@@ -197,7 +210,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                         {method === "displayName" && (
                             <FormTextField
                                 type="text"
-                                id="displayName"
+                                id={method}
                                 value={newDisplayName}
                                 onChange={(event) => setNewDisplayName(event.target.value)}
                                 autoComplete='off'
@@ -208,7 +221,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                         {method !== "displayName" && method !== "verification" && method !== "password" && (
                             <FormTextField
                                 type={showPassword ? 'text' : 'password'}
-                                id="password"
+                                id="formPassword"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 autoComplete='off'

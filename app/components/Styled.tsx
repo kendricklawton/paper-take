@@ -171,3 +171,12 @@ export const StyledToggleButton = styled(ToggleButton)({
         backgroundColor: 'transparent',
     }
 });
+
+export const StyledTextButton = styled(Button)({
+    // color: 'inherit',
+    borderRadius: '0px',
+    // borderRadius:'24px',
+    // '&:hover': {
+    //     backgroundColor: 'transparent',
+    // },
+});
