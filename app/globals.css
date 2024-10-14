@@ -12,10 +12,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
-  height: 100vh;
-}
-
 /* Typography */
 h1,
 h2,
