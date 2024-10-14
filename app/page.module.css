@@ -13,7 +13,7 @@
 }
 
 .pageLogin {
-  height: 100%;
+  padding-top: 10rem;
   justify-content: center;
 }
 
@@ -65,7 +65,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  /* padding-top: 5rem; */
+  padding-top: 10rem;
   /* padding-bottom: 5rem; */
   padding-left: 1rem;
   padding-right: 1rem;
@@ -203,12 +203,6 @@
 }
 
 @media screen and (max-width: 768px) {
-  .modal,
-  .pageLogin {
-      justify-content: flex-start;
-      padding-top: 10rem;
-  }
-
   .divider {
     display: none;
   }
