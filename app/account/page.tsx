@@ -5,6 +5,7 @@ import styles from "../page.module.css";
 import { useAuthContext } from "../providers/AuthProvider";
 import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos';
 import AccountModal from '../components/AccountModal';
+import Link from 'next/link';
 
 export default function Account() {
     const { user, userDisplayName, userEmail } = useAuthContext();
@@ -12,10 +13,10 @@ export default function Account() {
     const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
 
     const pushToDeleteAccount = () => {
-        if (user?.emailVerified === false) {
-            alert("You must verify your current email before making account changes.");
-            return;
-        }
+        // if (user?.emailVerified === false) {
+        //     alert("You must verify your current email before making account changes.");
+        //     return;
+        // }
         setMethod('delete');
         setIsAccountModalOpen(true);
     }
@@ -100,9 +101,14 @@ export default function Account() {
                             <ArrowForwardIos />
                         </div>
                     </div>
-                    <AccountModal isOpen={isAccountModalOpen} onClose={() => setIsAccountModalOpen(false)} method={method} />
                 </div>
+                <div className={styles.spacer}/>
+                <p className={styles.textTerms}>
+                    Need help with something else, please contact <Link href="mailto:support@machinename.dev?subject=Support%20Request&body=Please%20describe%20your%20issue%20here." className={styles.textTerms}>support</Link>
+                </p>
             </div>
+
+            <AccountModal isOpen={isAccountModalOpen} onClose={() => setIsAccountModalOpen(false)} method={method} />
         </div>
     );
 }

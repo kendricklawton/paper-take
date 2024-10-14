@@ -17,11 +17,16 @@
     bottom: 0;
     left: 0;
     right: 0;
+    transition: all 0.25s;
 }
 
 .container {
     max-width: 600px;
     width: 100%;
+}
+
+.dragging {
+   display: none;
 }
 
 .create,
@@ -81,7 +86,7 @@
 .create:hover,
 .read:hover,
 .noteEdit:hover {
-    box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
+    /* box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1); */
 }
 
 .footerWrapper {
@@ -128,17 +133,6 @@
 
 .backgroundMenu {
     flex-direction: row;
-}
-
-.menuItem {
-    padding: 1rem;
-    align-items: center;
-    color: inherit;
-    background-color: inherit;
-}
-
-.menuItem:hover {
-    background-color: gray;
 }
 
 /* Project Styles */

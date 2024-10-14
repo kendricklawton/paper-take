@@ -4,8 +4,13 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation'
 import styles from "../page.module.css";
 import { useAuthContext } from '../providers/AuthProvider';
-import { IconButton, InputAdornment } from '@mui/material';
-import { Close, VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material';
+import {
+    //  IconButton, 
+    InputAdornment
+ } from '@mui/material';
+import { 
+    // Close, 
+    VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material';
 import { FormButton, FormTextField } from './Styled';
 
 interface AccountModalProps {
@@ -31,10 +36,10 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
         setShowPassword(prev => !prev);
     };
 
-    const handleCloseButton = (event: React.FormEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-        clearValues();
-    };
+    // const handleCloseButton = (event: React.FormEvent<HTMLButtonElement>) => {
+    //     event.preventDefault();
+    //     clearValues();
+    // };
 
     const clearValues = () => {
         clearAuthError();
@@ -112,29 +117,36 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                 return (
                     <React.Fragment>
                         <h1>Update email</h1>
-                        <p>Current Email: {userEmail}</p>
+                       {
+                        userEmail && (
+                            <p>{userEmail}</p>
+                        )
+                       } 
                     </React.Fragment>
                 );
             case "password":
                 return (
                     <React.Fragment>
                         <h1>Reset password</h1>
-                        <p>Password reset link will be sent to the following email &apos;{userEmail}&apos;. To verify, type your email below.</p>
+                        <p>Password reset link will be sent to {userEmail}</p>
+                        <p>Type your email below to continue</p>
+                        {/* <p>Password reset link will be sent to the following email &apos;{userEmail}&apos;. To verify, type your email below.</p> */}
                     </React.Fragment>
                 );
             case "delete":
                 return (
                     <React.Fragment>
                         <h1>Delete account</h1>
-                        <p>We will promptly remove your account and all related information associated with the following email &apos;{userEmail}&apos;. 
-                        To verify, type &apos;delete-my-account&apos; below and enter your password. Please note that this is a permanent action.</p>
+                        <p>We will delete your account associated with the email &apos;{userEmail}&apos;</p>
+                        <p>Type &apos;delete-my-account&apos; and enter your password below to continue</p>
                     </React.Fragment>
                 );
             case "displayName":
                 return (
                     <React.Fragment>
                         <h1>Update display name</h1>
-                        <p>Current display name: {userDisplayName ? userDisplayName : 'N/A'}</p>
+                        { userDisplayName && ( <p>{userDisplayName}</p> )
+                    }
                     </React.Fragment>
                 );
             case "verification":
@@ -153,11 +165,11 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
     return (
         isOpen && (
             <div className={styles.modal}>
-                <div className={styles.closeButtonContainer}>
+                {/* <div className={styles.closeButtonContainer}>
                     <IconButton onClick={handleCloseButton} sx={{ color: 'gray' }}>
                         <Close />
                     </IconButton>
-                </div>
+                </div> */}
                 <div className={styles.wrapperAccount}>
                     {
                         FormHeader(method)
@@ -202,7 +214,8 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                                 id={method}
                                 value={deleteAccount}
                                 onChange={(event) => setDeleteAccount(event.target.value)}
-                                placeholder="delete-my-account"
+                                label="delete-my-account"
+                         
                                 autoComplete='off'
                                 variant="standard"
                             />

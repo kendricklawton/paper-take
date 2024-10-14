@@ -11,6 +11,20 @@ interface BackgroundIconButtonProps {
     selected?: boolean;
 }
 
+export const TransparentIconButton = styled(IconButton)<BackgroundIconButtonProps>(({ }) => ({
+    color: 'inherit',
+    backgroundColor: 'transparent',
+    '&:hover': {
+        backgroundColor: 'transparent',
+    }
+}));
+
+export const TransparentIcon = styled(Circle)({
+
+    color: 'transparent',
+    border: 'none',
+    // borderRadius: '50%',
+});
 export const BackgroundIconButton = styled(IconButton)<BackgroundIconButtonProps>(({ selected }) => ({
     padding: '0.25rem',
     '&:hover': {
@@ -53,7 +67,7 @@ export const NoteHeaderTextField = styled(TextField)({
         fontFamily: 'monospace',
         fontWeight: 'lighter',
         WebkitTapHighlightColor: 'transparent',
-        touchAction: 'manipulation',
+        touchAction: 'none',
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': { border: 'none' },
@@ -73,7 +87,7 @@ export const NoteBodyTextField = styled(TextField)({
         fontFamily: 'monospace',
         fontWeight: 'lighter',
         WebkitTapHighlightColor: 'transparent', 
-        touchAction: 'manipulation',
+        touchAction: 'none',
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': { border: 'none' },

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import styles from "../page.module.css";
 import { ToggleButtonGroup } from "@mui/material";
 import { StyledToggleButton } from '../components/Styled';
@@ -11,17 +11,30 @@ import { Note, Project } from "../models";
 import { v4 as uuidv4 } from 'uuid';
 
 const Notes: React.FC = () => {
-    const { notes, noteService } = useAppContext();
+    const { notes,
+        noteService 
+    } = useAppContext();
     const activeNotes = notes.filter(note => !note.isArchived && !note.isTrash);
     const [draggingNoteIndex, setDraggingNoteIndex] = useState<number | null>(null);
 
-    const handleDragStart = (index: number) => {
+    const handleDragStart = (event: React.DragEvent<HTMLDivElement>, index: number) => {
+        const dragDiv = event.currentTarget.cloneNode(true) as HTMLDivElement;
+        dragDiv.style.pointerEvents = 'none';
+        document.body.appendChild(dragDiv);
+        const rect = event.currentTarget.getBoundingClientRect();
+        const offsetX = event.clientX - rect.left;
+        const offsetY = event.clientY - rect.top;
+        event.dataTransfer.setDragImage(dragDiv, offsetX, offsetY);
+        setTimeout(() => {
+            document.body.removeChild(dragDiv);
+        }, 0);
         setDraggingNoteIndex(index);
     };
 
+
     const handleDragOver = (e: React.DragEvent<HTMLDivElement>, index: number) => {
         e.preventDefault();
-        e.stopPropagation();
+   
         console.log('Drag Over Index:', index);
     };
 
@@ -33,6 +46,7 @@ const Notes: React.FC = () => {
             noteService(newNotes);
         }
         setDraggingNoteIndex(null);
+
     };
 
     const newNote = new Note(
@@ -52,23 +66,38 @@ const Notes: React.FC = () => {
         <React.Fragment>
             <NoteGUI operation={'create'} note={newNote} />
             {activeNotes.length === 0 ? (
-                <div className={styles.pageText}>
-                    <p>Notes you create will appear here</p>
-                </div>
+                <React.Fragment>
+                    <div className={styles.pageText}>
+                        <p>Features Coming Soon</p>
+                    </div>
+                    <div className={styles.pageText}>
+                        <p>List Layout</p>
+                    </div>
+                    <div className={styles.pageText}>
+                        <p>App Settings</p>
+                    </div>
+                    <div className={styles.pageText}>
+                        <p>Notes you create will appear here</p>
+                    </div>
+                </React.Fragment>
+
             ) : (
                 activeNotes.map((note, index) => (
                     <React.Fragment key={index}>
                         <div className={styles.spacer} />
+                        { /* Todo - Create Draggable List */}
                         <NoteGUI
                             key={note.id}
                             operation={'read'}
                             note={note}
-                            draggable={true}
-                            handleDragOver={handleDragOver}
-                            handleDrop={handleDrop}
-                            noteIndex={index}
-                            handleDragStart={handleDragStart}
+        
+                        draggable={true}
+                        handleDragOver={handleDragOver}
+                        handleDrop={handleDrop}
+                        noteIndex={index}
+                        handleDragStart={handleDragStart}
                         />
+
                     </React.Fragment>
                 ))
             )}

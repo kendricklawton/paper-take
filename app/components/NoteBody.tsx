@@ -22,13 +22,15 @@ export default function NoteBody({
     const readOnlyMode = initialOperation === 'read' && !isModalMode;
     const placeholderText = 'Create a note...';
 
-    const handleFocus = () => {
+    const handleFocus = (event: React.FocusEvent<HTMLTextAreaElement>) => {
+        event.preventDefault()
         if (!readOnlyMode) {
             toggleModeTrue();
         }
     };
 
-    const handleClick = () => {
+    const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+        event.preventDefault()
         if (readOnlyMode) {
             toggleModeTrue();
         }
@@ -49,10 +51,10 @@ export default function NoteBody({
                     placeholder={placeholderText}
                     sx={{
                         '& .MuiInputBase-input': {
-                            cursor: isEditMode ? 'text' : 'pointer',
+                            cursor: isEditMode ? 'text' : 'default',
                         },
                         '& .MuiOutlinedInput-root': {
-                            cursor: isEditMode ? 'text' : 'pointer',
+                            cursor: isEditMode ? 'text' : 'default',
                         },
                     }}
                     value={content}

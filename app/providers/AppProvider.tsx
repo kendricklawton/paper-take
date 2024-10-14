@@ -238,7 +238,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
             setFilteredItems([]);
         } else {
             const lowercasedTerm = term.toLowerCase();
-            const filteredNotes = notes.filter(note => note.title.toLowerCase().includes(lowercasedTerm));
+            const filteredNotes = notes.filter(note =>
+                note.title.toLowerCase().includes(lowercasedTerm) ||
+                note.content.toLowerCase().includes(lowercasedTerm)
+            );
             const filteredProjects = projects.filter(project => project.title.toLowerCase().includes(lowercasedTerm));
             setFilteredItems([...filteredNotes, ...filteredProjects]);
         }

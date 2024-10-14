@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useAuthContext } from './providers/AuthProvider';
 import {
     InputAdornment,
-    Divider,
+    Divider
 } from '@mui/material';
 import {
     // Close,

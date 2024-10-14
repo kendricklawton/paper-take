@@ -10,7 +10,7 @@ import { Note } from '../models';
 
 interface NoteGUIProps {
     draggable?: boolean;
-    handleDragStart?: (index: number) => void;
+    handleDragStart?: (e: React.DragEvent<HTMLDivElement>, index: number) => void;
     handleDragOver?: (e: React.DragEvent<HTMLDivElement>, index: number) => void;
     handleDrop?: (index: number) => void;
     noteIndex?: number;
@@ -34,7 +34,9 @@ const NoteGUI: React.FC<NoteGUIProps> = ({
     const [isBackgroundMenuOpen, setIsBackgroundMenu] = useState(false);
     const [isFontMenuOpen, setIsFontMenu] = useState(false);
     const [isOptionsMenuOpen, setIsOptionsMenu] = useState(false);
-    // const [activeBackgroundColor, setActiveBackgroundColor] = useState(note.backgroundColor);
+    const [isHovering, setIsHovering] = useState<boolean>(false);
+
+
     const [contentArray, setContentArray] = useState([note.content]);
     const isArchived = note.isArchived;
     const isPinned = note.isPinned;
@@ -53,6 +55,13 @@ const NoteGUI: React.FC<NoteGUIProps> = ({
     const fontMenuRefButton = useRef<HTMLButtonElement | null>(null);
     const optionsMenuRef = useRef<HTMLDivElement | null>(null);
     const optionsMenuRefButton = useRef<HTMLButtonElement | null>(null);
+
+    const handleMouseEnter = () => {
+        setIsHovering(true);
+    };
+    const handleMouseLeave = () => {
+        setIsHovering(false);
+    }
 
     const handleTitleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (isTrash) return;
@@ -83,6 +92,7 @@ const NoteGUI: React.FC<NoteGUIProps> = ({
         setIsModalMode(false);
         setContentArray([content]);
         setIsEditMode(false);
+        setIsHovering(false);
         index.current = 0;
         nestedIndex.current = 0;
     }, [initialOperation, content]);
@@ -104,9 +114,12 @@ const NoteGUI: React.FC<NoteGUIProps> = ({
     };
 
     const handleDeleteNote = async () => {
+
         try {
-            await deleteNote(note.id);
-            setInfo('Note deleted');
+            if (isTrash) {
+                await deleteNote(note.id);
+                setInfo('Note deleted');
+            }
         } catch (error) {
             console.log(error);
         }
@@ -153,52 +166,56 @@ const NoteGUI: React.FC<NoteGUIProps> = ({
 
     const handleClickOutside = useCallback((event: MouseEvent) => {
         event.stopPropagation();
-        const handleCloseMenu = (
-            isOpen: boolean,
-            menuRef: React.RefObject<HTMLElement>,
-            menuButtonRef: React.RefObject<HTMLElement>,
-            setIsOpen: React.Dispatch<React.SetStateAction<boolean>>,
-            event: MouseEvent
-        ) => {
-            if (
-                isOpen &&
-                menuRef.current &&
-                !menuRef.current.contains(event.target as Node) &&
-                !(menuButtonRef.current && menuButtonRef.current.contains(event.target as Node))
-            ) {
-                setIsOpen(false);
-            }
-        };
+        // const handleCloseMenu = (
+        //     isOpen: boolean,
+        //     menuRef: React.RefObject<HTMLElement>,
+        //     menuButtonRef: React.RefObject<HTMLElement>,
+        //     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>,
+        //     event: MouseEvent
+        // ) => {
+        //     if (
+        //         isOpen &&
+        //         menuRef.current &&
+        //         !menuRef.current.contains(event.target as Node) &&
+        //         !(menuButtonRef.current && menuButtonRef.current.contains(event.target as Node))
+        //     ) {
+        //         setIsOpen(false);
+        //         setIsHovering(false);
+        //     }
+        // };
 
-        handleCloseMenu(isBackgroundMenuOpen, backgroundMenuRef, backgroundMenuRefButton, setIsBackgroundMenu, event);
-        handleCloseMenu(isFontMenuOpen, fontMenuRef, fontMenuRefButton, setIsFontMenu, event);
-        handleCloseMenu(isOptionsMenuOpen, optionsMenuRef, optionsMenuRefButton, setIsOptionsMenu, event);
-        // if (
-        //     isBackgroundMenuOpen &&
-        //     backgroundMenuRef.current &&
-        //     !backgroundMenuRef.current.contains(event.target as Node) &&
-        //     !(backgroundMenuRefButton.current && backgroundMenuRefButton.current.contains(event.target as Node))
-        // ) {
-        //     setIsBackgroundMenu(false);
-        // }
-        
-        // if (
-        //     isFontMenuOpen &&
-        //     fontMenuRef.current &&
-        //     !fontMenuRef.current.contains(event.target as Node) &&
-        //     !(fontMenuRefButton.current && fontMenuRefButton.current.contains(event.target as Node))
-        // ) {
-        //     setIsFontMenu(false);
-        // }
+        // handleCloseMenu(isBackgroundMenuOpen, backgroundMenuRef, backgroundMenuRefButton, setIsBackgroundMenu, event);
+        // handleCloseMenu(isFontMenuOpen, fontMenuRef, fontMenuRefButton, setIsFontMenu, event);
+        // handleCloseMenu(isOptionsMenuOpen, optionsMenuRef, optionsMenuRefButton, setIsOptionsMenu, event);
+        if (
+            isBackgroundMenuOpen &&
+            backgroundMenuRef.current &&
+            !backgroundMenuRef.current.contains(event.target as Node) &&
+            !(backgroundMenuRefButton.current && backgroundMenuRefButton.current.contains(event.target as Node))
+        ) {
+            setIsBackgroundMenu(false);
+            // setIsHovering(false);
+        }
 
-        // if (
-        //     isOptionsMenuOpen &&
-        //     optionsMenuRef.current &&
-        //     !optionsMenuRef.current.contains(event.target as Node) &&
-        //     !(optionsMenuRefButton.current && optionsMenuRefButton.current.contains(event.target as Node))
-        // ) {
-        //     setIsOptionsMenu(false);
-        // }
+        if (
+            isFontMenuOpen &&
+            fontMenuRef.current &&
+            !fontMenuRef.current.contains(event.target as Node) &&
+            !(fontMenuRefButton.current && fontMenuRefButton.current.contains(event.target as Node))
+        ) {
+            setIsFontMenu(false);
+            // setIsHovering(false);
+        }
+
+        if (
+            isOptionsMenuOpen &&
+            optionsMenuRef.current &&
+            !optionsMenuRef.current.contains(event.target as Node) &&
+            !(optionsMenuRefButton.current && optionsMenuRefButton.current.contains(event.target as Node))
+        ) {
+            setIsOptionsMenu(false);
+            // setIsHovering(false);
+        }
 
         if (isEditMode || isTrash) {
             if (initialOperation === 'create' && noteCreateRef.current && !noteCreateRef.current.contains(event.target as Node)) {
@@ -210,14 +227,18 @@ const NoteGUI: React.FC<NoteGUIProps> = ({
     }, [isOptionsMenuOpen, isBackgroundMenuOpen, isFontMenuOpen, isEditMode, isTrash, initialOperation, handleNote]);
 
     const toggleArchive = async () => {
+        if (isArchived) {
+            setInfo('Note unarchived');
+        } else {
+            setInfo('Note archived');
+        }
         await updateNote({ ...note, isArchived: !isArchived } as Note);
-        setInfo(isArchived ? 'Note archived' : 'Note unarchived');
         setIsOptionsMenu(false);
     };
 
     const handleBackgroundColor = async (color: "" | "#fff59c" | "#aaf0d1" | "#b2dfdb" | "#f5f5f5") => {
         setBackgroundColor(color);
-        if(initialOperation === 'read' && !isTrash){
+        if (initialOperation === 'read' && !isTrash) {
             await updateNote({ ...note, backgroundColor: color } as Note);
         }
     };
@@ -259,69 +280,78 @@ const NoteGUI: React.FC<NoteGUIProps> = ({
         };
     }, [isModalMode]);
 
+
+
     return (
-        <div
-            draggable={initialOperation === 'read' && !isModalMode}
-            onDragStart={() => handleDragStart && handleDragStart(noteIndex ?? 0)}
-            onDragOver={(e) => handleDragOver && handleDragOver(e, noteIndex ?? 0)}
-            onDrop={() => handleDrop && handleDrop(noteIndex ?? 0)}
-            className={isModalMode ? styles.containerModal : styles.container}
-        >
-            <form
-                className={!isModalMode ? (initialOperation === 'create' ? styles.create : styles.read) : styles.noteEdit}
-                onSubmit={handleSubmit}
-                ref={initialOperation === 'create' ? noteCreateRef : noteEditRef}
-                style={{ backgroundColor: backgroundColor}}
+     
+
+
+            <div
+                draggable={initialOperation === 'read' && !isModalMode}
+                onDragStart={(e) => handleDragStart && handleDragStart(e, noteIndex ?? 0)}
+                onDragOver={(e) => handleDragOver && handleDragOver(e, noteIndex ?? 0)}
+                onDrop={() => handleDrop && handleDrop(noteIndex ?? 0)}
+                className={(isModalMode ? styles.containerModal : styles.container)}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
             >
-                <div
-                    className={(initialOperation === 'read' && !isModalMode) ? styles.infoContainerRead : styles.infoContainer}
+                <form
+                    className={!isModalMode ? (initialOperation === 'create' ? styles.create : styles.read) : styles.noteEdit}
+                    onSubmit={handleSubmit}
+                    ref={initialOperation === 'create' ? noteCreateRef : noteEditRef}
+                    style={{ backgroundColor: backgroundColor }}
                 >
-                    <NoteHeader
+                    <div
+                        className={(initialOperation === 'read' && !isModalMode) ? styles.infoContainerRead : styles.infoContainer}
+                    >
+                        <NoteHeader
+                            initialOperation={initialOperation}
+                            isEditMode={isEditMode}
+                            isModalMode={isModalMode}
+                            title={title}
+                            handleTitleChange={handleTitleChange}
+                            toggleModeTrue={toggleModeTrue}
+                        />
+                        <NoteBody
+                            content={content}
+                            handleContentChange={handleContentChange}
+                            initialOperation={initialOperation}
+                            isEditMode={isEditMode}
+                            isModalMode={isModalMode}
+                            toggleModeTrue={toggleModeTrue}
+                        />
+                    </div>
+                    <NoteFooter
+                        backgroundColor={backgroundColor}
+                        contentArray={contentArray}
                         initialOperation={initialOperation}
+                        isArchived={isArchived}
                         isEditMode={isEditMode}
-                        isModalMode={isModalMode}
-                        title={title}
-                        handleTitleChange={handleTitleChange}
-                        toggleModeTrue={toggleModeTrue}
+                        isHovering={isHovering}
+                        isBackgroundMenuOpen={isBackgroundMenuOpen}
+                        isFontMenuOpen={isFontMenuOpen}
+                        isOptionsMenuOpen={isOptionsMenuOpen}
+                        isTrash={isTrash}
+                        backgroundMenuRef={backgroundMenuRef}
+                        backgroundMenuRefButton={backgroundMenuRefButton}
+                        fontMenuRef={fontMenuRef}
+                        fontMenuRefButton={fontMenuRefButton}
+                        optionsMenuRef={optionsMenuRef}
+                        optionsMenuRefButton={optionsMenuRefButton}
+                        index={index}
+                        handleBackgroundColor={handleBackgroundColor}
+                        handleDeleteNote={handleDeleteNote}
+                        handleRedo={handleRedo}
+                        handleUndo={handleUndo}
+                        setIsBackgroundMenu={setIsBackgroundMenu}
+                        setIsFontMenu={setIsFontMenu}
+                        setIsOptionsMenu={setIsOptionsMenu}
+                        toggleArchive={toggleArchive}
+                        toggleDelete={toggleDelete}
                     />
-                    <NoteBody
-                        content={content}
-                        handleContentChange={handleContentChange}
-                        initialOperation={initialOperation}
-                        isEditMode={isEditMode}
-                        isModalMode={isModalMode}
-                        toggleModeTrue={toggleModeTrue}
-                    />
-                </div>
-                <NoteFooter
-                    backgroundColor={backgroundColor}
-                    contentArray={contentArray}
-                    initialOperation={initialOperation}
-                    isArchived={isArchived}
-                    isEditMode={isEditMode}
-                    isBackgroundMenuOpen={isBackgroundMenuOpen}
-                    isFontMenuOpen={isFontMenuOpen}
-                    isOptionsMenuOpen={isOptionsMenuOpen}
-                    isTrash={isTrash}
-                    backgroundMenuRef={backgroundMenuRef}
-                    backgroundMenuRefButton={backgroundMenuRefButton}
-                    fontMenuRef={fontMenuRef}
-                    fontMenuRefButton={fontMenuRefButton}
-                    optionsMenuRef={optionsMenuRef}
-                    optionsMenuRefButton={optionsMenuRefButton}
-                    index={index}
-                    handleBackgroundColor={handleBackgroundColor}
-                    handleDeleteNote={handleDeleteNote}
-                    handleRedo={handleRedo}
-                    handleUndo={handleUndo}
-                    setIsBackgroundMenu={setIsBackgroundMenu}
-                    setIsFontMenu={setIsFontMenu}
-                    setIsOptionsMenu={setIsOptionsMenu}
-                    toggleArchive={toggleArchive}
-                    toggleDelete={toggleDelete}
-                />
-            </form>
-        </div>
+                </form>
+            </div>
+      
     );
 };
 
