@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 // import { useState } from 'react';
 // import { useRouter } from 'next/navigation'
 // import { useAppContext } from '../providers/AppProvider';
@@ -70,6 +71,88 @@ const ProjectGUI: React.FC<ProjectGUIProps> = ({ operation, project }) => {
                     />
                 </div>
             </form >
+            <React.Fragment>
+                {/* {isTrash ?
+                    (
+                        <div className={styles.footerWrapper}>
+                            <div className={styles.footerContainer}>
+                                <div className={styles.footerLeading}>
+                                    <StyledIconButton aria-label="Delete note forever" onClick={() => handleDeleteNote()}>
+                                        <DeleteForeverOutlined />
+                                    </StyledIconButton>
+                                    <StyledIconButton aria-label="Restore from trash" onClick={() => toggleDelete()}>
+                                        <RestoreFromTrashOutlined />
+                                    </StyledIconButton>
+                                </div>
+                                <StyledIconButton disabled={true}>
+                                    <NoteOutlined sx={{ color: 'gray' }} />
+                                </StyledIconButton>
+                            </div>
+                        </div>
+                    )
+                    :
+                    showFooter && (
+                        <div className={styles.footerWrapper}>
+                            <div className={styles.footerContainer}>
+                                <div className={styles.footerLeading}>
+                                    <div className={styles.backgroundAnchor}>
+                                        <StyledIconButton ref={backgroundMenuRefButton} className={styles.menuButton}
+                                            onClick={() => setIsBackgroundMenu(prev => !prev)}>
+                                            <PaletteOutlined />
+                                        </StyledIconButton>
+                                        {isBackgroundMenuOpen && (
+                                            <div className={styles.backgroundMenu} ref={backgroundMenuRef}>
+                                                <BackgroundIconButton selected={backgroundColor === ''} onClick={() => handleBackgroundColor('')}>
+                                                    <BackgroundCircle selected={backgroundColor === ''} />
+                                                </BackgroundIconButton>
+                                                <BackgroundIconButton selected={backgroundColor === '#fff59c'} onClick={() => handleBackgroundColor('#fff59c')}>
+                                                    <BackgroundCircle selected={backgroundColor === '#fff59c'} bgcolor={'#fff59c'} />
+                                                </BackgroundIconButton>
+                                                <BackgroundIconButton selected={backgroundColor === '#aaf0d1'} onClick={() => handleBackgroundColor('#aaf0d1')}>
+                                                    <BackgroundCircle selected={backgroundColor === '#aaf0d1'} bgcolor={'#aaf0d1'} />
+                                                </BackgroundIconButton>
+                                                <BackgroundIconButton selected={backgroundColor === '#b2dfdb'} onClick={() => handleBackgroundColor('#b2dfdb')}>
+                                                    <BackgroundCircle selected={backgroundColor === '#b2dfdb'} bgcolor={'#b2dfdb'} />
+                                                </BackgroundIconButton>
+                                                <BackgroundIconButton selected={backgroundColor === '#f5f5f5'} onClick={() => handleBackgroundColor('#f5f5f5')}>
+                                                    <BackgroundCircle selected={backgroundColor === '#f5f5f5'} bgcolor={'#f5f5f5'} />
+                                                </BackgroundIconButton>
+                                            </div>
+                                        )}
+                                    </div>
+                                    {initialOperation !== 'create' && (
+                                        <StyledIconButton aria-label="Archive" onClick={() => toggleArchive()}>
+                                            {isArchived ? <Archive /> : <ArchiveOutlined />}
+                                        </StyledIconButton>
+                                    )}
+                                    {isEditMode && (
+                                        <React.Fragment>
+                                            <StyledIconButton aria-label="Undo" onClick={handleUndo} disabled={index.current === 0}>
+                                                <UndoOutlined />
+                                            </StyledIconButton>
+                                            <StyledIconButton aria-label="Redo" onClick={handleRedo} disabled={index.current === contentArray.length - 1}>
+                                                <RedoOutlined />
+                                            </StyledIconButton>
+                                        </React.Fragment>
+                                    )}
+                                    <div className={styles.settingsAnchor}>
+                                        <StyledIconButton ref={optionsMenuRefButton} className={styles.menuButton}
+                                            onClick={() => setIsOptionsMenu(prev => !prev)}>
+                                            <MoreVert />
+                                        </StyledIconButton>
+                                        {isOptionsMenuOpen && (
+                                            <div className={styles.menu} ref={optionsMenuRef}>
+                                                <div className={styles.menuItem} onClick={toggleDelete}>Delete Note</div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                                <Button sx={{ borderRadius: '0px' }} type="submit">Close</Button>
+                            </div>
+                        </div>
+                    )
+                } */}
+            </React.Fragment>
         </div>
     );
 }

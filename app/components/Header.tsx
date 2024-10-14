@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { IconButton } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import {
     AccountBoxOutlined, ArchiveOutlined, CircleOutlined, Close, DeleteOutlined, LoginOutlined,
@@ -21,6 +20,7 @@ import {
 import { useAppContext } from '../providers/AppProvider';
 import { useAuthContext } from '../providers/AuthProvider';
 import styles from "./Header.module.css";
+import { StyledIconButton } from './Styled';
 
 export default function Header() {
     // Contexts
@@ -148,9 +148,9 @@ export default function Header() {
             {/* Nav Leading */}
             <div className={styles.headerLeading}>
                 <div className={styles.navAnchor}>
-                    <IconButton ref={navButtonRef} onClick={() => setIsNavMenuOpen(prev => !prev)} sx={{ color: 'gray' }}>
+                    <StyledIconButton ref={navButtonRef} onClick={() => setIsNavMenuOpen(prev => !prev)}>
                         {isNavMenuOpen ? <Close /> : <MenuOpen />}
-                    </IconButton>
+                    </StyledIconButton>
                     {isNavMenuOpen && (
                         <nav className={styles.menu} ref={navMenuRef}>
                             <Link className={pathname === '/' ? styles.navLinkActive : styles.navLink} href='/'>
@@ -179,9 +179,9 @@ export default function Header() {
                 </div>
                 {/* Nav Input */}
                 <div className={styles.searchInputContainer}>
-                    <IconButton onClick={handleSearchButton} sx={{ color: 'gray' }}>
+                    <StyledIconButton onClick={handleSearchButton}>
                         <Search />
-                    </IconButton>
+                    </StyledIconButton>
                     <input
                         autoComplete="off"
                         className={styles.searchInput}
@@ -194,9 +194,9 @@ export default function Header() {
                         ref={inputRef}
                     />
                     {pathname === '/search' && (
-                        <IconButton onClick={handleCloseButton} sx={{ color: 'gray' }}>
+                        <StyledIconButton onClick={handleCloseButton}>
                             <Close />
-                        </IconButton>
+                        </StyledIconButton>
                     )}
                 </div>
             </div>
@@ -205,22 +205,22 @@ export default function Header() {
                 {
                     user && (
                         (isLoadingApp || isLoadingAuth) ? (
-                            <IconButton sx = {{ color: 'gray' }}>
+                            <StyledIconButton>
                                 <CircularProgress size={20} />
-                            </IconButton>
+                            </StyledIconButton>
                         ) : (
-                            <IconButton onClick={fetchData} sx={{ color: 'gray'}}>
+                            <StyledIconButton onClick={fetchData}>
                                 <Refresh />
-                            </IconButton>
+                            </StyledIconButton>
                         )
                     )
                 }
                 {/* <div className={styles.settingsAnchor}>
-                    <IconButton
+                    <StyledIconButton
                         ref={settingsButtonRef}
                         onClick={() => setIsSettingsMenuOpen(prev => !prev)}>
                         {isSettingsMenuOpen ? <Settings /> : <SettingsOutlined />}
-                    </IconButton>
+                    </StyledIconButton>
                     {isSettingsMenuOpen && (
                         <nav className={styles.menu} ref={settingsMenuRef}>
                             <div className={styles.navLink}>
@@ -236,15 +236,9 @@ export default function Header() {
                     )}
                 </div> */}
                 <div className={styles.accountAnchor}>
-                    <IconButton
-                        ref={accountButtonRef}
-                        onClick={() => setIsAccountMenuOpen(prev => !prev)}
-                        sx={{
-                            color: 'gray'
-                        }}
-                    >
+                    <StyledIconButton ref={accountButtonRef} onClick={() => setIsAccountMenuOpen(prev => !prev)}>
                         {isAccountMenuOpen ? <Circle /> : <CircleOutlined />}
-                    </IconButton>
+                    </StyledIconButton>
                     {isAccountMenuOpen && (
                         <nav className={styles.menu} ref={accountMenuRef}>
                             {user && (

@@ -4,15 +4,17 @@ export class Note {
     createdAt: Timestamp | undefined;
     id: string;
     title: string;
+    backgroundColor: '' | '#fff59c' | '#aaf0d1' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5';
     content: string;
     isArchived: boolean;
     isPinned: boolean;
     isTrash: boolean;
     images: string[];
-    reminder?: Date;
+    reminder: Timestamp | undefined;
 
     constructor(
         createdAt: Timestamp | undefined,
+        backgroundColor: '' | '#fff59c' | '#aaf0d1' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5',
         id: string,
         title: string,
         content: string,
@@ -20,9 +22,10 @@ export class Note {
         isPinned: boolean,
         isTrash: boolean,
         images: string[] = [],
-        reminder?: Date
+        reminder: Timestamp | undefined,
     ) {
         this.createdAt = createdAt;
+        this.backgroundColor = backgroundColor;
         this.id = id;
         this.title = title;
         this.content = content;
@@ -35,12 +38,13 @@ export class Note {
 
     static fromJSON(jsonString: string): Note | null {
         try {
-            const { createdAt, id, title, content, isArchived,
+            const { createdAt, backgroundColor, id, title, content, isArchived,
                 isPinned, isTrash, reminder, images = [],
             } = JSON.parse(jsonString);
 
             return new Note(
                 createdAt,
+                backgroundColor,
                 id,
                 title,
                 content,
@@ -48,7 +52,7 @@ export class Note {
                 isPinned,
                 isTrash,
                 images,
-                reminder ? new Date(reminder) : undefined
+                reminder
             );
         } catch (error) {
             console.error('Failed to parse JSON:', error);
@@ -59,6 +63,7 @@ export class Note {
     toJSON(): string {
         return JSON.stringify({
             createdAt: this.createdAt,
+            backgroundColor: this.backgroundColor,
             id: this.id,
             title: this.title,
             content: this.content,
@@ -66,7 +71,7 @@ export class Note {
             isPinned: this.isPinned,
             isTrash: this.isTrash,
             images: this.images,
-            reminder: this.reminder?.toISOString() || null
+            reminder: this.reminder
         });
     }
 }

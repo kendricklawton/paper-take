@@ -15,10 +15,10 @@ export default function Trash() {
             {trashNotes.length === 0 ? (
                 <div className={styles.pageTitle}><p>Empty Trash</p></div>
             ) : (
-                trashNotes.map(note => (
+                trashNotes.map((note, index) => (
                     <React.Fragment key={note.id}>
-                        <div className={styles.spacer} key={note.id} />
                         <NoteGUI note={note} operation='read' key={note.id} />
+                        <div className={styles.spacer} key={index} />
                     </React.Fragment>
                 ))
             )}

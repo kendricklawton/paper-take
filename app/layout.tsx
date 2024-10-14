@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "./components/Header";
+// import Information from "./components/Information";
 import ProviderWrapper from "./providers/ProviderWrapper";
+import Information from "./components/Information";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.papertake.io"),
@@ -43,7 +45,7 @@ export default function RootLayout({
         <ProviderWrapper>
           <Header />
           {children}
-          {/* <Information /> */}
+          <Information />
         </ProviderWrapper>
         {/* <footer>
           <p>&copy; {new Date().getFullYear()} Machine Name. All rights reserved.</p>

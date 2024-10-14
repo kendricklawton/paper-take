@@ -29,7 +29,7 @@ interface AppContextType {
     appError: string;
     currentList: 'notes' | 'projects';
     filteredItems: (Note | Project)[];
-    info: string[];
+    info: string;
     isLoadingApp: boolean;
     isLoginModalOpen: boolean;
     notes: Note[];
@@ -46,7 +46,7 @@ interface AppContextType {
     setCurrentList: React.Dispatch<React.SetStateAction<'notes' | 'projects'>>;
     setIsLoadingApp: React.Dispatch<React.SetStateAction<boolean>>;
     setIsLoginModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    setInfo: React.Dispatch<React.SetStateAction<string[]>>;
+    setInfo: React.Dispatch<React.SetStateAction<string>>;
     setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
     setProjects: React.Dispatch<React.SetStateAction<Project[]>>;
     noteService: (newNotes: Note[]) => Promise<void>;
@@ -69,7 +69,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     const [projects, setProjects] = useState<Project[]>([]);
     const [filteredItems, setFilteredItems] = useState<(Note | Project)[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [info, setInfo] = useState<string[]>([]);
+    const [info, setInfo] = useState<string>('');
     const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
     const [isLoadingApp, setIsLoadingApp] = useState<boolean>(false);
 

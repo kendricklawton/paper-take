@@ -13,10 +13,10 @@ export default function Archive() {
             {archivedNotes.length === 0 ? (
                 <div className={styles.pageTitle}><p>Empty Archive</p></div>
             ) : (
-                archivedNotes.map(note => (
+                archivedNotes.map((note, index) => (
                     <React.Fragment key={note.id}>
-                        <div className={styles.spacer} key={note.id} />
                         <NoteGUI note={note} operation='read' key={note.id} />
+                        <div className={styles.spacer} key={index} />
                     </React.Fragment>
                 ))
             )}

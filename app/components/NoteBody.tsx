@@ -49,10 +49,10 @@ export default function NoteBody({
                     placeholder={placeholderText}
                     sx={{
                         '& .MuiInputBase-input': {
-                            cursor: isEditMode ? 'text' : 'default',
+                            cursor: isEditMode ? 'text' : 'pointer',
                         },
                         '& .MuiOutlinedInput-root': {
-                            cursor: isEditMode ? 'text' : 'default',
+                            cursor: isEditMode ? 'text' : 'pointer',
                         },
                     }}
                     value={content}

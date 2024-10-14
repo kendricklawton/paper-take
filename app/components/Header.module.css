@@ -11,6 +11,7 @@
     justify-content: space-between;
     box-shadow: 0 2px 2px rgba(0.1, 0.1, 0.1, 0.1);
     z-index: 1;
+    background-color: white;
 }
 
 .headerScrolled {
@@ -43,7 +44,6 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    text-decoration: none;
 }
 
 .accountAnchor,
@@ -97,7 +97,8 @@
 }
 
 .navLinkActive {
-    background-color: #fee8b3;
+    background-color: #fff59c;
+    /* background-color: #fee8b3; */
 }
 
 .searchInputContainer {
@@ -134,7 +135,8 @@
 @media(prefers-color-scheme: dark) {
     .header,
     .headerScrolled,
-    .menu {
+    .menu,
+    .backgroundMenu {
         background-color: #121212;
     }
 
@@ -147,7 +149,8 @@
         border-bottom: 0.5px solid gray;
     }
 
-    .menu {
+    .menu,
+    .backgroundMenu {
         border: 0.5px solid gray;
     }
 }

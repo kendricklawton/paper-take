@@ -116,9 +116,11 @@ export default function Login() {
                     setErrors({ ...errors, confirmPassword: 'Passwords do not match' });
                     return;
                 }
-                
+
                 await createUserAccount(email, password);
                 alert('Account created successfully. Please check your email for a verification link.');
+                clearValues();
+                router.push('/');
             }
         } catch (error) {
             console.log('Error:', error);
@@ -136,7 +138,7 @@ export default function Login() {
     };
 
     return (
-        <div className={styles.page}>
+        <div className={styles.pageLogin}>
             <div className={styles.closeButtonContainer}>
                 <IconButton onClick={handleCloseButton} sx={{ color: 'gray' }}>
                     <Close />
@@ -240,16 +242,19 @@ export default function Login() {
                     </React.Fragment>
                 )}
                 <div className={styles.textButtonContainer}>
-                    {!isLoginHelp && (
+                    {!isLoginHelp 
+                    && (
                         <Button type="button" sx={{
+                            color: 'inherit',
                             borderRadius: '0px',
-                        }} onClick={handleSwitch}>
+                            '&:hover': { backgroundColor: 'lightgray' }}} onClick={handleSwitch}>
                             {isLogin ? 'Create an account' : 'Already have an account?'}
                         </Button>
                     )}
                     <Button type="button" sx={{
+                        color: 'inherit',
                         borderRadius: '0px',
-                    }} onClick={toggleLoginHelp}>
+                        '&:hover': { backgroundColor: 'lightgray' }}} onClick={toggleLoginHelp}>
                         {isLoginHelp ? 'Back' : 'Log in Help'}
                     </Button>
                 </div>

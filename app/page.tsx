@@ -2,22 +2,13 @@
 
 import React, { useState } from 'react';
 import styles from "./page.module.css";
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { ToggleButtonGroup } from "@mui/material";
+import { StyledToggleButton } from './components/Styled';
 import { useAppContext } from "./providers/AppProvider";
 import NoteGUI from "./components/NoteGUI";
 import ProjectGUI from "./components/ProjectGUI";
 import { Note, Project } from "./models";
 import { v4 as uuidv4 } from 'uuid';
-
-const toggleButtonStyles = {
-    fontSize: 'x-large',
-    fontWeight: 'lighter',
-    fontFamily: 'monospace',
-    color: 'inherit',
-    border: 'none',
-    borderRadius: '0px',
-    textTransform: 'none'
-};
 
 const Notes: React.FC = () => {
     const { notes, noteService } = useAppContext();
@@ -44,17 +35,22 @@ const Notes: React.FC = () => {
         setDraggingNoteIndex(null);
     };
 
+    const newNote = new Note(
+        undefined,
+        '',
+        uuidv4(),
+        '',
+        '',
+        false,
+        false,
+        false,
+        [],
+        undefined
+    )
+
     return (
         <React.Fragment>
-            <NoteGUI operation={'create'} note={new Note(
-                undefined,
-                '',
-                '',
-                '',
-                false,
-                false,
-                false
-            )} />
+            <NoteGUI operation={'create'} note={newNote} />
             {activeNotes.length === 0 ? (
                 <div className={styles.pageText}>
                     <p>Notes you create will appear here</p>
@@ -135,12 +131,8 @@ export default function Home() {
                     border: 'none',
                     borderRadius: '0px',
                 }}>
-                <ToggleButton value="notes" sx={toggleButtonStyles}>
-                    Notes
-                </ToggleButton>
-                <ToggleButton value="projects" sx={toggleButtonStyles}>
-                    Projects
-                </ToggleButton>
+                <StyledToggleButton value="notes">Notes</StyledToggleButton>
+                <StyledToggleButton value="projects">Projects</StyledToggleButton>
             </ToggleButtonGroup>
             <div className={styles.spacer} />
             {

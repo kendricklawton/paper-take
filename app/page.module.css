@@ -1,11 +1,20 @@
-.page {
+.page,
+.pageLogin {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-left: 1rem;
   padding-right: 1rem;
+
+}
+.page {
   padding-top: 5rem;
   padding-bottom: 5rem;
+}
+
+.pageLogin {
+  height: 100%;
+  justify-content: center;
 }
 
 .pageTitle {
@@ -34,6 +43,7 @@
 
 .wrapperLogin {
   max-width: 800px;
+  /* background: pink; */
 }
 
 .wrapperAccount,
@@ -54,7 +64,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 5rem;
+  justify-content: center;
+  /* padding-top: 5rem; */
+  /* padding-bottom: 5rem; */
   padding-left: 1rem;
   padding-right: 1rem;
   z-index: 5;
@@ -137,6 +149,13 @@
   max-width: 600px;
 }
 
+.anchor {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
 .spacer {
   height: 1rem;
 }
@@ -144,6 +163,9 @@
 .textButtonContainer {
   display: flex;
   flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
 }
 
 .textError {
@@ -154,6 +176,24 @@
 .textTerms {
   color: gray;
   font-size: small;
+}
+
+.information {
+  position: fixed;
+  bottom: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  background-color: black;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: 4rem;
+  width: 300px;
+  left: 1rem;
+  box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
+  z-index: 3;
 }
 
 @media (prefers-color-scheme: dark) {
