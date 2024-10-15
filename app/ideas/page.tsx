@@ -8,22 +8,23 @@ import styles from "../page.module.css";
 import { useAppContext } from "../providers/AppProvider";
 import NoteGUI from "../components/NoteGUI";
 import ProjectGUI from "../components/ProjectGUI";
-import { Note, 
+import {
+    Note,
     Project
- } from "../models";
+} from "../models";
 import { v4 as uuidv4 } from 'uuid';
 
 const Notes: React.FC = () => {
-    const { 
-        notes, 
+    const {
+        notes,
         projects,
     } = useAppContext();
 
     const activeNotes: Note[] = notes.filter(note => !note.isArchived && !note.isTrash);
     const activeProjects: Project[] = projects.filter(project => !project.isArchived && !project.isTrash);
-    
+
     const activeIdeas: (Note | Project)[] = [...activeNotes, ...activeProjects];
-    
+
     // const activeIdeas = notes.filter(note => !note.isArchived && !note.isTrash && note.isIdea ) ;
     // const [draggingNoteIndex, setDraggingNoteIndex] = useState<number | null>(null);
 
@@ -46,7 +47,7 @@ const Notes: React.FC = () => {
 
     // const handleDragOver = (e: React.DragEvent<HTMLDivElement>, index: number) => {
     //     e.preventDefault();
-   
+
     //     console.log('Drag Over Index:', index);
     // };
 
@@ -102,7 +103,7 @@ const Notes: React.FC = () => {
         //                     key={note.id}
         //                     operation={'read'}
         //                     note={note}
-        
+
         //                 draggable={true}
         //                 handleDragOver={handleDragOver}
         //                 handleDrop={handleDrop}
@@ -117,33 +118,24 @@ const Notes: React.FC = () => {
         <React.Fragment>
             <NoteGUI operation={'create'} note={newNote} />
             {activeNotes.length === 0 ? (
-                <React.Fragment>
-                    <div className={styles.pageText}>
-                        <p>Features Coming Soon</p>
-                    </div>
-                    <div className={styles.pageText}>
-                        <p>List Layout</p>
-                    </div>
-                    <div className={styles.pageText}>
-                        <p>App Settings</p>
-                    </div>
-                    <div className={styles.pageText}>
-                        <p>Notes you create will appear here</p>
-                    </div>
-                </React.Fragment>
+
+                <div className={styles.pageText}>
+                    <p>Notes you create will appear here</p>
+                </div>
+
 
             ) : (
                 activeIdeas.map((idea, index) => (
-           
+
                     <React.Fragment key={index}>
                         <div className={styles.spacer}>
                             {/* <p>Id - {idea.id}</p> */}
                         </div>
 
                         { /* Todo - Create Draggable List */}
-      
+
                         {
-                            idea.type === 'note' ? 
+                            idea.type === 'note' ?
                                 <NoteGUI
                                     key={idea.id}
                                     operation={'read'}
@@ -154,7 +146,7 @@ const Notes: React.FC = () => {
                                 // noteIndex={index}
                                 // handleDragStart={handleDragStart}
                                 />
-                            :
+                                :
                                 <ProjectGUI
                                     key={idea.id}
                                     operation={'read'}
@@ -167,7 +159,7 @@ const Notes: React.FC = () => {
                                 />
 
                         }
- 
+
                     </React.Fragment>
                 ))
             )}

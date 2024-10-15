@@ -15,7 +15,7 @@ import {
 } from '@mui/icons-material';
 import styles from "./GUI.module.css"
 import React from 'react';
-import { BackgroundCircle, BackgroundIconButton, StyledIconButton, TransparentIconButton, StyledTextButton, TransparentIcon } from './Styled';
+import { BackgroundCircle, BackgroundIconButton, StyledIconButton, TransparentIconButton, StyledTextButton, TransparentIcon, StyledNoteButton } from './Styled';
 import { Button } from '@mui/material';
 
 interface NoteFooterProps {
@@ -178,7 +178,7 @@ export default function NoteFooter({
                                                 // }}
                                                 >
 
-                                                    <StyledTextButton type="button" onClick={toggleDelete}>Delete</StyledTextButton>
+                                                    <StyledNoteButton type="button" onClick={toggleDelete}>Delete</StyledNoteButton>
                                                 </div>
                                             )}
                                         </div>
@@ -192,8 +192,7 @@ export default function NoteFooter({
                             }
                             <React.Fragment>
                                 {showCloseButton && (
-                                    <Button type="submit">Close</Button>
-                                    // <StyledTextButton  onClick={handleNote}>Close</StyledTextButton>
+                                    <StyledTextButton type="submit">Close</StyledTextButton>
                                 )}
                             </React.Fragment>
                         </div>

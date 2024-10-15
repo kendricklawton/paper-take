@@ -1,8 +1,8 @@
 'use client';
 
-import { IconButton, InputAdornment, Tooltip, Typography } from "@mui/material";
-import { NoteBodyTextField } from "./Styled";
-import { AccountTreeOutlined, NoteOutlined } from "@mui/icons-material";
+import { InputAdornment } from "@mui/material";
+import { NoteBodyTextField, StyledNoteButton } from "./Styled";
+import { AccountTreeOutlined, AddOutlined, NoteOutlined } from "@mui/icons-material";
 import React from "react";
 
 interface NoteBodyProps {
@@ -43,20 +43,30 @@ export default function NoteBody({
     const endAdornment = initialOperation === "create" && !isEditMode ? (
         <React.Fragment>
             <InputAdornment position="end">
-                <Tooltip arrow title={<Typography sx={{ fontSize: "normal" }}>Create a note</Typography>} 
-           
-                >
-                    <IconButton>
+                {/* <Tooltip arrow title={<Typography sx={{ fontSize: "normal" }}>Create a note</Typography>}>
+                    <StyledIconButton>
                         <NoteOutlined />
-                    </IconButton>
-                </Tooltip>
+                    </StyledIconButton>
+                </Tooltip> */}
+                <StyledNoteButton variant="contained" 
+                startIcon={< AddOutlined/>}
+                // endIcon={<NoteOutlined />}
+                >
+                    Note
+                </StyledNoteButton>
             </InputAdornment>
             <InputAdornment position="end">
-                <Tooltip arrow title={<Typography sx={{ fontSize: "normal" }}>Create a project</Typography>} >
-                    <IconButton>
+                {/* <Tooltip arrow title={<Typography sx={{ fontSize: "normal" }}>Create a project</Typography>} >
+                    <StyledIconButton>
                         <AccountTreeOutlined />
-                    </IconButton>
-                </Tooltip>
+                    </StyledIconButton>
+                </Tooltip> */}
+                <StyledNoteButton variant="contained" 
+                startIcon={< AddOutlined />} 
+                // endIcon={<AccountTreeOutlined />}
+                >
+                    Project
+                </StyledNoteButton>
             </InputAdornment>
         </React.Fragment>
     ) : null;

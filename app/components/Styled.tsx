@@ -102,7 +102,7 @@ export const NoteBodyTextField = styled(TextField)({
     
 });
 
-export const FormButton = styled(Button)({
+export const StyledButton = styled(Button)({
     width: '100%',
     fontFamily: 'monospace',
     fontWeight: 'lighter',
@@ -118,6 +118,23 @@ export const FormButton = styled(Button)({
     '@media (prefers-color-scheme: dark)': {
         color: 'black',
         backgroundColor: 'white',
+    },
+});
+
+export const StyledNoteButton = styled(Button)({
+    width: '100%',
+    fontFamily: 'monospace',
+    fontWeight: 'lighter',
+    color: 'grey',
+    backgroundColor: 'transparent',
+
+
+
+
+    borderRadius: '0px',
+    '@media (prefers-color-scheme: dark)': {
+        color: 'grey',
+        backgroundColor: 'transparent',
     },
 });
 

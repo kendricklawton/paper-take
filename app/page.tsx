@@ -15,7 +15,7 @@ import {
     VisibilityOutlined,
 } from '@mui/icons-material';
 import styles from './page.module.css';
-import { FormButton, FormTextField, StyledTextButton } from './components/Styled';
+import { StyledButton, FormTextField, StyledTextButton } from './components/Styled';
 import React from 'react';
 import { useAppContext } from './providers/AppProvider';
 
@@ -207,9 +207,9 @@ export default function Login() {
                         )}
                         {errors.confirmPassword && (<p aria-live="polite" className={styles.textError}>{errors.confirmPassword}</p>)}
                         {authError && (<p className={styles.textError} aria-live="polite">{authError}</p>)}
-                        <FormButton disabled={!isButtonEnabled()} type="submit">
+                        <StyledButton disabled={!isButtonEnabled()} type="submit">
                             {isLoginHelp ? 'Send' : (isLogin ? 'Log in' : 'Create Account')}
-                        </FormButton>
+                        </StyledButton>
                     </form>
                     {!isLoginHelp && (
                         <React.Fragment>
@@ -220,9 +220,9 @@ export default function Login() {
                                 <Divider orientation='horizontal'>OR</Divider>
                             </div>
                             <div className={styles.form}>
-                                <FormButton className={styles.button} onClick={handleContinueWithoutAccount} startIcon={<Policy />}>
+                                <StyledButton className={styles.button} onClick={handleContinueWithoutAccount} startIcon={<Policy />}>
                                     Continue without an account
-                                </FormButton>
+                                </StyledButton>
                             </div>
                         </React.Fragment>
                     )}
