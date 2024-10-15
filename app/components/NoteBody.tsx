@@ -4,10 +4,11 @@ import { InputAdornment } from "@mui/material";
 import { NoteBodyTextField, StyledNoteButton } from "./Styled";
 import { 
     // AccountTreeOutlined, 
-    AddOutlined,
+    // AddOutlined,
     //  NoteOutlined 
     } from "@mui/icons-material";
 import React from "react";
+import { useRouter } from "next/navigation";
 
 interface NoteBodyProps {
     content: string;
@@ -28,6 +29,7 @@ export default function NoteBody({
 }: NoteBodyProps) {
     const readOnlyMode = initialOperation === 'read' && !isModalMode;
     const placeholderText = 'Create an idea...';
+    const router = useRouter();
 
     const handleFocus = (event: React.FocusEvent<HTMLTextAreaElement>) => {
         event.preventDefault();
@@ -43,6 +45,17 @@ export default function NoteBody({
         }
     };
 
+    const handleNoteButton = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        toggleModeTrue();
+    }
+
+    const handleProjectButton = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        router.push('/projects/create');
+        // toggleModeTrue();
+    }
+
     // Conditional rendering for the end adornment
     const endAdornment = initialOperation === "create" && !isEditMode ? (
         <React.Fragment>
@@ -53,8 +66,9 @@ export default function NoteBody({
                     </StyledIconButton>
                 </Tooltip> */}
                 <StyledNoteButton variant="contained" 
-                startIcon={< AddOutlined/>}
+                // startIcon={< AddOutlined/>}
                 // endIcon={<NoteOutlined />}
+                onClick={handleProjectButton}
                 >
                     Note
                 </StyledNoteButton>
@@ -66,8 +80,9 @@ export default function NoteBody({
                     </StyledIconButton>
                 </Tooltip> */}
                 <StyledNoteButton variant="contained" 
-                startIcon={< AddOutlined />} 
+                // startIcon={< AddOutlined />} 
                 // endIcon={<AccountTreeOutlined />}
+                onClick={handleProjectButton}
                 >
                     Project
                 </StyledNoteButton>
