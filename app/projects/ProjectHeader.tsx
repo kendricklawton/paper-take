@@ -1,8 +1,9 @@
 'use client';
 
 import styles from './Project.module.css';
-import { Button, IconButton, styled, TextField, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { Add, Close, SettingsOutlined } from '@mui/icons-material';
+import { styled, TextField, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Add } from '@mui/icons-material';
+import { StyledNoteButton } from '../components/Styled';
 
 const toggleButtonStyles = {
     fontSize: 'large',
@@ -20,19 +21,13 @@ interface ProjectHeaderProps {
     projectSettingsMenuRef: React.RefObject<HTMLDivElement>;
     projectSettingsMenuButtonRef: React.RefObject<HTMLButtonElement>;
     title: string;
-    handleClose: () => void;
     handleProjectSettingsMenu: () => void;
 }
 
 const ProjectHeader: React.FC<ProjectHeaderProps> = (
     {
         description,
-        isProjectSettingsOpen,
-        projectSettingsMenuRef,
-        projectSettingsMenuButtonRef,
         title,
-        handleClose,
-        handleProjectSettingsMenu
     }
 ) => {
     console.log('Project Header:', title, description);
@@ -41,7 +36,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = (
         maxWidth: '600px',
         width: '100%',
         '& .MuiInputBase-input': {
-            fontSize: 'large',
+            fontSize: 'normal',
             fontFamily: 'monospace',
             fontWeight: 'lighter',
             color: 'inherit',
@@ -67,17 +62,14 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = (
                     value={title}
                 />
                 <div className={styles.headerTopTrailing}>
-                    <Button variant="contained" startIcon={<Add />}
+                    <StyledNoteButton variant="contained" startIcon={<Add />}
                         sx={{
                             borderRadius: '0px',
                             minWidth: '150px',
                         }}
                     >
                         Add New Item
-                    </Button>
-                    <IconButton onClick={handleClose}>
-                        <Close />
-                    </IconButton>
+                    </StyledNoteButton>
                 </div>
             </div>
             <div className={styles.headerBottom}>
@@ -90,7 +82,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = (
                     sx={{
                         border: 'none',
                         borderRadius: '0px',
-                        justifyContent: 'start',
+                        justifyContent: 'center',
                         width: '100%',
                         // backgroundColor: 'yellow',
                     }}>
@@ -120,26 +112,7 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = (
                         Goal
                     </ToggleButton>
                 </ToggleButtonGroup>
-                <div className={styles.headerBottomTrailing}>
-                    <div className={styles.projectSettingsMenuAnchor}>
-
-                        <IconButton
-                            ref={projectSettingsMenuButtonRef}
-                            onClick={handleProjectSettingsMenu}>
-                            <SettingsOutlined />
-                        </IconButton>
-                        {
-                            isProjectSettingsOpen &&
-                            (
-                                <div className={styles.projectSettingsMenu} ref={projectSettingsMenuRef}>
-                                    <div className={styles.menuItem}>Add Column</div>
-                                    <div className={styles.menuItem}>Share</div>
-                                    <div className={styles.menuItem}>Delete</div>
-                                </div>
-                            )
-                        }
-                    </div>
-                </div>
+    
             </div>
         </div>
     )

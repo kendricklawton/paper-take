@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useAppContext } from '../providers/AppProvider';
-import NoteGUI from "../components/NoteGUI";
+import NoteGUI from "../components/GUI";
 import styles from "../page.module.css";
 import { Note } from '../models';
 

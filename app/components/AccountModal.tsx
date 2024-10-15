@@ -5,11 +5,9 @@ import { useRouter } from 'next/navigation'
 import styles from "../page.module.css";
 import { useAuthContext } from '../providers/AuthProvider';
 import {
-    //  IconButton, 
     InputAdornment
  } from '@mui/material';
 import { 
-    // Close, 
     VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material';
 import { StyledButton, FormTextField } from './Styled';
 

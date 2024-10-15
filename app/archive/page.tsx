@@ -1,7 +1,7 @@
 'use client'
 import React from "react";
 import styles from "../page.module.css";
-import NoteGUI from "../components/NoteGUI";
+import NoteGUI from "../components/GUI";
 import { useAppContext } from "../providers/AppProvider";
 
 export default function Archive() {

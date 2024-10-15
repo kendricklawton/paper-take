@@ -10,7 +10,7 @@ import {
 import React from "react";
 import { useRouter } from "next/navigation";
 
-interface NoteBodyProps {
+interface GUIBodyProps {
     content: string;
     initialOperation: 'read' | 'create';
     isEditMode: boolean;
@@ -19,14 +19,14 @@ interface NoteBodyProps {
     toggleModeTrue: () => void;
 }
 
-export default function NoteBody({
+export default function GUIBody({
     content,
     initialOperation,
     isEditMode,
     isModalMode,
     handleContentChange,
     toggleModeTrue
-}: NoteBodyProps) {
+}: GUIBodyProps) {
     const readOnlyMode = initialOperation === 'read' && !isModalMode;
     const placeholderText = 'Create an idea...';
     const router = useRouter();
@@ -97,7 +97,7 @@ export default function NoteBody({
                         readOnly: readOnlyMode,
                     }}
                     autoComplete='off'
-                    multiline
+                    multiline={isEditMode}
                     onChange={handleContentChange}
                     onClick={handleClick}
                     // onFocus={handleFocus}

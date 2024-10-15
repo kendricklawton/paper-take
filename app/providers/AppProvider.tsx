@@ -107,71 +107,57 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
     const apiService = useCallback(async (operation: "create" | "update" | "delete", idea: Note | Project) => {
         try {
-            if (user) {
-                console.log("id - " + idea.id);
-                const location = idea instanceof Note ? "notes" : "projects";
-                console.log("Location " + location);
-                const ref = collection(firestore, "users", user.uid, location)
+            if (!user) {
+                console.log('No user is logged in, updating note list in local storage');
+                return;
+            }
 
-                // let docRef = null;
-                let docRef;
+            const location = idea instanceof Note ? "notes" : "projects";
+            const ref = collection(firestore, "users", user.uid, location);
+            let docRef;
 
-                if (operation === "create") {
-                    const docRefId = doc(ref);
-                    docRef = doc(ref, docRefId.id);
-                    idea.id = docRefId.id;
-                    idea.createdAt = Timestamp.now();
+            if (operation === "create") {
+                const docRefId = doc(ref);
+                docRef = doc(ref, docRefId.id);
+                idea.id = docRefId.id;
+                idea.createdAt = Timestamp.now();
+            } else {
+                docRef = doc(ref, idea.id);
+            }
 
-                    if (idea instanceof Note) {
-                        setNotes([idea, ...notes]);
-                    } else if (idea instanceof Project) {
-                        setProjects([idea, ...projects]);
-                    }
-                } else if (operation === "update") {
-                    console.log(idea.id)
-                    docRef = doc(ref, idea.id);
+            await runTransaction(firestore, async (transaction: Transaction) => {
+                const snapshot = await transaction.get(docRef);
 
-                    if (idea instanceof Note) {
-                        setNotes(notes.map(note => note.id === idea.id ? idea : note));
-                    } else if (idea instanceof Project) {
-                        setProjects(projects.map(project => project.id === idea.id ? idea : project));
-                    }
-                } else if (operation === "delete") {
-                    docRef = doc(ref, idea.id);
-
-                    if (idea instanceof Note) {
-                        setNotes(notes.filter(note => note.id !== idea.id));
-                    } else if (idea instanceof Project) {
-                        setProjects(projects.filter(project => project.id !== idea.id));
-                    }
-                } else {
-                    throw new Error("Invalid operation");
+                if ((operation === "update" || operation === "delete") && !snapshot.exists()) {
+                    console.error(idea instanceof Note ? 'Note not found' : 'Project not found');
+                    throw new Error(idea instanceof Note ? 'Note not found' : 'Project not found');
                 }
 
-                await runTransaction(firestore, async (transaction: Transaction) => {
-                    const snapshot = await transaction.get(docRef);
-                    if (operation === "create") {
+                switch (operation) {
+                    case "create":
                         transaction.set(docRef, JSON.parse(idea.toJSON()));
-                        console.log(idea as Note ? "Note created in Firestore" : "Project created in Firestore");
-                    } else if (operation === "update") {
-                        if (!snapshot.exists()) {
-                            throw new Error(idea as Note ? "Note does not exist" : "Project does not exist");
-                        }
+                        console.log(idea instanceof Note ? "Note created in Firestore" : "Project created in Firestore");
+                        break;
+                    case "update":
                         transaction.update(docRef, JSON.parse(idea.toJSON()));
-                        console.log(idea as Note ? "Note updated in Firestore" : "Project updated in Firestore");
-                    } else if (operation === "delete") {
+                        console.log(idea instanceof Note ? "Note updated in Firestore" : "Project updated in Firestore");
+                        break;
+                    case "delete":
                         transaction.delete(docRef);
-                        console.log(idea as Note ? "Note deleted in Firestore" : "Project deleted in Firestore");
-                    }
-                });
-                await fetchData();
-            } else {
-                console.log('No user is logged in, updating note list in local storage');
-            }
+                        console.log(idea instanceof Note ? "Note deleted in Firestore" : "Project deleted in Firestore");
+                        break;
+                    default:
+                        console.error("Invalid operation");
+                        throw new Error("Invalid operation");
+                }
+            });
+
+            await fetchData();
         } catch (error) {
-            console.error(idea as Note ? 'Error updating note: ' : 'Error updating project: ', error);
+            console.error(idea instanceof Note ? 'Error updating note: ' : 'Error updating project: ', error);
         }
-    }, [user, notes, projects, fetchData]);
+    }, [user, fetchData]);
+
 
     useEffect(() => {
         if (user) {
@@ -195,10 +181,24 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }, [apiService]);
 
     const updateIdea = useCallback(async (idea: Note | Project) => {
+        if (idea instanceof Note) {
+            setNotes(prevNotes => prevNotes.map(note => note.id === idea.id ? idea : note));
+        } else if (idea instanceof Project) {
+            setProjects(prevProjects => prevProjects.map(project => project.id === idea.id ? idea : project));
+        } else {
+            throw new Error("Invalid idea type");
+        }
         await apiService("update", idea);
     }, [apiService]);
 
     const deleteIdea = useCallback(async (idea: Note | Project) => {
+        if (idea instanceof Note) {
+            setNotes(prevNotes => prevNotes.filter(note => note.id !== idea.id));
+        } else if (idea instanceof Project) {
+            setProjects(prevProjects => prevProjects.filter(project => project.id !== idea.id));
+        } else {
+            throw new Error("Invalid idea type");
+        }
         await apiService("delete", idea);
     }, [apiService]);
 

@@ -6,8 +6,8 @@ import styles from "../page.module.css";
 // import { ToggleButtonGroup } from "@mui/material";
 // import { StyledToggleButton } from '../components/Styled';
 import { useAppContext } from "../providers/AppProvider";
-import NoteGUI from "../components/NoteGUI";
-import ProjectGUI from "../components/ProjectGUI";
+import GUI from "../components/GUI";
+
 import {
     Note,
     Project
@@ -116,7 +116,7 @@ const Notes: React.FC = () => {
         //     )}
         // </React.Fragment>
         <React.Fragment>
-            <NoteGUI operation={'create'} note={newNote} />
+            <GUI operation={'create'} idea={newNote} />
             {activeNotes.length === 0 ? (
 
                 <div className={styles.pageText}>
@@ -129,37 +129,19 @@ const Notes: React.FC = () => {
 
                     <React.Fragment key={index}>
                         <div className={styles.spacer}>
-                            {/* <p>Id - {idea.id}</p> */}
                         </div>
 
                         { /* Todo - Create Draggable List */}
 
-                        {
-                            idea.type === 'note' ?
-                                <NoteGUI
-                                    key={idea.id}
-                                    operation={'read'}
-                                    note={idea as Note}
-                                // draggable={true}
-                                // handleDragOver={handleDragOver}
-                                // handleDrop={handleDrop}
-                                // noteIndex={index}
-                                // handleDragStart={handleDragStart}
-                                />
-                                :
-                                <ProjectGUI
-                                    key={idea.id}
-                                    operation={'read'}
-                                    project={idea as Project}
-                                // draggable={true}
-                                // handleDragOver={handleDragOver}
-                                // handleDrop={handleDrop}
-                                // noteIndex={index}
-                                // handleDragStart={handleDragStart}
-                                />
+                        
 
-                        }
-
+                            <GUI
+                                key={idea.id}
+                                operation={'read'}
+                                idea={idea}
+                            />
+                        
+                    
                     </React.Fragment>
                 ))
             )}

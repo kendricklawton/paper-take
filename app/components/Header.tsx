@@ -14,7 +14,9 @@ import {
     Circle,
     // Settings,
     Lightbulb,
-    LightbulbOutlined
+    LightbulbOutlined,
+    Settings,
+    SettingsOutlined
 } from '@mui/icons-material';
 
 import { useAppContext } from '../providers/AppProvider';
@@ -34,7 +36,7 @@ export default function Header() {
     const [title, setTitle] = useState('');
     const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
     const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
-    // const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
+    const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
 
     const pathname = usePathname();
@@ -85,7 +87,7 @@ export default function Header() {
             }
             if (settingsMenuRef.current && !settingsMenuRef.current.contains(event.target as Node)) {
                 if (!settingsButtonRef.current?.contains(event.target as Node)) {
-                    // setIsSettingsMenuOpen(false);
+                    setIsSettingsMenuOpen(false);
                 }
             }
         };
@@ -213,7 +215,7 @@ export default function Header() {
                         </StyledIconButton>
                     ))
                 }
-                {/* <div className={styles.settingsAnchor}>
+                <div className={styles.settingsAnchor}>
                     <StyledIconButton
                         ref={settingsButtonRef}
                         onClick={() => setIsSettingsMenuOpen(prev => !prev)}>
@@ -232,7 +234,7 @@ export default function Header() {
                             </div>
                         </nav>
                     )}
-                </div> */}
+                </div>
                 <div className={styles.accountAnchor}>
                     <StyledIconButton ref={accountButtonRef} onClick={() => setIsAccountMenuOpen(prev => !prev)}>
                         {isAccountMenuOpen ? <Circle /> : <CircleOutlined />}

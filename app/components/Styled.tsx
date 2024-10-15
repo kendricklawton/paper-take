@@ -67,7 +67,7 @@ export const NoteHeaderTextField = styled(TextField)({
         fontFamily: 'monospace',
         fontWeight: 'lighter',
         WebkitTapHighlightColor: 'transparent',
-        touchAction: 'none',
+        // touchAction: 'none',
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': { border: 'none' },
@@ -129,8 +129,6 @@ export const StyledNoteButton = styled(Button)({
     backgroundColor: 'transparent',
 
 
-
-
     borderRadius: '0px',
     '@media (prefers-color-scheme: dark)': {
         color: 'grey',
@@ -140,45 +138,58 @@ export const StyledNoteButton = styled(Button)({
 
 export const FormTextField = styled(TextField)({
     width: '100%',
-    '& .MuiInputBase-input': {
-        fontFamily: 'monospace',
-        fontWeight: 'lighter',
-        color: 'inherit',
+    '& .MuiFilledInput-root': {
+        backgroundColor: 'transparent',
     },
-    '& label': {
-        fontFamily: 'monospace',
-        fontWeight: 'lighter',
-    },
-    '& label.Mui-focused': {
-        fontFamily: 'monospace',
-        fontWeight: 'lighter',
-        color: 'inherit',
-    },
-    '@media (prefers-color-scheme: dark)': {
-        '& .MuiInput-underline': {
-            '&:before': {
-                borderBottom: '1px solid gray',
-            },
-            '&:hover:before': {
-                borderBottom: '2px solid gray',
-            }
-        },
-        '& .MuiInputBase-input': {
-            color: 'white',
-        },
-        '& label': {
-            color: 'gray',
-        },
-        '& label.Mui-focused': {
-            color: 'gray',
-        },
-        '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-                border: '1px solid gray',
-            },
-        },
-    },
+    // '& .MuiInputBase-input': {
+    //     fontFamily: 'monospace',
+    //     fontWeight: 'lighter',
+    //     color: 'inherit',
+    //     transition: 'color 0.3s ease',
+    // },
+    // '& label': {
+    //     fontFamily: 'monospace',
+    //     fontWeight: 'lighter',
+    //     transition: 'color 0.3s ease',
+    // },
+    // '& label.Mui-focused': {
+    //     fontFamily: 'monospace',
+    //     fontWeight: 'lighter',
+    //     color: 'inherit',
+    // },
+    // '&.MuiFilledInput-root': {
+
+
+    // },
+    // '@media (prefers-color-scheme: dark)': {
+    //     '& .MuiInput-underline': {
+    //         '&:before': {
+    //             borderBottom: '1px solid gray',
+    //         },
+    //         '&:hover:before': {
+    //             borderBottom: '2px solid gray',
+    //         },
+    //     },
+    //     '& .MuiFilledInput-root': {
+    //         backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    //     },
+    //     '& .MuiInputBase-input': {
+    //         color: 'white',
+    //     },
+    //     '& label': {
+    //         color: 'gray',
+    //     },
+    //     '& label.Mui-focused': {
+    //         color: 'gray',
+    //     },
+    //     '& .MuiOutlinedInput-root': {
+    //         '& fieldset': {
+    //             border: '1px solid gray',
+    //         },
+    //     },
+    // },
 });
+
 
 export const StyledToggleButton = styled(ToggleButton)({
     fontSize: 'x-large',

@@ -4,13 +4,11 @@ import { useState, useRef, useEffect } from 'react';
 import styles from '../../page.module.css';
 import ProjectBody from '../ProjectBody';
 import ProjectHeader from '../ProjectHeader';
-import { useRouter } from 'next/navigation'
 
 export default function Page({ params }: { params: { slug: string } }) {
 
     console.log('params.slug:', params.slug);
 
-    const Router = useRouter();
     const title = 'Project Title';
     const description = 'Project Description';
 
@@ -18,10 +16,6 @@ export default function Page({ params }: { params: { slug: string } }) {
 
     const projectSettingsMenuRef = useRef<HTMLDivElement | null>(null);
     const projectSettingsMenuButtonRef = useRef<HTMLButtonElement | null>(null);
-
-    const handleClose = () => {
-        Router.push('/ideas');
-    };
 
     const handleProjectSettingsMenu = () => {
         setIsProjectSettingsOpen(prev => !prev);
@@ -51,9 +45,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                 projectSettingsMenuRef={projectSettingsMenuRef}
                 projectSettingsMenuButtonRef={projectSettingsMenuButtonRef}
                 title={title}
-                handleProjectSettingsMenu={handleProjectSettingsMenu}
-                handleClose={handleClose}
-            />
+                handleProjectSettingsMenu={handleProjectSettingsMenu}/>
             <h1>Under Construction</h1>
             <ProjectBody />
         </div>

@@ -2,7 +2,7 @@
 
 import { NoteHeaderTextField } from './Styled';
 
-export interface NoteHeaderProps {
+export interface GUIHeaderProps {
     title: string,
     initialOperation: 'read' | 'create';
     isEditMode: boolean,
@@ -11,14 +11,14 @@ export interface NoteHeaderProps {
     toggleModeTrue: () => void,
 }
 
-export default function NoteHeader({
+export default function GUIHeader({
     initialOperation,
     isEditMode,
     isModalMode,
     title,
     handleTitleChange,
     toggleModeTrue
-}: NoteHeaderProps) {
+}: GUIHeaderProps) {
     const readOnlyMode = initialOperation === 'read' && !isModalMode;
     const placeholderText = 'Title...';
 

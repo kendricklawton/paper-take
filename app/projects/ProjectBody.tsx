@@ -19,8 +19,6 @@ const initialTasks = [
     { id: '2', content: 'Item 2' },
     { id: '3', content: 'Item 3' },
     { id: '4', content: 'Item 4' },
-    { id: '5', content: 'Item 5' },
-    { id: '6', content: 'Item 6' },
 ];
 
 const columnHeaders = [
@@ -39,8 +37,6 @@ const ProjectBody: React.FC = () => {
         // 3: [],
     });
     const [isMobile, setIsMobile] = useState(false);
-
-
 
     const handleColumnChange = (event: React.MouseEvent<HTMLElement>, newColumn: string) => {
         setCurrentColumn(newColumn);

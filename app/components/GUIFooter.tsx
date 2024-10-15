@@ -17,7 +17,7 @@ import styles from "./GUI.module.css"
 import React from 'react';
 import { BackgroundCircle, BackgroundIconButton, StyledIconButton, TransparentIconButton, StyledTextButton, TransparentIcon, StyledNoteButton } from './Styled';
 
-interface NoteFooterProps {
+interface GUIFooterProps {
     backgroundColor: '' | '#fff59c' | '#aaf0d1' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5';
     contentArray: string[];
     initialOperation: 'read' | 'create';
@@ -46,7 +46,7 @@ interface NoteFooterProps {
     toggleDelete: () => void;
 }
 
-export default function NoteFooter({
+export default function GUIFooter({
     backgroundColor,
     contentArray,
     isArchived,
@@ -74,14 +74,11 @@ export default function NoteFooter({
     setIsOptionsMenu,
     toggleArchive,
     toggleDelete
-}: NoteFooterProps) {
-
-
+}: GUIFooterProps) {
 
     const showFooter = isEditMode || initialOperation === 'read';
     const showFooterIcons = isEditMode || (isHovering && initialOperation === 'read') || isBackgroundMenuOpen || isOptionsMenuOpen;
     const showCloseButton = initialOperation === 'create' || isEditMode;
-
 
     return (
         <React.Fragment>
@@ -128,9 +125,6 @@ export default function NoteFooter({
                                             </StyledIconButton>
                                             {isBackgroundMenuOpen && (
                                                 <div className={styles.backgroundMenu}
-                                                    // style={{
-                                                    //     backgroundColor: backgroundColor,
-                                                    // }}
                                                     ref={backgroundMenuRef}>
                                                     <BackgroundIconButton selected={backgroundColor === ''} onClick={() => handleBackgroundColor('')}>
                                                         <BackgroundCircle selected={backgroundColor === ''} />
@@ -171,12 +165,7 @@ export default function NoteFooter({
                                                 <MoreVert />
                                             </StyledIconButton>
                                             {isOptionsMenuOpen && (
-                                                <div className={styles.menu} ref={optionsMenuRef}
-                                                // style={{
-                                                //     backgroundColor: backgroundColor,
-                                                // }}
-                                                >
-
+                                                <div className={styles.menu} ref={optionsMenuRef}>
                                                     <StyledNoteButton type="button" onClick={toggleDelete}>Delete</StyledNoteButton>
                                                 </div>
                                             )}

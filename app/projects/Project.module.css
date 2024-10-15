@@ -10,6 +10,7 @@
     align-items: center;
     width: 100%;
     justify-content: space-between;
+        /* background-color: yellow; */
 }
 
 .headerTopTrailing {
@@ -17,29 +18,17 @@
     flex-direction: row;
     gap: 0.5rem;
     align-items: center;
+
 }
 
 .headerBottom {
-    background-color: aquamarine;
     display: flex;
-    flex-direction: row;
-    align-items: center;
     width: 100%;
-    justify-content: space-between;
-}
-
-.headerBottomTrailing {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background-color: yellow;
 }
 
 .body {
     display: flex;
     flex-direction: row;
-    /* align-items: center; */
     width: 100%;
     gap: 1rem;
 }
