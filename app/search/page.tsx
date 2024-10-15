@@ -1,18 +1,18 @@
 'use client'
 
 import React from 'react';
-import { useAppContext } from '../providers/AppProvider';
-import NoteGUI from "../components/GUI";
+// import { useAppContext } from '../providers/AppProvider';
+// import NoteGUI from "../components/GUI";
 import styles from "../page.module.css";
-import { Note } from '../models';
+// import { Note } from '../models';
 
 export default function Search() {
-    const { filteredItems } = useAppContext();
-    const searchNotes = filteredItems.filter(note => !note.isTrash);
+    // const { filteredItems } = useAppContext();
+    // const searchNotes = filteredItems.filter(note => !note.isTrash);
 
     return (
         <div className={styles.content}>
-            {searchNotes.length === 0 ? (
+            {/* {searchNotes.length === 0 ? (
                 <div className={styles.pageTitle}>
                     <p>Search</p>
                 </div>
@@ -23,7 +23,7 @@ export default function Search() {
                         <NoteGUI note={note as Note} operation='read' key={note.id} />
                     </React.Fragment>
                 ))
-            )}
+            )} */}
         </div>
     );
 }
