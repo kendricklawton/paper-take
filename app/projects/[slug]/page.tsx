@@ -20,7 +20,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     const projectSettingsMenuButtonRef = useRef<HTMLButtonElement | null>(null);
 
     const handleClose = () => {
-        Router.push('/');
+        Router.push('/ideas');
     };
 
     const handleProjectSettingsMenu = () => {
