@@ -10,6 +10,7 @@ import React, {
     ReactNode,
 } from 'react';
 import { FirebaseError } from 'firebase/app';
+import { useRouter } from 'next/navigation';
 import {
     createUserWithEmailAndPassword,
     deleteUser,
@@ -53,8 +54,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [userDisplayName, setUserDisplayName] = useState<string>('');
     const [userEmail, setUserEmail] = useState<string>('');
     const [isLoadingAuth, setIsAuthLoading] = useState<boolean>(true);
+    const router = useRouter();
 
     useEffect(() => {
+        setIsAuthLoading(true);
         if (!auth) {
             console.error('Auth is not defined');
             setIsAuthLoading(false);
@@ -62,11 +65,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
 
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setUser(user);
+            if (user) {
+                setUser(user);
+                router.push('/ideas'); 
+            } else {
+                setUser(null);
+            }
             setIsAuthLoading(false);
         });
         return () => unsubscribe();
-    }, []);
+}, [ router ]);
 
     useEffect(() => {
         if (user) {

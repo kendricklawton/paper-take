@@ -56,6 +56,7 @@ export default function NoteHeader({
                             cursor: isEditMode ? 'text' : 'default',
                         },
                     }}
+
                 />
             )}
         </>

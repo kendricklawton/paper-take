@@ -1,6 +1,9 @@
 'use client';
 
+import { IconButton, InputAdornment, Tooltip, Typography } from "@mui/material";
 import { NoteBodyTextField } from "./Styled";
+import { AccountTreeOutlined, NoteOutlined } from "@mui/icons-material";
+import React from "react";
 
 interface NoteBodyProps {
     content: string;
@@ -20,25 +23,47 @@ export default function NoteBody({
     toggleModeTrue
 }: NoteBodyProps) {
     const readOnlyMode = initialOperation === 'read' && !isModalMode;
-    const placeholderText = 'Create a note...';
+    const placeholderText = 'Create an idea...';
 
     const handleFocus = (event: React.FocusEvent<HTMLTextAreaElement>) => {
-        event.preventDefault()
+        event.preventDefault();
         if (!readOnlyMode) {
             toggleModeTrue();
         }
     };
 
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-        event.preventDefault()
+        event.preventDefault();
         if (readOnlyMode) {
             toggleModeTrue();
         }
     };
 
+    // Conditional rendering for the end adornment
+    const endAdornment = initialOperation === "create" && !isEditMode ? (
+        <React.Fragment>
+            <InputAdornment position="end">
+                <Tooltip arrow title={<Typography sx={{ fontSize: "normal" }}>Create a note</Typography>} 
+           
+                >
+                    <IconButton>
+                        <NoteOutlined />
+                    </IconButton>
+                </Tooltip>
+            </InputAdornment>
+            <InputAdornment position="end">
+                <Tooltip arrow title={<Typography sx={{ fontSize: "normal" }}>Create a project</Typography>} >
+                    <IconButton>
+                        <AccountTreeOutlined />
+                    </IconButton>
+                </Tooltip>
+            </InputAdornment>
+        </React.Fragment>
+    ) : null;
+
     return (
         <>
-            {((initialOperation === "create" || content.length > 0 || isEditMode) && (
+            {(initialOperation === "create" || content.length > 0 || isEditMode) && (
                 <NoteBodyTextField
                     inputProps={{
                         readOnly: readOnlyMode,
@@ -57,9 +82,12 @@ export default function NoteBody({
                             cursor: isEditMode ? 'text' : 'default',
                         },
                     }}
+                    InputProps={{
+                        endAdornment: endAdornment, // End adornment for the icons
+                    }}
                     value={content}
                 />
-            ))}
+            )}
         </>
     );
 }

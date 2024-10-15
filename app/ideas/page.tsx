@@ -1,53 +1,65 @@
 'use client'
 
-import React, {useState} from 'react';
+// import React, {useState} from 'react';
+import React from 'react';
 import styles from "../page.module.css";
-import { ToggleButtonGroup } from "@mui/material";
-import { StyledToggleButton } from '../components/Styled';
+// import { ToggleButtonGroup } from "@mui/material";
+// import { StyledToggleButton } from '../components/Styled';
 import { useAppContext } from "../providers/AppProvider";
 import NoteGUI from "../components/NoteGUI";
 import ProjectGUI from "../components/ProjectGUI";
-import { Note, Project } from "../models";
+import { Note, 
+    Project
+ } from "../models";
 import { v4 as uuidv4 } from 'uuid';
 
 const Notes: React.FC = () => {
-    const { notes,
-        noteService 
+    const { 
+        notes, 
+        projects,
     } = useAppContext();
-    const activeNotes = notes.filter(note => !note.isArchived && !note.isTrash);
-    const [draggingNoteIndex, setDraggingNoteIndex] = useState<number | null>(null);
 
-    const handleDragStart = (event: React.DragEvent<HTMLDivElement>, index: number) => {
-        const dragDiv = event.currentTarget.cloneNode(true) as HTMLDivElement;
-        dragDiv.style.pointerEvents = 'none';
-        document.body.appendChild(dragDiv);
-        const rect = event.currentTarget.getBoundingClientRect();
-        const offsetX = event.clientX - rect.left;
-        const offsetY = event.clientY - rect.top;
-        event.dataTransfer.setDragImage(dragDiv, offsetX, offsetY);
-        setTimeout(() => {
-            document.body.removeChild(dragDiv);
-        }, 0);
-        setDraggingNoteIndex(index);
-    };
+    const activeNotes: Note[] = notes.filter(note => !note.isArchived && !note.isTrash);
+    const activeProjects: Project[] = projects.filter(project => !project.isArchived && !project.isTrash);
+    
+    const activeIdeas: (Note | Project)[] = [...activeNotes, ...activeProjects];
+    
+    // const activeIdeas = notes.filter(note => !note.isArchived && !note.isTrash && note.isIdea ) ;
+    // const [draggingNoteIndex, setDraggingNoteIndex] = useState<number | null>(null);
+
+    // const handleDragStart = (event: React.DragEvent<HTMLDivElement>, index: number) => {
+    //     const dragDiv = event.currentTarget.cloneNode(true) as HTMLDivElement;
+    //     dragDiv.style.pointerEvents = 'none';
+    //     document.body.appendChild(dragDiv);
+    //     const rect = event.currentTarget.getBoundingClientRect();
+    //     const offsetX = event.clientX - rect.left;
+    //     const offsetY = event.clientY - rect.top;
+    //     event.dataTransfer.setDragImage(dragDiv, offsetX, offsetY);
+    //     setTimeout(() => {
+    //         document.body.removeChild(dragDiv);
+    //     }, 0);
+    //     setDraggingNoteIndex(index);
+    // };
+
+    // console.log("All active ideas" + activeIdeas)
 
 
-    const handleDragOver = (e: React.DragEvent<HTMLDivElement>, index: number) => {
-        e.preventDefault();
+    // const handleDragOver = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+    //     e.preventDefault();
    
-        console.log('Drag Over Index:', index);
-    };
+    //     console.log('Drag Over Index:', index);
+    // };
 
-    const handleDrop = async (index: number) => {
-        if (draggingNoteIndex !== null) {
-            const newNotes = [...activeNotes];
-            const [draggingNote] = newNotes.splice(draggingNoteIndex, 1);
-            newNotes.splice(index, 0, draggingNote);
-            noteService(newNotes);
-        }
-        setDraggingNoteIndex(null);
+    // const handleDrop = async (index: number) => {
+    //     if (draggingNoteIndex !== null) {
+    //         const newNotes = [...activeNotes];
+    //         const [draggingNote] = newNotes.splice(draggingNoteIndex, 1);
+    //         newNotes.splice(index, 0, draggingNote);
+    //         noteService(newNotes);
+    //     }
+    //     setDraggingNoteIndex(null);
 
-    };
+    // };
 
     const newNote = new Note(
         undefined,
@@ -63,6 +75,45 @@ const Notes: React.FC = () => {
     )
 
     return (
+        // <React.Fragment>
+        //     <NoteGUI operation={'create'} note={newNote} />
+        //     {activeNotes.length === 0 ? (
+        //         <React.Fragment>
+        //             <div className={styles.pageText}>
+        //                 <p>Features Coming Soon</p>
+        //             </div>
+        //             <div className={styles.pageText}>
+        //                 <p>List Layout</p>
+        //             </div>
+        //             <div className={styles.pageText}>
+        //                 <p>App Settings</p>
+        //             </div>
+        //             <div className={styles.pageText}>
+        //                 <p>Notes you create will appear here</p>
+        //             </div>
+        //         </React.Fragment>
+
+        //     ) : (
+        //         activeNotes.map((note, index) => (
+        //             <React.Fragment key={index}>
+        //                 <div className={styles.spacer} />
+        //                 { /* Todo - Create Draggable List */}
+        //                 <NoteGUI
+        //                     key={note.id}
+        //                     operation={'read'}
+        //                     note={note}
+        
+        //                 draggable={true}
+        //                 handleDragOver={handleDragOver}
+        //                 handleDrop={handleDrop}
+        //                 noteIndex={index}
+        //                 handleDragStart={handleDragStart}
+        //                 />
+
+        //             </React.Fragment>
+        //         ))
+        //     )}
+        // </React.Fragment>
         <React.Fragment>
             <NoteGUI operation={'create'} note={newNote} />
             {activeNotes.length === 0 ? (
@@ -82,22 +133,41 @@ const Notes: React.FC = () => {
                 </React.Fragment>
 
             ) : (
-                activeNotes.map((note, index) => (
+                activeIdeas.map((idea, index) => (
+           
                     <React.Fragment key={index}>
-                        <div className={styles.spacer} />
-                        { /* Todo - Create Draggable List */}
-                        <NoteGUI
-                            key={note.id}
-                            operation={'read'}
-                            note={note}
-        
-                        draggable={true}
-                        handleDragOver={handleDragOver}
-                        handleDrop={handleDrop}
-                        noteIndex={index}
-                        handleDragStart={handleDragStart}
-                        />
+                        <div className={styles.spacer}>
+                            {/* <p>Id - {idea.id}</p> */}
+                        </div>
 
+                        { /* Todo - Create Draggable List */}
+      
+                        {
+                            idea.type === 'note' ? 
+                                <NoteGUI
+                                    key={idea.id}
+                                    operation={'read'}
+                                    note={idea as Note}
+                                // draggable={true}
+                                // handleDragOver={handleDragOver}
+                                // handleDrop={handleDrop}
+                                // noteIndex={index}
+                                // handleDragStart={handleDragStart}
+                                />
+                            :
+                                <ProjectGUI
+                                    key={idea.id}
+                                    operation={'read'}
+                                    project={idea as Project}
+                                // draggable={true}
+                                // handleDragOver={handleDragOver}
+                                // handleDrop={handleDrop}
+                                // noteIndex={index}
+                                // handleDragStart={handleDragStart}
+                                />
+
+                        }
+ 
                     </React.Fragment>
                 ))
             )}
@@ -105,52 +175,53 @@ const Notes: React.FC = () => {
     );
 };
 
-const Projects = () => {
-    const { projects } = useAppContext();
-    const activeProjects = projects.filter(project => !project.isArchived && !project.isTrash);
+// const Projects = () => {
+//     const { projects } = useAppContext();
+//     const activeProjects = projects.filter(project => !project.isArchived && !project.isTrash);
 
-    return (
-        <React.Fragment>
-            <ProjectGUI operation={'create'} project={new Project(
-                undefined,
-                uuidv4(),
-                'New Project',
-                '',
-                undefined,
-                false,
-                false,
-                false,
-            )} />
-            {activeProjects.length === 0 ? (
-                <div className={styles.pageText}>
-                    <p>Projects are currently under construction</p>
-                    {/* <p>Projects you create will appear here</p> */}
-                </div>
-            ) :
-                (
-                    activeProjects.map(project => (
-                        <ProjectGUI key={project.id} operation={'read'} project={project} />
-                    ))
-                )}
-        </React.Fragment>
-    );
-}
+//     return (
+//         <React.Fragment>
+//             <ProjectGUI operation={'create'} project={new Project(
+//                 undefined,
+//                 uuidv4(),
+//                 'New Project',
+//                 '',
+//                 undefined,
+//                 false,
+//                 false,
+//                 false,
+//             )} />
+//             {activeProjects.length === 0 ? (
+//                 <div className={styles.pageText}>
+//                     <p>Projects are currently under construction</p>
+//                     {/* <p>Projects you create will appear here</p> */}
+//                 </div>
+//             ) :
+//                 (
+//                     activeProjects.map(project => (
+//                         <ProjectGUI key={project.id} operation={'read'} project={project} />
+//                     ))
+//                 )}
+//         </React.Fragment>
+//     );
+// }
 
 export default function Ideas() {
-    const { currentList, setCurrentList } = useAppContext();
+    // const { currentList, setCurrentList } = useAppContext();
 
-    const handleChange = (
-        event: React.MouseEvent<HTMLElement>,
-        newList: ("notes" | "projects") | null,
-    ) => {
-        if (newList !== null) {
-            setCurrentList(newList);
-        }
-    };
+    // const handleChange = (
+    //     event: React.MouseEvent<HTMLElement>,
+    //     newList: ("notes" | "projects") | null,
+    // ) => {
+    //     if (newList !== null) {
+    //         setCurrentList(newList);
+    //     }
+    // };
 
     return (
         <main className={styles.page}>
-            <ToggleButtonGroup
+            <Notes />
+            {/* <ToggleButtonGroup
                 color='primary'
                 value={currentList}
                 exclusive={true}
@@ -170,7 +241,7 @@ export default function Ideas() {
                     <Notes />
                     :
                     <Projects />
-            }
+            } */}
         </main>
     );
 }

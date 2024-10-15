@@ -16,6 +16,7 @@ import {
 import styles from "./GUI.module.css"
 import React from 'react';
 import { BackgroundCircle, BackgroundIconButton, StyledIconButton, TransparentIconButton, StyledTextButton, TransparentIcon } from './Styled';
+import { Button } from '@mui/material';
 
 interface NoteFooterProps {
     backgroundColor: '' | '#fff59c' | '#aaf0d1' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5';
@@ -68,6 +69,7 @@ export default function NoteFooter({
     handleDeleteNote,
     handleRedo,
     handleUndo,
+
     setIsBackgroundMenu,
     // setIsFontMenu,
     setIsOptionsMenu,
@@ -106,12 +108,8 @@ export default function NoteFooter({
                 </div>)
                 :
                 showFooter && (
-                    <div className={styles.footerWrapper}
-                    >
-
-                        <div className={styles.footerContainer}
-                        >
-
+                    <div className={styles.footerWrapper}>
+                        <div className={styles.footerContainer}>
                             {
                                 showFooterIcons ? (
                                     <div className={styles.footerLeading}>
@@ -187,17 +185,15 @@ export default function NoteFooter({
                                     </div>
                                 ) : (
                                     <div className={styles.footerLeading}>
-                                           <TransparentIconButton>
-                                            <TransparentIcon/>
-                                         </TransparentIconButton>
-
-                                    </div>
-                                )
-
+                                        <TransparentIconButton>
+                                            <TransparentIcon />
+                                        </TransparentIconButton>
+                                    </div>)
                             }
                             <React.Fragment>
                                 {showCloseButton && (
-                                    <StyledTextButton type="submit">Close</StyledTextButton>
+                                    <Button type="submit">Close</Button>
+                                    // <StyledTextButton  onClick={handleNote}>Close</StyledTextButton>
                                 )}
                             </React.Fragment>
                         </div>

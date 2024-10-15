@@ -9,24 +9,24 @@ import styles from "./GUI.module.css"
 import { Note } from '../models';
 
 interface NoteGUIProps {
-    draggable?: boolean;
-    handleDragStart?: (e: React.DragEvent<HTMLDivElement>, index: number) => void;
-    handleDragOver?: (e: React.DragEvent<HTMLDivElement>, index: number) => void;
-    handleDrop?: (index: number) => void;
+    // draggable?: boolean;
+    // handleDragStart?: (e: React.DragEvent<HTMLDivElement>, index: number) => void;
+    // handleDragOver?: (e: React.DragEvent<HTMLDivElement>, index: number) => void;
+    // handleDrop?: (index: number) => void;
     noteIndex?: number;
     operation: 'read' | 'create';
     note: Note;
 }
 
 const NoteGUI: React.FC<NoteGUIProps> = ({
-    handleDragStart,
-    handleDragOver,
-    handleDrop,
-    noteIndex,
+    // handleDragStart,
+    // handleDragOver,
+    // handleDrop,
+    // noteIndex,
     operation,
     note,
 }) => {
-    const { createNote, deleteNote, updateNote, setInfo } = useAppContext();
+    const { createIdea, createNote, deleteNote, deleteIdea, updateNote, updateIdea, setInfo } = useAppContext();
 
     const initialOperation = operation;
     const [isModalMode, setIsModalMode] = useState(false);
@@ -35,7 +35,6 @@ const NoteGUI: React.FC<NoteGUIProps> = ({
     const [isFontMenuOpen, setIsFontMenu] = useState(false);
     const [isOptionsMenuOpen, setIsOptionsMenu] = useState(false);
     const [isHovering, setIsHovering] = useState<boolean>(false);
-
 
     const [contentArray, setContentArray] = useState([note.content]);
     const isArchived = note.isArchived;
@@ -55,13 +54,6 @@ const NoteGUI: React.FC<NoteGUIProps> = ({
     const fontMenuRefButton = useRef<HTMLButtonElement | null>(null);
     const optionsMenuRef = useRef<HTMLDivElement | null>(null);
     const optionsMenuRefButton = useRef<HTMLButtonElement | null>(null);
-
-    const handleMouseEnter = () => {
-        setIsHovering(true);
-    };
-    const handleMouseLeave = () => {
-        setIsHovering(false);
-    }
 
     const handleTitleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (isTrash) return;
@@ -84,6 +76,7 @@ const NoteGUI: React.FC<NoteGUIProps> = ({
     };
 
     const handleResetNote = useCallback(() => {
+        console.log("reseting")
         if (initialOperation === 'create') {
             setContent('');
             setTitle('');
@@ -114,7 +107,6 @@ const NoteGUI: React.FC<NoteGUIProps> = ({
     };
 
     const handleDeleteNote = async () => {
-
         try {
             if (isTrash) {
                 await deleteNote(note.id);
@@ -126,45 +118,66 @@ const NoteGUI: React.FC<NoteGUIProps> = ({
     };
 
     const handleNote = useCallback(async () => {
-
+        console.log('handle note')
         if (isTrash) return;
+
+        const currentNot = new Note(
+            undefined,
+            backgroundColor,
+            note.id,
+            title,
+            content,
+            isArchived,
+            isPinned,
+            isTrash,
+            [],
+            undefined
+        );
 
         const currentNote = {
             backgroundColor,
             content,
             isArchived,
             isPinned,
+            isTrash,
             title,
-            id: note.id,
         };
-
-        console.log('Current Note:', currentNote);
 
         const prevNote = note;
 
         if (initialOperation === 'create') {
             if (currentNote.title !== prevNote.title || currentNote.content !== prevNote.content) {
+                handleResetNote();
                 await createNote(currentNote as Note);
+                await createIdea(currentNot);
+                console.log('Created Note');
             }
         } else {
             if (currentNote.title.trim().length === 0 && currentNote.content.trim().length === 0) {
+                handleResetNote();
                 await deleteNote(note.id);
+                await deleteIdea(currentNot);
                 console.log('Deleted Note');
             } else if (currentNote.title !== prevNote.title || currentNote.content !== prevNote.content) {
+                handleResetNote();
                 await updateNote(currentNote as Note);
+                await updateIdea(currentNot);
                 console.log('Updated Note');
             }
         }
 
         handleResetNote();
-    }, [backgroundColor, isTrash, title, content, isArchived, isPinned, note, initialOperation, handleResetNote, createNote, deleteNote, updateNote]);
+    }, [backgroundColor, isTrash, title, content, isArchived, isPinned, note, initialOperation, 
+        handleResetNote, createNote, deleteNote, updateNote, createIdea, deleteIdea, updateIdea]);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        console.log('clicking submit')
         event.preventDefault();
         handleNote();
     };
 
     const handleClickOutside = useCallback((event: MouseEvent) => {
+        console.log('clicking outside')
         event.stopPropagation();
         // const handleCloseMenu = (
         //     isOpen: boolean,
@@ -282,18 +295,15 @@ const NoteGUI: React.FC<NoteGUIProps> = ({
 
 
 
-    return (
-     
-
-
+    return ( 
             <div
-                draggable={initialOperation === 'read' && !isModalMode}
-                onDragStart={(e) => handleDragStart && handleDragStart(e, noteIndex ?? 0)}
-                onDragOver={(e) => handleDragOver && handleDragOver(e, noteIndex ?? 0)}
-                onDrop={() => handleDrop && handleDrop(noteIndex ?? 0)}
+                // draggable={initialOperation === 'read' && !isModalMode}
+                // onDragStart={(e) => handleDragStart && handleDragStart(e, noteIndex ?? 0)}
+                // onDragOver={(e) => handleDragOver && handleDragOver(e, noteIndex ?? 0)}
+                // onDrop={() => handleDrop && handleDrop(noteIndex ?? 0)}
                 className={(isModalMode ? styles.containerModal : styles.container)}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
+                // onMouseEnter={handleMouseEnter}
+                // onMouseLeave={handleMouseLeave}
             >
                 <form
                     className={!isModalMode ? (initialOperation === 'create' ? styles.create : styles.read) : styles.noteEdit}
@@ -341,8 +351,10 @@ const NoteGUI: React.FC<NoteGUIProps> = ({
                         index={index}
                         handleBackgroundColor={handleBackgroundColor}
                         handleDeleteNote={handleDeleteNote}
+    
                         handleRedo={handleRedo}
                         handleUndo={handleUndo}
+            
                         setIsBackgroundMenu={setIsBackgroundMenu}
                         setIsFontMenu={setIsFontMenu}
                         setIsOptionsMenu={setIsOptionsMenu}

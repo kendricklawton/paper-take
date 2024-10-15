@@ -11,6 +11,7 @@ export class Note {
     isTrash: boolean;
     images: string[];
     reminder: Timestamp | undefined;
+    type: 'note';
 
     constructor(
         createdAt: Timestamp | undefined,
@@ -34,6 +35,7 @@ export class Note {
         this.isTrash = isTrash;
         this.images = images;
         this.reminder = reminder;
+        this.type = 'note';
     }
 
     static fromJSON(jsonString: string): Note | null {
@@ -52,7 +54,7 @@ export class Note {
                 isPinned,
                 isTrash,
                 images,
-                reminder
+                reminder,
             );
         } catch (error) {
             console.error('Failed to parse JSON:', error);
@@ -71,6 +73,7 @@ export class Note {
             isPinned: this.isPinned,
             isTrash: this.isTrash,
             images: this.images,
+            type: this.type,
             reminder: this.reminder
         });
     }
@@ -159,6 +162,7 @@ export class Project {
     isPinned: boolean;
     isTrash: boolean;
     tasks: Task[];
+    type: 'project';
 
     constructor(
         createdAt: Timestamp | undefined,
@@ -180,6 +184,7 @@ export class Project {
         this.isPinned = isPinned;
         this.isTrash = isTrash;
         this.tasks = tasks;
+        this.type = 'project';
     }
 
     static fromJSON(jsonString: string): Project | null {
@@ -231,6 +236,7 @@ export class Project {
             isTrash: this.isTrash,
             tasks: this.tasks.map(task => JSON.parse(task.toJSON())),
             dueDate: this.dueDate?.toISOString() || null,
+            type: this.type
         });
     }
 
