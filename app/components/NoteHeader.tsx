@@ -22,11 +22,11 @@ export default function NoteHeader({
     const readOnlyMode = initialOperation === 'read' && !isModalMode;
     const placeholderText = 'Title...';
 
-    const handleFocus = () => {
-        if (!readOnlyMode) {
-            toggleModeTrue();
-        }
-    };
+    // const handleFocus = () => {
+    //     if (!readOnlyMode) {
+    //         toggleModeTrue();
+    //     }
+    // };
 
     const handleClick = () => {
         if (readOnlyMode) {
@@ -45,7 +45,7 @@ export default function NoteHeader({
                     multiline
                     onChange={handleTitleChange}
                     onClick={initialOperation === 'create' ? undefined : handleClick}
-                    onFocus={handleFocus}
+                    // onFocus={handleFocus}
                     placeholder={placeholderText}
                     value={title}
                     sx={{

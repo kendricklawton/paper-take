@@ -31,18 +31,18 @@ export default function NoteBody({
     const placeholderText = 'Create an idea...';
     const router = useRouter();
 
-    const handleFocus = (event: React.FocusEvent<HTMLTextAreaElement>) => {
-        event.preventDefault();
-        if (!readOnlyMode) {
-            toggleModeTrue();
-        }
-    };
+    // const handleFocus = (event: React.FocusEvent<HTMLTextAreaElement>) => {
+    //     event.preventDefault();
+    //     if (!readOnlyMode) {
+    //         toggleModeTrue();
+    //     }
+    // };
 
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
         event.preventDefault();
-        if (readOnlyMode) {
+        // if (readOnlyMode) {
             toggleModeTrue();
-        }
+        // }
     };
 
     const handleNoteButton = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -68,8 +68,7 @@ export default function NoteBody({
                 <StyledNoteButton variant="contained" 
                 // startIcon={< AddOutlined/>}
                 // endIcon={<NoteOutlined />}
-                onClick={handleProjectButton}
-                >
+                onClick={handleNoteButton}>
                     Note
                 </StyledNoteButton>
             </InputAdornment>
@@ -101,7 +100,7 @@ export default function NoteBody({
                     multiline
                     onChange={handleContentChange}
                     onClick={handleClick}
-                    onFocus={handleFocus}
+                    // onFocus={handleFocus}
                     placeholder={placeholderText}
                     sx={{
                         '& .MuiInputBase-input': {
