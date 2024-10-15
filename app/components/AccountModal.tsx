@@ -11,7 +11,7 @@ import {
 import { 
     // Close, 
     VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material';
-import { FormButton, FormTextField } from './Styled';
+import { StyledButton, FormTextField } from './Styled';
 
 interface AccountModalProps {
     isOpen: boolean;
@@ -257,24 +257,24 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                             { authError && (<p className={styles.textError} aria-live="polite">{authError}</p>)}
                             {
                                 method === "password" ?
-                                    <FormButton className={styles.button} disabled={!isButtonEnabled()} type="submit">
+                                    <StyledButton className={styles.button} disabled={!isButtonEnabled()} type="submit">
                                         Send
-                                    </FormButton>
+                                    </StyledButton>
                                     :
-                                    <FormButton className={styles.button} disabled={!isButtonEnabled()} type="submit">
+                                    <StyledButton className={styles.button} disabled={!isButtonEnabled()} type="submit">
                                         {method === "verification" ? "Resend" : "Submit"}
-                                    </FormButton>
+                                    </StyledButton>
                             }
                             {
                                 ( method === "displayName" && user?.displayName ) && (
-                                    <FormButton className={styles.button} type="button" onClick={handleRemoveDisplayName}>
+                                    <StyledButton className={styles.button} type="button" onClick={handleRemoveDisplayName}>
                                         Remove Display Name
-                                    </FormButton>
+                                    </StyledButton>
                                 )
                             }
-                            <FormButton className={styles.button} onClick={clearValues} type="reset">
+                            <StyledButton className={styles.button} onClick={clearValues} type="reset">
                                 Cancel
-                            </FormButton>
+                            </StyledButton>
                         </React.Fragment>
                     </form>
                 </div>
