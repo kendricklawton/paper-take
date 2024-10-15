@@ -2,7 +2,11 @@
 
 import { InputAdornment } from "@mui/material";
 import { NoteBodyTextField, StyledNoteButton } from "./Styled";
-import { AccountTreeOutlined, AddOutlined, NoteOutlined } from "@mui/icons-material";
+import { 
+    // AccountTreeOutlined, 
+    AddOutlined,
+    //  NoteOutlined 
+    } from "@mui/icons-material";
 import React from "react";
 
 interface NoteBodyProps {

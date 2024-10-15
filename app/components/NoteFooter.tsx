@@ -16,7 +16,6 @@ import {
 import styles from "./GUI.module.css"
 import React from 'react';
 import { BackgroundCircle, BackgroundIconButton, StyledIconButton, TransparentIconButton, StyledTextButton, TransparentIcon, StyledNoteButton } from './Styled';
-import { Button } from '@mui/material';
 
 interface NoteFooterProps {
     backgroundColor: '' | '#fff59c' | '#aaf0d1' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5';
