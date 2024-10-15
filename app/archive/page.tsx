@@ -1,16 +1,16 @@
 'use client'
 import React from "react";
 import styles from "../page.module.css";
-import NoteGUI from "../components/GUI";
-import { useAppContext } from "../providers/AppProvider";
+// import NoteGUI from "../components/GUI";
+// import { useAppContext } from "../providers/AppProvider";
 
 export default function Archive() {
-    const { notes } = useAppContext();
-    const archivedNotes = notes.filter(note => note.isArchived && !note.isTrash);
+    // const { notes } = useAppContext();
+    // const archivedNotes = notes.filter(note => note.isArchived && !note.isTrash);
 
     return (
         <div className={styles.page}>
-            {archivedNotes.length === 0 ? (
+            {/* {archivedNotes.length === 0 ? (
                 <div className={styles.pageTitle}><p>Empty Archive</p></div>
             ) : (
                 archivedNotes.map((note, index) => (
@@ -19,7 +19,7 @@ export default function Archive() {
                         <div className={styles.spacer} key={index} />
                     </React.Fragment>
                 ))
-            )}
+            )} */}
         </div>
     );
 }
