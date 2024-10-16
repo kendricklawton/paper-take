@@ -7,7 +7,7 @@ import {
     // AddOutlined,
     //  NoteOutlined 
     } from "@mui/icons-material";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 interface GUIBodyProps {
@@ -16,6 +16,7 @@ interface GUIBodyProps {
     isEditMode: boolean;
     isModalMode: boolean;
     handleContentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
     toggleModeTrue: () => void;
 }
 
@@ -25,24 +26,25 @@ export default function GUIBody({
     isEditMode,
     isModalMode,
     handleContentChange,
+    setIsEditMode,
     toggleModeTrue
 }: GUIBodyProps) {
     const readOnlyMode = initialOperation === 'read' && !isModalMode;
     const placeholderText = 'Create an idea...';
     const router = useRouter();
 
-    // const handleFocus = (event: React.FocusEvent<HTMLTextAreaElement>) => {
-    //     event.preventDefault();
-    //     if (!readOnlyMode) {
-    //         toggleModeTrue();
-    //     }
-    // };
+    const handleFocus = (event: React.FocusEvent<HTMLTextAreaElement>) => {
+        event.preventDefault();
+        if (!readOnlyMode) {
+            toggleModeTrue();
+        }
+    };
 
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
         event.preventDefault();
-        // if (readOnlyMode) {
+        if (readOnlyMode) {
             toggleModeTrue();
-        // }
+        }
     };
 
     const handleNoteButton = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -52,9 +54,16 @@ export default function GUIBody({
 
     const handleProjectButton = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
+        setIsEditMode(false);
         router.push('/projects/create');
-        // toggleModeTrue();
     }
+    const textFieldRef = useRef<HTMLTextAreaElement | null>(null); 
+    
+    useEffect(() => {
+        if (isEditMode && textFieldRef.current) {
+            textFieldRef.current.focus();
+        }
+    }, [isEditMode]);
 
     // Conditional rendering for the end adornment
     const endAdornment = initialOperation === "create" && !isEditMode ? (
@@ -94,13 +103,13 @@ export default function GUIBody({
             {(initialOperation === "create" || content.length > 0 || isEditMode) && (
                 <NoteBodyTextField
                     inputProps={{
-                        readOnly: readOnlyMode,
+                        readOnly: readOnlyMode
                     }}
                     autoComplete='off'
-                    multiline={isEditMode}
+                    multiline={content.length > 0}
                     onChange={handleContentChange}
                     onClick={handleClick}
-                    // onFocus={handleFocus}
+                    onFocus={handleFocus}
                     placeholder={placeholderText}
                     sx={{
                         '& .MuiInputBase-input': {
@@ -110,10 +119,13 @@ export default function GUIBody({
                             cursor: isEditMode ? 'text' : 'default',
                         },
                     }}
-                    InputProps={{
-                        endAdornment: endAdornment, // End adornment for the icons
+                    slotProps={{
+                        input: {
+                            endAdornment: endAdornment,
+                        },
                     }}
                     value={content}
+                    inputRef={textFieldRef}
                 />
             )}
         </>

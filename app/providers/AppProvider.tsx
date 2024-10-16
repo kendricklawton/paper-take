@@ -169,9 +169,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }, [user, fetchData]);
 
     const createIdea = useCallback(async (idea: Note | Project) => {
-        if (idea instanceof Note) {
+        if (idea.type === "note") {
             setNotes(prevNotes => [idea, ...prevNotes]);
-        } else if (idea instanceof Project) {
+        } else if (idea.type === "project") {
             setProjects(prevProjects => [idea, ...prevProjects]);
         } else {
             throw new Error("Invalid idea type");
@@ -181,9 +181,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }, [apiService]);
 
     const updateIdea = useCallback(async (idea: Note | Project) => {
-        if (idea instanceof Note) {
+        if (idea.type === "note") {
             setNotes(prevNotes => prevNotes.map(note => note.id === idea.id ? idea : note));
-        } else if (idea instanceof Project) {
+        } else if (idea.type === "project") {
             setProjects(prevProjects => prevProjects.map(project => project.id === idea.id ? idea : project));
         } else {
             throw new Error("Invalid idea type");
@@ -192,9 +192,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }, [apiService]);
 
     const deleteIdea = useCallback(async (idea: Note | Project) => {
-        if (idea instanceof Note) {
+        if (idea.type === "note") {
             setNotes(prevNotes => prevNotes.filter(note => note.id !== idea.id));
-        } else if (idea instanceof Project) {
+        } else if (idea.type === "project") {
             setProjects(prevProjects => prevProjects.filter(project => project.id !== idea.id));
         } else {
             throw new Error("Invalid idea type");

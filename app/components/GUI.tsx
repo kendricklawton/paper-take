@@ -243,13 +243,21 @@ const GUI: React.FC<GUIProps> = ({
         };
     }, [handleClickOutside]);
 
-    useEffect(() => {
-        const previousOverflow = document.body.style.overflowY;
-        document.body.style.overflowY = isModalMode ? 'hidden' : 'auto';
-        return () => {
-            document.body.style.overflowY = previousOverflow;
-        };
-    }, [isModalMode]);
+    const handleMouseEnter = () => {
+        setIsHovering(true);
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovering(false);
+    };
+
+    // useEffect(() => {
+    //     const previousOverflow = document.body.style.overflowY;
+    //     document.body.style.overflowY = isModalMode ? 'hidden' : 'auto';
+    //     return () => {
+    //         document.body.style.overflowY = previousOverflow;
+    //     };
+    // }, [isModalMode]);
 
 
 
@@ -260,8 +268,8 @@ const GUI: React.FC<GUIProps> = ({
             // onDragOver={(e) => handleDragOver && handleDragOver(e, noteIndex ?? 0)}
             // onDrop={() => handleDrop && handleDrop(noteIndex ?? 0)}
             className={(isModalMode ? styles.containerModal : styles.container)}
-        // onMouseEnter={handleMouseEnter}
-        // onMouseLeave={handleMouseLeave}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         >
             <Box
                 style={{
@@ -292,6 +300,7 @@ const GUI: React.FC<GUIProps> = ({
                         initialOperation={initialOperation}
                         isEditMode={isEditMode}
                         isModalMode={isModalMode}
+                        setIsEditMode={setIsEditMode}
                         toggleModeTrue={toggleModeTrue}
                     />
                 </div>
