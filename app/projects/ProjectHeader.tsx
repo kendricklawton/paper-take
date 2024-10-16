@@ -2,7 +2,6 @@
 
 import styles from './Project.module.css';
 import { styled, TextField, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { Add } from '@mui/icons-material';
 import { StyledNoteButton } from '../components/Styled';
 
 const toggleButtonStyles = {
@@ -16,18 +15,18 @@ const toggleButtonStyles = {
 };
 
 interface ProjectHeaderProps {
+    currentPage: "taskboard" | "backlog" | "capacity" | "analytics" | "goal";
     description: string;
-    isProjectSettingsOpen: boolean;
-    projectSettingsMenuRef: React.RefObject<HTMLDivElement>;
-    projectSettingsMenuButtonRef: React.RefObject<HTMLButtonElement>;
     title: string;
-    handleProjectSettingsMenu: () => void;
+    handlePageChange: (event: React.MouseEvent<HTMLElement>, newAlignment: "taskboard" | "backlog" | "capacity" | "analytics" | "goal") => void;
 }
 
 const ProjectHeader: React.FC<ProjectHeaderProps> = (
     {
         description,
         title,
+        currentPage,
+        handlePageChange,
     }
 ) => {
     console.log('Project Header:', title, description);
@@ -62,22 +61,22 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = (
                     value={title}
                 />
                 <div className={styles.headerTopTrailing}>
-                    <StyledNoteButton variant="contained" startIcon={<Add />}
+                    <StyledNoteButton variant="contained"
                         sx={{
                             borderRadius: '0px',
-                            minWidth: '150px',
+                            minWidth: '90px',
                         }}
                     >
-                        Add New Item
+                        Add Task
                     </StyledNoteButton>
                 </div>
             </div>
             <div className={styles.headerBottom}>
                 <ToggleButtonGroup
                     color="primary"
-                    // value={currentList}
+                    value={currentPage}
                     exclusive={true}
-                    // onChange={handleChange}
+                    onChange={handlePageChange}
                     aria-label="Platform"
                     sx={{
                         border: 'none',
@@ -86,12 +85,12 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = (
                         width: '100%',
                         // backgroundColor: 'yellow',
                     }}>
-                    <ToggleButton value="Taskboard"
+                    <ToggleButton value="taskboard"
                         sx={toggleButtonStyles}
                     >
                         Taskboard
                     </ToggleButton>
-                    <ToggleButton value="Backlog"
+                    <ToggleButton value="backlog"
                         sx={toggleButtonStyles}
                     >
                         Backlog

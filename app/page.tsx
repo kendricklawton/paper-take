@@ -21,7 +21,8 @@ import { useAppContext } from './providers/AppProvider';
 
 export default function Login() {
     const
-        { authError,
+        { 
+            authError,
             clearAuthError,
             createUserAccount,
             logIn,
@@ -119,7 +120,7 @@ export default function Login() {
                 }
 
                 await createUserAccount(email, password);
-                setInfo('Accounts successfully created. Please check your email for a verification link. Confirm your email to enable full account functionality.');
+                setInfo('Account successfully created. Please check your email for a verification link. Confirm your email to enable full account functionality.');
                 clearValues();
                 router.push('/ideas');
             }
@@ -137,6 +138,7 @@ export default function Login() {
         setIsLogin(prev => !prev);
         clearValues();
     };
+
 
     return (
         <div className={styles.pageLogin}>

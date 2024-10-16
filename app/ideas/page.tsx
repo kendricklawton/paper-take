@@ -59,7 +59,6 @@ const Notes: React.FC = () => {
     //         noteService(newNotes);
     //     }
     //     setDraggingNoteIndex(null);
-
     // };
 
     const newNote = new Note(
@@ -120,7 +119,7 @@ const Notes: React.FC = () => {
             {activeNotes.length === 0 ? (
 
                 <div className={styles.pageText}>
-                    <p>Notes you create will appear here</p>
+                    <p>Ideas you create will appear here</p>
                 </div>
 
 
@@ -133,15 +132,15 @@ const Notes: React.FC = () => {
 
                         { /* Todo - Create Draggable List */}
 
-                        
 
-                            <GUI
-                                key={idea.id}
-                                operation={'read'}
-                                idea={idea}
-                            />
-                        
-                    
+
+                        <GUI
+                            key={idea.id}
+                            operation={'read'}
+                            idea={idea}
+                        />
+
+
                     </React.Fragment>
                 ))
             )}

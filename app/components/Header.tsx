@@ -224,13 +224,16 @@ export default function Header() {
                     {isSettingsMenuOpen && (
                         <nav className={styles.menu} ref={settingsMenuRef}>
                             <div className={styles.navLink}>
-                                Todo - Theme
+                                Todo - Settings Menu
                             </div>
                             <div className={styles.navLink}>
-                                Todo - Enable Sharing
+                                Todo - Project
                             </div>
                             <div className={styles.navLink}>
-                                Todo - Reminder Defaults
+                                Todo - Drag Drop Grid
+                            </div>
+                            <div className={styles.navLink}>
+                                Todo - Too Much
                             </div>
                         </nav>
                     )}

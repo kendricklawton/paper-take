@@ -4,6 +4,11 @@ import React, { useEffect, useState } from 'react';
 import styles from './Project.module.css';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 
+interface ProjectBodyProps {
+    currentPage: "taskboard" | "backlog" | "capacity" | "analytics" | "goal";
+}
+
+
 const toggleButtonStyles = {
     fontSize: 'large',
     fontWeight: 'lighter',
@@ -28,7 +33,9 @@ const columnHeaders = [
     'Closed'
 ];
 
-const ProjectBody: React.FC = () => {
+const ProjectBody: React.FC<ProjectBodyProps> = ({
+    currentPage,
+}) => {
     const [currentColumn, setCurrentColumn] = useState('notes');
     const [columns, setColumns] = useState<{ [key: number]: { id: string; content: string }[] }>({
         0: initialTasks,
@@ -85,9 +92,10 @@ const ProjectBody: React.FC = () => {
         };
     }, [isMobile]);
 
-    const desktopView = () => {
+    const Taskboard = () => {
         return (
-            <div className={styles.body}>
+            <React.Fragment>
+             
                 {Object.keys(columns).map((columnIndexStr) => {
                     const columnIndex = Number(columnIndexStr);
                     return (
@@ -111,11 +119,60 @@ const ProjectBody: React.FC = () => {
                         </div>
                     );
                 })}
+            </React.Fragment>
+        );
+    };
+
+    const Backlog = () => {
+        return (
+            <h1>Backlog</h1>
+        );
+    }
+
+    const Capacity = () => {
+        return (
+            <h1>Capacity</h1>
+        );
+    }
+
+    const Analytics = () => {
+        return (
+            <h1>Analytics</h1>
+        );
+    }
+
+    const Goal = () => {
+        return (
+            <h1>Goal</h1>
+        );
+    }
+
+    const Desktop = () => {
+        const renderPage = () => {
+            switch (currentPage) {
+                case 'taskboard':
+                    return <Taskboard />;
+                case 'backlog':
+                    return <Backlog />;
+                case 'capacity':
+                    return <Capacity />;
+                case 'analytics':
+                    return <Analytics />;
+                case 'goal':
+                    return <Goal />;
+                default:
+                    return <h1>Page not found</h1>;
+            }
+        };
+
+        return (
+            <div className={styles.body}>
+                {renderPage()}
             </div>
         );
     }
 
-    const mobileView = () => {
+    const Mobile = () => {
         return (
             <div className={styles.body}>
                 <ToggleButtonGroup
@@ -140,6 +197,7 @@ const ProjectBody: React.FC = () => {
                         </ToggleButton>
                     ))}
                 </ToggleButtonGroup>
+                <div className={styles.spacer} />
                 <div
                     onDragOver={handleDragOver}
                     onDrop={(event) => handleDrop(event, 0)}
@@ -162,11 +220,11 @@ const ProjectBody: React.FC = () => {
     }
 
     return (
-        <>
+        <React.Fragment>
             {
-                isMobile ? mobileView() : desktopView()
+                isMobile ? Mobile() : Desktop()
             }
-        </>
+        </React.Fragment>
     );
 };
 

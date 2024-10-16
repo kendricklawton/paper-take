@@ -15,7 +15,8 @@ import {
 } from '@mui/icons-material';
 import styles from "./GUI.module.css"
 import React from 'react';
-import { BackgroundCircle, BackgroundIconButton, StyledIconButton, TransparentIconButton, StyledTextButton, TransparentIcon, StyledNoteButton } from './Styled';
+import { BackgroundCircle, BackgroundIconButton, StyledIconButton, StyledTextButton, StyledNoteButton, TransparentIconButton, TransparentIcon } from './Styled';
+import { Tooltip } from '@mui/material';
 
 interface GUIFooterProps {
     backgroundColor: '' | '#fff59c' | '#aaf0d1' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5';
@@ -83,23 +84,30 @@ export default function GUIFooter({
     return (
         <React.Fragment>
             {isTrash ?
-                (<div className={styles.footerWrapper}
-                >
-                    <div className={styles.footerContainer}
-
-                    >
-                        <div className={styles.footerLeading}
-                        >
-                            <StyledIconButton aria-label="Delete note forever" onClick={() => handleDeleteNote()}>
-                                <DeleteForeverOutlined />
-                            </StyledIconButton>
-                            <StyledIconButton aria-label="Restore from trash" onClick={() => toggleDelete()}>
-                                <RestoreFromTrashOutlined />
-                            </StyledIconButton>
+                (<div className={styles.footerWrapper}>
+                    <div className={styles.footerContainer}>
+                        <div className={styles.footerLeading}>
+                            {
+                                showFooterIcons && (
+                                    <React.Fragment>
+                                        <StyledIconButton aria-label="Delete note forever" onClick={() => handleDeleteNote()}>
+                                            <DeleteForeverOutlined />
+                                        </StyledIconButton>
+                                        <StyledIconButton aria-label="Restore from trash" onClick={() => toggleDelete()}>
+                                            <RestoreFromTrashOutlined />
+                                        </StyledIconButton>
+                                    </React.Fragment>
+                                )
+                            }
                         </div>
-                        <StyledIconButton disabled={true}>
-                            <NoteOutlined sx={{ color: 'gray' }} />
-                        </StyledIconButton>
+
+                        <Tooltip title="Note">
+                            <span>
+                                <StyledIconButton disabled={true}>
+                                    <NoteOutlined sx={{ color: 'gray' }} />
+                                </StyledIconButton>
+                            </span>
+                        </Tooltip>
                     </div>
                 </div>)
                 :
@@ -171,7 +179,8 @@ export default function GUIFooter({
                                             )}
                                         </div>
                                     </div>
-                                ) : (
+                                )
+                                : (
                                     <div className={styles.footerLeading}>
                                         <TransparentIconButton>
                                             <TransparentIcon />
@@ -183,6 +192,17 @@ export default function GUIFooter({
                                     <StyledTextButton type="submit">Close</StyledTextButton>
                                 )}
                             </React.Fragment>
+                            {
+                                (initialOperation === 'read' && !isEditMode) && (
+                                    <Tooltip title="Note" className={styles.footerType}>
+                                        <span>
+                                            <StyledIconButton disabled={true}>
+                                                <NoteOutlined sx={{ color: 'gray' }} />
+                                            </StyledIconButton>
+                                        </span>
+                                    </Tooltip>
+                                )
+                            }
                         </div>
                     </div>
                 )

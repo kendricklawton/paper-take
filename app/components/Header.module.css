@@ -132,6 +132,7 @@
     font-size: normal;
 }
 
+
 @media(prefers-color-scheme: dark) {
     .header,
     .headerScrolled,

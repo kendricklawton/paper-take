@@ -127,6 +127,20 @@ export const StyledNoteButton = styled(Button)({
     fontWeight: 'lighter',
     color: 'grey',
     backgroundColor: 'transparent',
+    borderRadius: '0px',
+    '@media (prefers-color-scheme: dark)': {
+        color: 'grey',
+        backgroundColor: 'transparent',
+    },
+});
+
+export const StyledNoteButtonTwo = styled(Button)({
+
+    width: '90px',
+    fontFamily: 'monospace',
+    fontWeight: 'lighter',
+    color: 'grey',
+    backgroundColor: 'transparent',
 
 
     borderRadius: '0px',

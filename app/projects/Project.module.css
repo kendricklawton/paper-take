@@ -30,7 +30,7 @@
     display: flex;
     flex-direction: row;
     width: 100%;
-    gap: 1rem;
+    /* gap: 1rem; */
 }
 
 .column {
@@ -89,4 +89,8 @@
     .column {
         width: 100%;
     }
+}
+
+.spacer {
+    height: 1rem;
 }

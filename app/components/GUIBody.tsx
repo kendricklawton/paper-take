@@ -1,7 +1,7 @@
 'use client';
 
 import { InputAdornment } from "@mui/material";
-import { NoteBodyTextField, StyledNoteButton } from "./Styled";
+import { NoteBodyTextField, StyledNoteButtonTwo } from "./Styled";
 import { 
     // AccountTreeOutlined, 
     // AddOutlined,
@@ -49,6 +49,7 @@ export default function GUIBody({
 
     const handleNoteButton = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
+
         toggleModeTrue();
     }
 
@@ -61,17 +62,17 @@ export default function GUIBody({
     const endAdornment = initialOperation === "create" && !isEditMode ? (
         <React.Fragment>
             <InputAdornment position="end">
-                <StyledNoteButton variant="contained" 
+                <StyledNoteButtonTwo variant="contained" 
                 onClick={handleNoteButton}>
                     Note
-                </StyledNoteButton>
+                </StyledNoteButtonTwo>
             </InputAdornment>
             <InputAdornment position="end">
-                <StyledNoteButton variant="contained" 
+                <StyledNoteButtonTwo variant="contained" 
                 onClick={handleProjectButton}
                 >
                     Project
-                </StyledNoteButton>
+                </StyledNoteButtonTwo>
             </InputAdornment>
         </React.Fragment>
     ) : null;
@@ -84,7 +85,7 @@ export default function GUIBody({
                         readOnly: readOnlyMode
                     }}
                     autoComplete='off'
-                    multiline={true}
+                    multiline={isEditMode || content.length > 0}
                     onChange={handleContentChange}
                     onClick={handleClick}
                     onFocus={handleFocus}
@@ -103,6 +104,13 @@ export default function GUIBody({
                         },
                     }}
                     value={content}
+                    inputRef={input => {
+                        if (input && isEditMode) {
+                            input.focus();
+                            // Move the cursor to the end of the content
+                            input.setSelectionRange(content.length, content.length);
+                        }
+                    }}
                 />
             )}
         </React.Fragment>
