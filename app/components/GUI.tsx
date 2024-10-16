@@ -246,7 +246,7 @@ const GUI: React.FC<GUIProps> = ({
     const handleMouseEnter = () => {
         setIsHovering(true);
     };
-
+    
     const handleMouseLeave = () => {
         setIsHovering(false);
     };

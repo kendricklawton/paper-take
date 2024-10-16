@@ -7,7 +7,7 @@ import {
     // AddOutlined,
     //  NoteOutlined 
     } from "@mui/icons-material";
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 
 interface GUIBodyProps {
@@ -43,7 +43,7 @@ export default function GUIBody({
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
         event.preventDefault();
         if (readOnlyMode) {
-            toggleModeTrue();
+            toggleModeTrue();   
         }
     };
 
@@ -57,39 +57,17 @@ export default function GUIBody({
         setIsEditMode(false);
         router.push('/projects/create');
     }
-    const textFieldRef = useRef<HTMLTextAreaElement | null>(null); 
-    
-    useEffect(() => {
-        if (isEditMode && textFieldRef.current) {
-            textFieldRef.current.focus();
-        }
-    }, [isEditMode]);
 
-    // Conditional rendering for the end adornment
     const endAdornment = initialOperation === "create" && !isEditMode ? (
         <React.Fragment>
             <InputAdornment position="end">
-                {/* <Tooltip arrow title={<Typography sx={{ fontSize: "normal" }}>Create a note</Typography>}>
-                    <StyledIconButton>
-                        <NoteOutlined />
-                    </StyledIconButton>
-                </Tooltip> */}
                 <StyledNoteButton variant="contained" 
-                // startIcon={< AddOutlined/>}
-                // endIcon={<NoteOutlined />}
                 onClick={handleNoteButton}>
                     Note
                 </StyledNoteButton>
             </InputAdornment>
             <InputAdornment position="end">
-                {/* <Tooltip arrow title={<Typography sx={{ fontSize: "normal" }}>Create a project</Typography>} >
-                    <StyledIconButton>
-                        <AccountTreeOutlined />
-                    </StyledIconButton>
-                </Tooltip> */}
                 <StyledNoteButton variant="contained" 
-                // startIcon={< AddOutlined />} 
-                // endIcon={<AccountTreeOutlined />}
                 onClick={handleProjectButton}
                 >
                     Project
@@ -99,14 +77,14 @@ export default function GUIBody({
     ) : null;
 
     return (
-        <>
+        <React.Fragment>
             {(initialOperation === "create" || content.length > 0 || isEditMode) && (
                 <NoteBodyTextField
                     inputProps={{
                         readOnly: readOnlyMode
                     }}
                     autoComplete='off'
-                    multiline={content.length > 0}
+                    multiline={true}
                     onChange={handleContentChange}
                     onClick={handleClick}
                     onFocus={handleFocus}
@@ -125,9 +103,8 @@ export default function GUIBody({
                         },
                     }}
                     value={content}
-                    inputRef={textFieldRef}
                 />
             )}
-        </>
+        </React.Fragment>
     );
 }
