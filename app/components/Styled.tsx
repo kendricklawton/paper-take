@@ -1,14 +1,12 @@
-import { Button, IconButton, styled, TextField, ToggleButton } from "@mui/material";
+import { Button, IconButton, styled, TextField, ToggleButton, Tooltip, tooltipClasses, TooltipProps } from "@mui/material";
 import { Circle } from "@mui/icons-material";
-
-const selectBorderColor = 'purple';
 
 export const StyledIconButton = styled(IconButton)({
     color: 'gray',
 });
 
 interface BackgroundIconButtonProps {
-    selected?: boolean;
+    isButtonSelected?: boolean;
 }
 
 export const TransparentIconButton = styled(IconButton)<BackgroundIconButtonProps>(({ }) => ({
@@ -25,35 +23,35 @@ export const TransparentIcon = styled(Circle)({
     border: 'none',
     // borderRadius: '50%',
 });
-export const BackgroundIconButton = styled(IconButton)<BackgroundIconButtonProps>(({ selected }) => ({
+export const BackgroundIconButton = styled(IconButton)<BackgroundIconButtonProps>(({ isButtonSelected }) => ({
     padding: '0.25rem',
     '&:hover': {
         backgroundColor: 'transparent',
         '& .MuiSvgIcon-root': {
-            borderColor: selected ? selectBorderColor : '#222',
+            borderColor: isButtonSelected ? 'purple' : '#222',
         },
     },
     '@media (prefers-color-scheme: dark)': {
         '&:hover': {
             backgroundColor: 'transparent',
             '& .MuiSvgIcon-root': {
-                borderColor: selected ? selectBorderColor : 'white',
+                borderColor: isButtonSelected ? 'purple' : 'white',
             },
         },
     },
 }));
 
 interface BackgroundCircleProps {
-    selected?: boolean;
+    isButtonSelected?: boolean;
     bgcolor?: string;
     color?: string;
 }
 
-export const BackgroundCircle = styled(Circle)<BackgroundCircleProps>(({ selected, bgcolor }) => ({
+export const BackgroundCircle = styled(Circle)<BackgroundCircleProps>(({ isButtonSelected, bgcolor }) => ({
     fontSize: '2rem',
     backgroundColor: bgcolor || 'transparent',
     color: 'transparent',
-    border: `2px solid ${selected ? selectBorderColor : bgcolor || 'gray'}`,
+    border: `2px solid ${isButtonSelected ? 'purple' : bgcolor || 'gray'}`,
     borderRadius: '50%',
     '&:hover': {
         borderColor: 'inherit',
@@ -210,7 +208,7 @@ export const StyledToggleButton = styled(ToggleButton)({
     borderRadius: '0px',
     textTransform: 'none',
     backgroundColor: 'transparent',
-    '&.Mui-selected': {
+    '&.Mui-isButtonSelected': {
         backgroundColor: 'transparent',
     },
     '&:hover': {
@@ -232,3 +230,25 @@ export const StyledTextButton = styled(Button)({
     //     backgroundColor: 'transparent',
     // },
 });
+
+export const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+))(() => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+        backgroundColor: 'white',
+        borderRadius: '0px',
+        color: 'inherit',
+        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+        fontSize: '1rem',
+        '@media (prefers-color-scheme: dark)': {
+            backgroundColor: '#121212',
+            color: 'white',
+        },
+    },
+    [`& .${tooltipClasses.arrow}`]: {
+        color: 'white',
+        '@media (prefers-color-scheme: dark)': {
+            color: '#121212', // Dark mode arrow color
+        },
+    },
+}));

@@ -2,9 +2,9 @@
 
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { useAppContext } from '../providers/AppProvider';
-import NoteBody from './GUIBody';
-import NoteHeader from './GUIHeader';
-import NoteFooter from './GUIFooter';
+import GUIBody from './GUIBody';
+import GUIHeader from './GUIHeader';
+import GUIFooter from './GUIFooter';
 import styles from "./GUI.module.css"
 import { Note, Project } from '../models';
 import { Box } from '@mui/material';
@@ -30,12 +30,15 @@ const GUI: React.FC<GUIProps> = ({
     const { createIdea, deleteIdea, updateIdea, setInfo } = useAppContext();
 
     const initialOperation = operation;
+    const [backgroundColorInUse, setBackgroundColorInUse] = useState<string>('');
+    const [isDarkMode, setIsDarkMode] = useState(false);
     const [isModalMode, setIsModalMode] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [isBackgroundMenuOpen, setIsBackgroundMenu] = useState(false);
     const [isFontMenuOpen, setIsFontMenu] = useState(false);
     const [isOptionsMenuOpen, setIsOptionsMenu] = useState(false);
     const [isHovering, setIsHovering] = useState<boolean>(false);
+    const [focus, setFocus] = useState<'title' | 'body'>('body');
 
     const [contentArray, setContentArray] = useState([idea.type === 'note' ? idea.content : '']);
     const isArchived = idea.isArchived;
@@ -81,7 +84,9 @@ const GUI: React.FC<GUIProps> = ({
             setContent('');
             setTitle('');
             setBackgroundColor('');
+            setBackgroundColorInUse('');
         }
+
         setIsModalMode(false);
         setContentArray([content]);
         setIsEditMode(false);
@@ -246,10 +251,61 @@ const GUI: React.FC<GUIProps> = ({
     const handleMouseEnter = () => {
         setIsHovering(true);
     };
-    
+
     const handleMouseLeave = () => {
         setIsHovering(false);
     };
+
+
+    useEffect(() => {
+        const handleBackgroundColorInUse = () => {
+
+            if (backgroundColor === "" && isDarkMode) {
+                setBackgroundColorInUse('#121212;');
+            } else if (backgroundColor === "") {
+                setBackgroundColorInUse('#fff');
+            }
+            if (backgroundColor === "#fff59c" && isDarkMode) {
+                setBackgroundColorInUse('#e6db81');
+            } else if (backgroundColor === "#fff59c") {
+                setBackgroundColorInUse('#fff59c');
+            }
+
+            if (backgroundColor === "#aaf0d1" && isDarkMode) {
+                setBackgroundColorInUse('#8ad5b4');
+            } else if (backgroundColor === "#aaf0d1") {
+                setBackgroundColorInUse('#aaf0d1');
+            }
+            
+            if (backgroundColor === "#b2dfdb" && isDarkMode) {
+                setBackgroundColorInUse("#91c4bf");
+            } else if (backgroundColor === "#b2dfdb") {
+                setBackgroundColorInUse("#b2dfdb");
+            }
+
+            if (backgroundColor === "#f5f5f5" && isDarkMode) {
+                setBackgroundColorInUse('#d6d6d6');
+            } else if (backgroundColor === "#f5f5f5") {
+                setBackgroundColorInUse("#f5f5f5");
+            }
+        };
+
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        const handleChange = (e: MediaQueryListEvent) => {
+            setIsDarkMode(e.matches);
+        };
+
+        setIsDarkMode(mediaQuery.matches);
+        handleBackgroundColorInUse();
+
+        mediaQuery.addEventListener('change', handleChange);
+
+        return () => {
+            mediaQuery.removeEventListener('change', handleChange);
+        };
+
+    }, [backgroundColor, isDarkMode]);
+
 
     // useEffect(() => {
     //     const previousOverflow = document.body.style.overflowY;
@@ -268,24 +324,25 @@ const GUI: React.FC<GUIProps> = ({
             // onDragOver={(e) => handleDragOver && handleDragOver(e, noteIndex ?? 0)}
             // onDrop={() => handleDrop && handleDrop(noteIndex ?? 0)}
             className={(isModalMode ? styles.containerModal : styles.container)}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
         >
             <Box
                 style={{
-                    backgroundColor: backgroundColor,
-
+                    backgroundColor: backgroundColorInUse,
                 }}
-                component={'form'} 
+                component={'form'}
                 className={!isModalMode ? (initialOperation === 'create' ? styles.create : styles.read) : styles.noteEdit}
                 onSubmit={handleSubmit}
                 ref={initialOperation === 'create' ? noteCreateRef : noteEditRef}
-     
+
             >
                 <div
                     className={(initialOperation === 'read' && !isModalMode) ? styles.infoContainerRead : styles.infoContainer}
                 >
-                    <NoteHeader
+                    <GUIHeader
+                        focus={focus}
+                        setFocus={setFocus}
                         initialOperation={initialOperation}
                         isEditMode={isEditMode}
                         isModalMode={isModalMode}
@@ -294,7 +351,10 @@ const GUI: React.FC<GUIProps> = ({
                         toggleModeTrue={toggleModeTrue}
                     />
 
-                    <NoteBody
+                    <GUIBody
+                        focus={focus}
+                        setFocus={setFocus}
+                        title={title}
                         content={content}
                         handleContentChange={handleContentChange}
                         initialOperation={initialOperation}
@@ -305,12 +365,14 @@ const GUI: React.FC<GUIProps> = ({
                     />
                 </div>
 
-              
-                <NoteFooter
-                    backgroundColor={backgroundColor}
+
+                <GUIFooter
+                    type={idea.type}
+                    backgroundColorInUse={backgroundColorInUse}
                     contentArray={contentArray}
                     initialOperation={initialOperation}
                     isArchived={isArchived}
+                    isDarkMode={isDarkMode}
                     isEditMode={isEditMode}
                     isHovering={isHovering}
                     isBackgroundMenuOpen={isBackgroundMenuOpen}

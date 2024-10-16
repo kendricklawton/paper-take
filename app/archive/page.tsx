@@ -15,8 +15,8 @@ export default function Archive() {
         projects,
     } = useAppContext();
 
-    const archiveNotes = notes.filter(note => note.isArchived);
-    const archiveProjects = projects.filter(project => project.isArchived);
+    const archiveNotes = notes.filter(note => note.isArchived && !note.isTrash);
+    const archiveProjects = projects.filter(project => project.isArchived && !project.isTrash);
 
     const archiveIdeas: (Note | Project)[] = [...archiveNotes, ...archiveProjects];
 

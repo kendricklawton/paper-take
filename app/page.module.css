@@ -199,8 +199,9 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  min-height: 4rem;
-  padding: 1rem;
+  min-height: 3rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
   width: 300px;
   left: 1rem;
   box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);

@@ -15,13 +15,14 @@ import {
 } from '@mui/icons-material';
 import styles from "./GUI.module.css"
 import React from 'react';
-import { BackgroundCircle, BackgroundIconButton, StyledIconButton, StyledTextButton, StyledNoteButton, TransparentIconButton, TransparentIcon } from './Styled';
-import { Tooltip } from '@mui/material';
+import { BackgroundCircle, BackgroundIconButton, StyledIconButton, StyledTextButton, StyledNoteButton, TransparentIconButton, TransparentIcon, StyledTooltip } from './Styled';
 
 interface GUIFooterProps {
-    backgroundColor: '' | '#fff59c' | '#aaf0d1' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5';
+    type: 'note' | 'project';
+    backgroundColorInUse: string;
     contentArray: string[];
     initialOperation: 'read' | 'create';
+    isDarkMode: boolean;
     isArchived: boolean;
     isEditMode: boolean;
     isHovering: boolean;
@@ -48,9 +49,11 @@ interface GUIFooterProps {
 }
 
 export default function GUIFooter({
-    backgroundColor,
+    type,
+    backgroundColorInUse,
     contentArray,
     isArchived,
+    isDarkMode,
     isEditMode,
     isBackgroundMenuOpen,
     isHovering,
@@ -90,6 +93,11 @@ export default function GUIFooter({
                             {
                                 showFooterIcons && (
                                     <React.Fragment>
+                                        <StyledTooltip title={type === 'note' ? 'Delete note forever' : 'Delete project forever'}>
+                                                <StyledIconButton aria-label="Delete note forever" onClick={() => handleDeleteNote()}>
+                                                    <DeleteForeverOutlined />
+                                                </StyledIconButton>                                    
+                                        </StyledTooltip>
                                         <StyledIconButton aria-label="Delete note forever" onClick={() => handleDeleteNote()}>
                                             <DeleteForeverOutlined />
                                         </StyledIconButton>
@@ -100,14 +108,13 @@ export default function GUIFooter({
                                 )
                             }
                         </div>
-
-                        <Tooltip title="Note">
+                        <StyledTooltip title={type === 'note' ? 'Note' : 'Project'}>
                             <span>
                                 <StyledIconButton disabled={true}>
                                     <NoteOutlined sx={{ color: 'gray' }} />
                                 </StyledIconButton>
                             </span>
-                        </Tooltip>
+                        </StyledTooltip>
                     </div>
                 </div>)
                 :
@@ -117,61 +124,79 @@ export default function GUIFooter({
                             {
                                 showFooterIcons ? (
                                     <div className={styles.footerLeading}>
-                                        <div className={styles.backgroundAnchor}>
+                                        <StyledTooltip placement="top" title={'Pin note'}>
                                             <StyledIconButton ref={backgroundMenuRefButton} className={styles.menuButton}
                                             // onClick={() => setIsBackgroundMenu(prev => !prev)}
                                             >
                                                 <PushPinOutlined />
                                             </StyledIconButton>
+                                        </StyledTooltip>
+                                        <StyledTooltip placement="top"  title={'Reminder'}>
                                             <StyledIconButton ref={backgroundMenuRefButton} className={styles.menuButton}
                                                 onClick={() => setIsBackgroundMenu(prev => !prev)}>
                                                 <AlarmAddOutlined />
                                             </StyledIconButton>
-                                            <StyledIconButton ref={backgroundMenuRefButton} className={styles.menuButton}
-                                                onClick={() => setIsBackgroundMenu(prev => !prev)}>
-                                                <PaletteOutlined />
-                                            </StyledIconButton>
+                                        </StyledTooltip>
+                                        <div className={styles.backgroundAnchor}>
+               
+                                            <StyledTooltip 
+                                                placement="top"
+                                            title={'Background options'}>
+                                                <StyledIconButton ref={backgroundMenuRefButton} className={styles.menuButton}
+                                                    onClick={() => setIsBackgroundMenu(prev => !prev)}>
+                                                    <PaletteOutlined />
+                                                </StyledIconButton>
+                                            </StyledTooltip>
+
                                             {isBackgroundMenuOpen && (
                                                 <div className={styles.backgroundMenu}
                                                     ref={backgroundMenuRef}>
-                                                    <BackgroundIconButton selected={backgroundColor === ''} onClick={() => handleBackgroundColor('')}>
-                                                        <BackgroundCircle selected={backgroundColor === ''} />
+                                                    <BackgroundIconButton isButtonSelected={backgroundColorInUse === ''} onClick={() => handleBackgroundColor('')}>
+                                                        <BackgroundCircle isButtonSelected={backgroundColorInUse === ''} />
                                                     </BackgroundIconButton>
-                                                    <BackgroundIconButton selected={backgroundColor === '#fff59c'} onClick={() => handleBackgroundColor('#fff59c')}>
-                                                        <BackgroundCircle selected={backgroundColor === '#fff59c'} bgcolor={'#fff59c'} />
+                                                    <BackgroundIconButton isButtonSelected={backgroundColorInUse === '#fff59c' || backgroundColorInUse === '#e6db81'} onClick={() => handleBackgroundColor('#fff59c')}>
+                                                        <BackgroundCircle isButtonSelected={backgroundColorInUse === '#fff59c' || backgroundColorInUse === '#e6db81'} bgcolor={isDarkMode ? '#e6db81' : '#fff59c'} />
                                                     </BackgroundIconButton>
-                                                    <BackgroundIconButton selected={backgroundColor === '#aaf0d1'} onClick={() => handleBackgroundColor('#aaf0d1')}>
-                                                        <BackgroundCircle selected={backgroundColor === '#aaf0d1'} bgcolor={'#aaf0d1'} />
+                                                    <BackgroundIconButton isButtonSelected={backgroundColorInUse === '#aaf0d1' || backgroundColorInUse === '#8ad5b4'} onClick={() => handleBackgroundColor('#aaf0d1')}>
+                                                        <BackgroundCircle isButtonSelected={backgroundColorInUse === '#aaf0d1' || backgroundColorInUse === '#8ad5b4'} bgcolor={isDarkMode ? '#8ad5b4' : '#fff59c'} />
                                                     </BackgroundIconButton>
-                                                    <BackgroundIconButton selected={backgroundColor === '#b2dfdb'} onClick={() => handleBackgroundColor('#b2dfdb')}>
-                                                        <BackgroundCircle selected={backgroundColor === '#b2dfdb'} bgcolor={'#b2dfdb'} />
+                                                    <BackgroundIconButton isButtonSelected={backgroundColorInUse === '#b2dfdb' || backgroundColorInUse === '#91c4bf'} onClick={() => handleBackgroundColor('#b2dfdb')}>
+                                                        <BackgroundCircle isButtonSelected={backgroundColorInUse === '#b2dfdb' || backgroundColorInUse === '#91c4bf'} bgcolor={isDarkMode ? '#91c4bf' : '#b2dfdb'} />
                                                     </BackgroundIconButton>
-                                                    <BackgroundIconButton selected={backgroundColor === '#f5f5f5'} onClick={() => handleBackgroundColor('#f5f5f5')}>
-                                                        <BackgroundCircle selected={backgroundColor === '#f5f5f5'} bgcolor={'#f5f5f5'} />
+                                                    <BackgroundIconButton isButtonSelected={backgroundColorInUse === '#f5f5f5' || backgroundColorInUse === '#d6d6d6'} onClick={() => handleBackgroundColor('#f5f5f5')}>
+                                                        <BackgroundCircle isButtonSelected={backgroundColorInUse === '#f5f5f5' || backgroundColorInUse === '#d6d6d6'} bgcolor={isDarkMode ? '#d6d6d6' : '#f5f5f5'} />
                                                     </BackgroundIconButton>
                                                 </div>
                                             )}
                                         </div>
                                         {initialOperation !== 'create' && (
-                                            <StyledIconButton aria-label="Archive" onClick={() => toggleArchive()}>
-                                                {isArchived ? <Archive /> : <ArchiveOutlined />}
-                                            </StyledIconButton>
+                                            <StyledTooltip title={'Archive note'} placement="top">
+                                                <StyledIconButton aria-label="Archive" onClick={() => toggleArchive()}>
+                                                    {isArchived ? <Archive /> : <ArchiveOutlined />}
+                                                </StyledIconButton>
+                                            </StyledTooltip>
                                         )}
                                         {isEditMode && (
                                             <React.Fragment>
-                                                <StyledIconButton aria-label="Undo" onClick={handleUndo} disabled={index.current === 0}>
-                                                    <UndoOutlined />
-                                                </StyledIconButton>
-                                                <StyledIconButton aria-label="Redo" onClick={handleRedo} disabled={index.current === contentArray.length - 1}>
-                                                    <RedoOutlined />
-                                                </StyledIconButton>
+                                                <StyledTooltip title={'Undo'} placement="top">
+                                                    <StyledIconButton aria-label="Undo" onClick={handleUndo} disabled={index.current === 0}>
+                                                        <UndoOutlined />
+                                                    </StyledIconButton>
+                                                </StyledTooltip>
+                                                <StyledTooltip title={'Redo'} placement="top">
+                                                    <StyledIconButton aria-label="Redo" onClick={handleRedo} disabled={index.current === contentArray.length - 1}>
+                                                        <RedoOutlined />
+                                                    </StyledIconButton>
+                                                </StyledTooltip>
                                             </React.Fragment>
                                         )}
-                                        <div className={styles.settingsAnchor}>
-                                            <StyledIconButton ref={optionsMenuRefButton} className={styles.menuButton}
-                                                onClick={() => setIsOptionsMenu(prev => !prev)}>
-                                                <MoreVert />
-                                            </StyledIconButton>
+                                        <div className={styles.settingsAnchor} >
+                                            <StyledTooltip title={'Options'} placement="top">
+                                                <StyledIconButton ref={optionsMenuRefButton} className={styles.menuButton}
+                                                    onClick={() => setIsOptionsMenu(prev => !prev)}>
+                                                    <MoreVert />
+                                                </StyledIconButton>
+                                            </StyledTooltip>
                                             {isOptionsMenuOpen && (
                                                 <div className={styles.menu} ref={optionsMenuRef}>
                                                     <StyledNoteButton type="button" onClick={toggleDelete}>Delete</StyledNoteButton>
@@ -194,13 +219,13 @@ export default function GUIFooter({
                             </React.Fragment>
                             {
                                 (initialOperation === 'read' && !isEditMode) && (
-                                    <Tooltip title="Note" className={styles.footerType}>
+                                    <StyledTooltip title={type === 'note' ? 'Note' : 'Project'} placement="top">
                                         <span>
                                             <StyledIconButton disabled={true}>
                                                 <NoteOutlined sx={{ color: 'gray' }} />
                                             </StyledIconButton>
                                         </span>
-                                    </Tooltip>
+                                    </StyledTooltip>
                                 )
                             }
                         </div>

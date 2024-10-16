@@ -2,15 +2,13 @@
 
 import { InputAdornment } from "@mui/material";
 import { NoteBodyTextField, StyledNoteButtonTwo } from "./Styled";
-import { 
-    // AccountTreeOutlined, 
-    // AddOutlined,
-    //  NoteOutlined 
-    } from "@mui/icons-material";
 import React from "react";
 import { useRouter } from "next/navigation";
 
 interface GUIBodyProps {
+    focus: 'title' | 'body',
+    setFocus: React.Dispatch<React.SetStateAction<'title' | 'body'>>,
+    title: string;
     content: string;
     initialOperation: 'read' | 'create';
     isEditMode: boolean;
@@ -21,6 +19,9 @@ interface GUIBodyProps {
 }
 
 export default function GUIBody({
+    focus,
+    setFocus,
+    title,
     content,
     initialOperation,
     isEditMode,
@@ -30,11 +31,14 @@ export default function GUIBody({
     toggleModeTrue
 }: GUIBodyProps) {
     const readOnlyMode = initialOperation === 'read' && !isModalMode;
-    const placeholderText = 'Create an idea...';
+    const placeholderText = (initialOperation === 'create'  || isEditMode )? 'Create an idea...' : 'Empty note...';
     const router = useRouter();
+
+    const dontShow = content.length === 0 && !isEditMode && title.length > 0;
 
     const handleFocus = (event: React.FocusEvent<HTMLTextAreaElement>) => {
         event.preventDefault();
+        setFocus('body');
         if (!readOnlyMode) {
             toggleModeTrue();
         }
@@ -49,7 +53,6 @@ export default function GUIBody({
 
     const handleNoteButton = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-
         toggleModeTrue();
     }
 
@@ -62,15 +65,12 @@ export default function GUIBody({
     const endAdornment = initialOperation === "create" && !isEditMode ? (
         <React.Fragment>
             <InputAdornment position="end">
-                <StyledNoteButtonTwo variant="contained" 
-                onClick={handleNoteButton}>
+                <StyledNoteButtonTwo variant="contained" onClick={handleNoteButton}>
                     Note
                 </StyledNoteButtonTwo>
             </InputAdornment>
             <InputAdornment position="end">
-                <StyledNoteButtonTwo variant="contained" 
-                onClick={handleProjectButton}
-                >
+                <StyledNoteButtonTwo variant="contained" onClick={handleProjectButton}>
                     Project
                 </StyledNoteButtonTwo>
             </InputAdornment>
@@ -79,7 +79,13 @@ export default function GUIBody({
 
     return (
         <React.Fragment>
-            {(initialOperation === "create" || content.length > 0 || isEditMode) && (
+            {(
+                !dontShow
+            // initialOperation === "create" || 
+            // content.length > 0 || 
+            // isEditMode
+            // true
+        ) && (
                 <NoteBodyTextField
                     inputProps={{
                         readOnly: readOnlyMode
@@ -104,11 +110,11 @@ export default function GUIBody({
                         },
                     }}
                     value={content}
-                    inputRef={input => {
-                        if (input && isEditMode) {
-                            input.focus();
-                            // Move the cursor to the end of the content
-                            input.setSelectionRange(content.length, content.length);
+                  
+                    inputRef={inputBody => {
+                        if (inputBody && isEditMode && focus === 'body') {
+                            inputBody.focus();
+                            inputBody.setSelectionRange(content.length, content.length);
                         }
                     }}
                 />

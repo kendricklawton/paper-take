@@ -3,6 +3,8 @@
 import { NoteHeaderTextField } from './Styled';
 
 export interface GUIHeaderProps {
+    focus: 'title' | 'body',
+    setFocus: React.Dispatch<React.SetStateAction<'title' | 'body'>>,
     title: string,
     initialOperation: 'read' | 'create';
     isEditMode: boolean,
@@ -12,6 +14,8 @@ export interface GUIHeaderProps {
 }
 
 export default function GUIHeader({
+    focus,
+    setFocus,
     initialOperation,
     isEditMode,
     isModalMode,
@@ -22,11 +26,13 @@ export default function GUIHeader({
     const readOnlyMode = initialOperation === 'read' && !isModalMode;
     const placeholderText = 'Title...';
 
-    // const handleFocus = () => {
-    //     if (!readOnlyMode) {
-    //         toggleModeTrue();
-    //     }
-    // };
+    const handleFocus = (event: React.FocusEvent<HTMLTextAreaElement>) => {
+        event.preventDefault();
+        setFocus('title');
+        if (!readOnlyMode) {
+            toggleModeTrue();
+        }
+    };
 
     const handleClick = () => {
         if (readOnlyMode) {
@@ -36,7 +42,7 @@ export default function GUIHeader({
 
     return (
         <>
-            {(isEditMode || title.length > 0) && (            
+            {(isEditMode || title.length > 0) && (
                 <NoteHeaderTextField
                     autoComplete='off'
                     inputProps={{
@@ -45,7 +51,7 @@ export default function GUIHeader({
                     multiline
                     onChange={handleTitleChange}
                     onClick={initialOperation === 'create' ? undefined : handleClick}
-                    // onFocus={handleFocus}
+                    onFocus={handleFocus}
                     placeholder={placeholderText}
                     value={title}
                     sx={{
@@ -57,6 +63,12 @@ export default function GUIHeader({
                         },
                     }}
 
+                    inputRef={input => {
+                        if (input && isEditMode && focus === 'title') {
+                            input.focus();
+                            input.setSelectionRange(title.length, title.length);
+                        }
+                    }}
                 />
             )}
         </>
