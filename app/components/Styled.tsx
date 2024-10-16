@@ -155,53 +155,49 @@ export const FormTextField = styled(TextField)({
     '& .MuiFilledInput-root': {
         backgroundColor: 'transparent',
     },
-    // '& .MuiInputBase-input': {
-    //     fontFamily: 'monospace',
-    //     fontWeight: 'lighter',
-    //     color: 'inherit',
-    //     transition: 'color 0.3s ease',
-    // },
-    // '& label': {
-    //     fontFamily: 'monospace',
-    //     fontWeight: 'lighter',
-    //     transition: 'color 0.3s ease',
-    // },
-    // '& label.Mui-focused': {
-    //     fontFamily: 'monospace',
-    //     fontWeight: 'lighter',
-    //     color: 'inherit',
-    // },
-    // '&.MuiFilledInput-root': {
-
-
-    // },
-    // '@media (prefers-color-scheme: dark)': {
-    //     '& .MuiInput-underline': {
-    //         '&:before': {
-    //             borderBottom: '1px solid gray',
-    //         },
-    //         '&:hover:before': {
-    //             borderBottom: '2px solid gray',
-    //         },
-    //     },
-    //     '& .MuiFilledInput-root': {
-    //         backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    //     },
-    //     '& .MuiInputBase-input': {
-    //         color: 'white',
-    //     },
-    //     '& label': {
-    //         color: 'gray',
-    //     },
-    //     '& label.Mui-focused': {
-    //         color: 'gray',
-    //     },
-    //     '& .MuiOutlinedInput-root': {
-    //         '& fieldset': {
-    //             border: '1px solid gray',
-    //         },
-    //     },
-    // },
+    '& .MuiInputBase-input': {
+        fontFamily: 'monospace',
+        fontWeight: 'lighter',
+        color: 'inherit',
+        transition: 'color 0.3s ease',
+    },
+    '& label': {
+        fontFamily: 'monospace',
+        fontWeight: 'lighter',
+        transition: 'color 0.3s ease',
+    },
+    '& label.Mui-focused': {
+        fontFamily: 'monospace',
+        fontWeight: 'lighter',
+        color: 'inherit',
+    },
+    '@media (prefers-color-scheme: dark)': {
+        '& .MuiInput-underline': {
+            '&:before': {
+                borderBottom: '1px solid gray',
+            },
+            '&:hover:before': {
+                borderBottom: '2px solid gray',
+            },
+        },
+        '& .MuiFilledInput-root': {
+            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        },
+        '& .MuiInputBase-input': {
+            color: 'white',
+        },
+        '& label': {
+            color: 'gray',
+        },
+        '& label.Mui-focused': {
+            color: 'gray',
+        },
+        '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+                border: '1px solid gray',
+            },
+        },
+    },
 });
 
 
