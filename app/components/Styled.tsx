@@ -4,7 +4,7 @@ import { Circle } from "@mui/icons-material";
 export const StyledIconButton = styled(IconButton)({
     color: 'gray',
     '@media (prefers-color-scheme: dark)': {
-        color: '#f5f5f5',
+        color: 'lightgray',
     },
 });
 
@@ -54,7 +54,7 @@ export const BackgroundCircle = styled(Circle)<BackgroundCircleProps>(({ selecte
     fontSize: '2rem',
     backgroundColor: '#ffffff',
     color: '#ffffff',
-    border: `2px solid ${selected ? 'purple' : '#f5f5f5'}`,
+    border: `2px solid ${selected ? 'purple' : 'lightgray'}`,
     borderRadius: '50%',
     '&:hover': {
         borderColor: 'inherit',
@@ -62,7 +62,7 @@ export const BackgroundCircle = styled(Circle)<BackgroundCircleProps>(({ selecte
     '@media (prefers-color-scheme: dark)': {
         backgroundColor: '#121212',
         color: 'transparent',
-        border: `2px solid ${selected ? 'purple' : '#f5f5f5'}`,
+        border: `2px solid ${selected ? 'purple' : 'lightgray'}`,
     },
 }));
 
@@ -118,9 +118,9 @@ export const BackgroundCircleTeal = styled(Circle)<BackgroundCircleProps>(({ sel
 
 export const BackgroundCircleChalk = styled(Circle)<BackgroundCircleProps>(({ selected }) => ({
     fontSize: '2rem',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'lightgray',
     color: 'transparent',
-    border: `2px solid ${selected ? 'purple' : '#f5f5f5'}`,
+    border: `2px solid ${selected ? 'purple' : 'lightgray'}`,
     borderRadius: '50%',
     '&:hover': {
         borderColor: 'inherit',
@@ -300,7 +300,7 @@ export const StyledToggleButton = styled(ToggleButton)({
 export const StyledTextButton = styled(Button)({
     borderRadius: '0px',
     '@media (prefers-color-scheme: dark)': {
-        color: '#f5f5f5',
+        color: 'lightgray',
     }});
 
 export const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
