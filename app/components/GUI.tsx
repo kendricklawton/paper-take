@@ -182,7 +182,7 @@ const GUI: React.FC<GUIProps> = ({
         handleNote();
     };
 
-    const handleClickOutside = useCallback((event: MouseEvent) => {
+    const handleClickOutside = useCallback((event: MouseEvent | TouchEvent) => {
         event.stopPropagation();
         if (
             isBackgroundMenuOpen &&
@@ -283,9 +283,16 @@ const GUI: React.FC<GUIProps> = ({
     // }, [isModalMode]);
 
     useEffect(() => {
-        document.addEventListener('mousedown', handleClickOutside);
+        const handleEvent = (event: MouseEvent | TouchEvent) => {
+            handleClickOutside(event);
+        };
+
+        document.addEventListener('mousedown', handleEvent);
+        document.addEventListener('touchstart', handleEvent);
+
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('mousedown', handleEvent);
+            document.removeEventListener('touchstart', handleEvent);
         };
     }, [handleClickOutside]);
 
