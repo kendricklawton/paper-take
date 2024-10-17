@@ -11,20 +11,6 @@ const Information: React.FC =()=> {
 
     const informationRef = useRef<HTMLDivElement | null>(null);
 
-    // useEffect(() => {
-    //     const handleClickOutside = (event: MouseEvent) => {
-    //         event.preventDefault();
-    //         if (info && informationRef.current) {
-    //             setInfo('');
-    //         }
-    //     };
-
-    //     document.addEventListener('mousedown', handleClickOutside);
-    //     return () => {
-    //         document.removeEventListener('mousedown', handleClickOutside);
-    //     };
-    // }, [info]);
-
     return (
         info && (
             <div className={styles.information} ref={informationRef}>

@@ -12,7 +12,7 @@ import {
     Note,
     Project
 } from "../models";
-// import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 const Notes: React.FC = () => {
     const {
@@ -75,9 +75,9 @@ const Notes: React.FC = () => {
     // type: 'note';
     const newNote = new Note(
         undefined,
-        '',
-        '',
-        '',
+        '#ffffff',
+        '#121212',
+        uuidv4(),
         '',
         '',
         false,

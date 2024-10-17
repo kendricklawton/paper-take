@@ -4,8 +4,8 @@ export class Note {
     createdAt: Timestamp | undefined;
     id: string;
     title: string;
-    backgroundColor: '' | '#fff59c' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5';
-    backgroundColorDark: '' | '#a68f00' | '#4c8c7d' | '#005c5a' | '#004d40';
+    backgroundColor: '#ffffff' | '#fff59c' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5';
+    backgroundColorDark: '#121212' | '#a68f00' | '#4c8c7d' | '#005c5a' | '#004d40';
     content: string;
     isArchived: boolean;
     isPinned: boolean;
@@ -16,8 +16,8 @@ export class Note {
 
     constructor(
         createdAt: Timestamp | undefined,
-        backgroundColor: '' | '#fff59c' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5',
-        backgroundColorDark: '' | '#a68f00' | '#4c8c7d' | '#005c5a' | '#004d40',
+        backgroundColor: '#ffffff' | '#fff59c' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5',
+        backgroundColorDark: '#121212' | '#a68f00' | '#4c8c7d' | '#005c5a' | '#004d40',
         id: string,
         title: string,
         content: string,

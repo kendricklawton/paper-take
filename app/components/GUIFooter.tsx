@@ -43,7 +43,10 @@ interface GUIFooterProps {
     optionsMenuRef: React.RefObject<HTMLDivElement>;
     optionsMenuRefButton: React.RefObject<HTMLButtonElement>;
     index: React.MutableRefObject<number>;
-    handleBackgroundColor: (backgroundColor: "" | "#fff59c" | "#aaf0d1" | "#b2dfdb" | "#f5f5f5", backgroundColorDark: "" | "#a68f00" | "#4c8c7d" | "#005c5a" | "#004d40" ) => Promise<void>;
+    handleBackgroundColor: (
+        backgroundColor: "#ffffff" | "#fff59c" | "#aaf0d1" | "#b2dfdb" | "#f5f5f5", 
+        backgroundColorDark: "#121212" | "#a68f00" | "#4c8c7d" | "#005c5a" | "#004d40" 
+    ) => Promise<void>;
     handleDeleteNote: () => void;
     handleRedo: (event: React.MouseEvent<HTMLButtonElement>) => void;
     handleUndo: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -117,7 +120,7 @@ export default function GUIFooter({
                         <StyledTooltip title={type === 'note' ? 'Note' : 'Project'}>
                             <span>
                                 <StyledIconButton disabled={true}>
-                                    <NoteOutlined sx={{ color: 'gray' }} />
+                                    <NoteOutlined/>
                                 </StyledIconButton>
                             </span>
                         </StyledTooltip>
@@ -130,14 +133,14 @@ export default function GUIFooter({
                             {
                                 showFooterIcons ? (
                                     <div className={styles.footerLeading}>
-                                        <StyledTooltip placement="top" title={'Pin note'}>
+                                        <StyledTooltip  title={'Pin note'}>
                                             <StyledIconButton ref={backgroundMenuRefButton} className={styles.menuButton}
                                             // onClick={() => setIsBackgroundMenu(prev => !prev)}
                                             >
                                                 <PushPinOutlined />
                                             </StyledIconButton>
                                         </StyledTooltip>
-                                        <StyledTooltip placement="top" title={'Reminder'}>
+                                        <StyledTooltip  title={'Reminder'}>
                                             <StyledIconButton ref={backgroundMenuRefButton} className={styles.menuButton}
                                                 onClick={() => setIsBackgroundMenu(prev => !prev)}>
                                                 <AlarmAddOutlined />
@@ -145,20 +148,20 @@ export default function GUIFooter({
                                         </StyledTooltip>
                                         <div className={styles.backgroundAnchor}>
 
-                                            <StyledTooltip
-                                                placement="top"
-                                                title={'Background options'}>
+                                            {/* <StyledTooltip
+                                                
+                                                title={'Background options'}> */}
                                                 <StyledIconButton ref={backgroundMenuRefButton} className={styles.menuButton}
                                                     onClick={() => setIsBackgroundMenu(prev => !prev)}>
                                                     <PaletteOutlined />
                                                 </StyledIconButton>
-                                            </StyledTooltip>
+                                            {/* </StyledTooltip> */}
 
                                             {isBackgroundMenuOpen && (
                                                 <div className={styles.backgroundMenu}
                                                     ref={backgroundMenuRef}>
-                                                    <BackgroundIconButton selected={backgroundColor === ''} onClick={() => handleBackgroundColor('','')}>
-                                                        <BackgroundCircle selected={backgroundColor === ''} />
+                                                    <BackgroundIconButton selected={backgroundColor === '#ffffff'} onClick={() => handleBackgroundColor('#ffffff','#121212')}>
+                                                        <BackgroundCircle selected={backgroundColor === '#ffffff'} />
                                                     </BackgroundIconButton>
                                                     <BackgroundIconButton selected={backgroundColor === '#fff59c'} onClick={() => handleBackgroundColor('#fff59c', '#a68f00')}>
                                                         <BackgroundCircleYellow selected={backgroundColor === '#fff59c'} />
@@ -176,7 +179,7 @@ export default function GUIFooter({
                                             )}
                                         </div>
                                         {initialOperation !== 'create' && (
-                                            <StyledTooltip title={'Archive note'} placement="top">
+                                            <StyledTooltip title={'Archive note'} >
                                                 <StyledIconButton aria-label="Archive" onClick={() => toggleArchive()}>
                                                     {isArchived ? <Archive /> : <ArchiveOutlined />}
                                                 </StyledIconButton>
@@ -184,14 +187,14 @@ export default function GUIFooter({
                                         )}
                                         {isEditMode && (
                                             <React.Fragment>
-                                                <StyledTooltip title={'Undo'} placement="top">
+                                                <StyledTooltip title={'Undo'} >
                                                     <span>
                                                         <StyledIconButton aria-label="Undo" onClick={handleUndo} disabled={index.current === 0}>
                                                             <UndoOutlined />
                                                         </StyledIconButton>
                                                     </span>
                                                 </StyledTooltip>
-                                                <StyledTooltip title={'Redo'} placement="top">
+                                                <StyledTooltip title={'Redo'} >
                                                     <span>
                                                         <StyledIconButton aria-label="Redo" onClick={handleRedo} disabled={index.current === contentArray.length - 1}>
                                                             <RedoOutlined />
@@ -201,12 +204,12 @@ export default function GUIFooter({
                                             </React.Fragment>
                                         )}
                                         <div className={styles.settingsAnchor} >
-                                            <StyledTooltip title={'Options'} placement="top">
+                                            {/* <StyledTooltip title={'Options'} > */}
                                                 <StyledIconButton ref={optionsMenuRefButton} className={styles.menuButton}
                                                     onClick={() => setIsOptionsMenu(prev => !prev)}>
                                                     <MoreVert />
                                                 </StyledIconButton>
-                                            </StyledTooltip>
+                                            {/* </StyledTooltip> */}
                                             {isOptionsMenuOpen && (
                                                 <div className={styles.menu} ref={optionsMenuRef}>
                                                     <StyledNoteButton type="button" onClick={toggleDelete}>Delete</StyledNoteButton>
@@ -229,7 +232,7 @@ export default function GUIFooter({
                             </React.Fragment>
                             {
                                 (initialOperation === 'read' && !isEditMode) && (
-                                    <StyledTooltip title={type === 'note' ? 'Note' : 'Project'} placement="top">
+                                    <StyledTooltip title={type === 'note' ? 'Note' : 'Project'} >
                                         <span>
                                             <StyledIconButton disabled={true}>
                                                 <NoteOutlined sx={{ color: 'gray' }} />

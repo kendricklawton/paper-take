@@ -43,8 +43,8 @@ const GUI: React.FC<GUIProps> = ({
     const isTrash = idea.isTrash;
     const [title, setTitle] = useState(idea.title);
     const [content, setContent] = useState(idea.type === 'note' ? idea.content : '');
-    const [backgroundColor, setBackgroundColor] = useState(idea.type === 'note' ? idea.backgroundColor : '');
-    const [backgroundColorDark, setBackgroundColorDark] = useState(idea.type === 'note' ? idea.backgroundColorDark : '');
+    const [backgroundColor, setBackgroundColor] = useState(idea.type === 'note' ? idea.backgroundColor : '#ffffff');
+    const [backgroundColorDark, setBackgroundColorDark] = useState(idea.type === 'note' ? idea.backgroundColorDark : '#121212');
 
     const index = useRef(0);
     const nestedIndex = useRef(0);
@@ -81,7 +81,8 @@ const GUI: React.FC<GUIProps> = ({
         if (initialOperation === 'create') {
             setContent('');
             setTitle('');
-            setBackgroundColor('');
+            setBackgroundColor('#ffffff');
+            setBackgroundColorDark('#121212');
         }
 
         setIsModalMode(false);
@@ -123,9 +124,20 @@ const GUI: React.FC<GUIProps> = ({
         if (idea.type !== 'note') return;
 
         if (isTrash) return;
+        // createdAt: Timestamp | undefined;
+        // id: string;
+        // title: string;
+        // backgroundColor: '#ffffff' | '#fff59c' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5';
+        // backgroundColorDark: '#121212' | '#a68f00' | '#4c8c7d' | '#005c5a' | '#004d40';
+        // content: string;
+        // isArchived: boolean;
+        // isPinned: boolean;
+        // isTrash: boolean;
+        // images: string[];
+        // reminder: Timestamp | undefined;
 
         const currentNote = new Note(
-            undefined,
+            idea.createdAt,
             backgroundColor,
             backgroundColorDark,
             idea.id,
@@ -134,17 +146,22 @@ const GUI: React.FC<GUIProps> = ({
             isArchived,
             isPinned,
             isTrash,
-            [],
-            undefined
+            idea.images,
+            idea.reminder,
         );
 
         // const prevNote = idea;
+      
+        console.log('Current note:', currentNote);
+        console.log('Previous idea:', idea);
 
         if (initialOperation === 'create') {
+            
             // if (currentNote.title !== prevNote.title || currentNote.content !== prevNote.content) {
             if (currentNote.title !== idea.title || currentNote.content !== idea.content) {
-                handleResetNote();
+     
                 await createIdea(currentNote);
+                handleResetNote();
                 return;
             }
         // } else if (currentNote.title !== prevNote.title || currentNote.content !== prevNote.content || currentNote.backgroundColor !== prevNote.backgroundColor) {
@@ -215,8 +232,8 @@ const GUI: React.FC<GUIProps> = ({
 
     // backgroundColor: '' | '#fff59c' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5';
     // backgroundColorsDark: '' | '#a68f00' | '#4c8c7d' | '#005c5a' | '#004d40' | '#424242';
-    const handleBackgroundColor = async (backgroundColor: "" | "#fff59c" | "#aaf0d1" | "#b2dfdb" | "#f5f5f5", 
-        backgroundColorDark: '' | '#a68f00' | '#4c8c7d' | '#005c5a' | '#004d40') => {
+    const handleBackgroundColor = async (backgroundColor: "#ffffff" | "#fff59c" | "#aaf0d1" | "#b2dfdb" | "#f5f5f5", 
+        backgroundColorDark: '#121212' | '#a68f00' | '#4c8c7d' | '#005c5a' | '#004d40') => {
         console.log('Background color:', backgroundColor);
         console.log('Background color dark:', backgroundColorDark);
         setBackgroundColor(backgroundColor);
