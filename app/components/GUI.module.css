@@ -135,6 +135,7 @@
     .create,
     .read,
     .noteEdit,
+    .backgroundMenu,
     .menu {
         background-color: #121212;
         border: 0.5px solid gray;

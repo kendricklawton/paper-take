@@ -47,14 +47,19 @@ interface BackgroundCircleProps {
     color?: string;
 }
 
-export const BackgroundCircle = styled(Circle)<BackgroundCircleProps>(({ selected, bgcolor }) => ({
+export const BackgroundCircle = styled(Circle)<BackgroundCircleProps>(({ selected }) => ({
     fontSize: '2rem',
-    backgroundColor: bgcolor || 'transparent',
+    backgroundColor: 'transparent',
     color: 'transparent',
-    border: `2px solid ${selected ? 'purple' : bgcolor || 'gray'}`,
+    border: `2px solid ${selected ? 'purple' : 'gray'}`,
     borderRadius: '50%',
     '&:hover': {
         borderColor: 'inherit',
+    },
+    '@media (prefers-color-scheme: dark)': {
+        backgroundColor: 'transparent',
+        color: 'transparent',
+        border: `2px solid ${selected ? 'purple' : 'white'}`,
     },
 }));
 
