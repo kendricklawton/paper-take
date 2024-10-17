@@ -6,7 +6,7 @@ export const StyledIconButton = styled(IconButton)({
 });
 
 interface BackgroundIconButtonProps {
-    isButtonSelected?: boolean;
+    selected?: boolean;
 }
 
 export const TransparentIconButton = styled(IconButton)<BackgroundIconButtonProps>(({ }) => ({
@@ -23,40 +23,90 @@ export const TransparentIcon = styled(Circle)({
     border: 'none',
     // borderRadius: '50%',
 });
-export const BackgroundIconButton = styled(IconButton)<BackgroundIconButtonProps>(({ isButtonSelected }) => ({
+export const BackgroundIconButton = styled(IconButton)<BackgroundIconButtonProps>(({ selected }) => ({
     padding: '0.25rem',
     '&:hover': {
         backgroundColor: 'transparent',
         '& .MuiSvgIcon-root': {
-            borderColor: isButtonSelected ? 'purple' : '#222',
+            borderColor: selected ? 'purple' : '#222',
         },
     },
     '@media (prefers-color-scheme: dark)': {
         '&:hover': {
             backgroundColor: 'transparent',
             '& .MuiSvgIcon-root': {
-                borderColor: isButtonSelected ? 'purple' : 'white',
+                borderColor: selected ? 'purple' : 'white',
             },
         },
     },
 }));
 
 interface BackgroundCircleProps {
-    isButtonSelected?: boolean;
+    selected?: boolean;
     bgcolor?: string;
     color?: string;
 }
 
-export const BackgroundCircle = styled(Circle)<BackgroundCircleProps>(({ isButtonSelected, bgcolor }) => ({
+export const BackgroundCircle = styled(Circle)<BackgroundCircleProps>(({ selected, bgcolor }) => ({
     fontSize: '2rem',
     backgroundColor: bgcolor || 'transparent',
     color: 'transparent',
-    border: `2px solid ${isButtonSelected ? 'purple' : bgcolor || 'gray'}`,
+    border: `2px solid ${selected ? 'purple' : bgcolor || 'gray'}`,
     borderRadius: '50%',
     '&:hover': {
         borderColor: 'inherit',
     },
 }));
+
+
+export const BackgroundCircleYellow = styled(Circle)<BackgroundCircleProps>(({ selected }) => ({
+    fontSize: '2rem',
+    backgroundColor: '#fff59c',
+    color: 'transparent',
+    border: `2px solid ${selected ? 'purple' : '#fff59c'}`,
+    borderRadius: '50%',
+    '&:hover': {
+        borderColor: 'inherit',
+    },
+    '@media (prefers-color-scheme: dark)': {
+        backgroundColor: '#A68F00',
+        color: 'transparent',
+        border: `2px solid ${selected ? 'purple' : '#A68F00'}`,
+    },
+}));
+
+export const BackgroundCircleMintyGreen = styled(Circle)<BackgroundCircleProps>(({ selected }) => ({
+    fontSize: '2rem',
+    backgroundColor: '#fff59c',
+    color: 'transparent',
+    border: `2px solid ${selected ? 'purple' : '#fff59c'}`,
+    borderRadius: '50%',
+    '&:hover': {
+        borderColor: 'inherit',
+    },
+    '@media (prefers-color-scheme: dark)': {
+        backgroundColor: '#4C8C7D',
+        color: 'transparent',
+        border: `2px solid ${selected ? 'purple' : '#4C8C7D'}`,
+    },
+}));
+
+export const BackgroundCircleTeal = styled(Circle)<BackgroundCircleProps>(({ selected }) => ({
+    fontSize: '2rem',
+    backgroundColor: '#B2DFDB',
+    color: 'transparent',
+    border: `2px solid ${selected ? 'purple' : '#B2DFDB'}`,
+    borderRadius: '50%',
+    '&:hover': {
+        borderColor: 'inherit',
+    },
+    '@media (prefers-color-scheme: dark)': {
+        backgroundColor: '#005C5A',
+        color: 'transparent',
+        border: `2px solid ${selected ? 'purple' : '#005C5A'}`,
+    },
+}
+));
 
 export const NoteHeaderTextField = styled(TextField)({
     width: '100%',
@@ -208,7 +258,7 @@ export const StyledToggleButton = styled(ToggleButton)({
     borderRadius: '0px',
     textTransform: 'none',
     backgroundColor: 'transparent',
-    '&.Mui-isButtonSelected': {
+    '&.Mui-selected': {
         backgroundColor: 'transparent',
     },
     '&:hover': {

@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useCallback, useEffect, useState, useMemo, ReactNode } from 'react';
 import { firestore } from '../firebase';
-import { collection, doc, getDocs, orderBy, query, runTransaction, Timestamp, Transaction } from "firebase/firestore";
+import { collection, doc, FirestoreError, getDocs, orderBy, query, runTransaction, Timestamp, Transaction } from "firebase/firestore";
 import { Note, Project } from '../models';
 import { useAuthContext } from './AuthProvider';
 
@@ -52,19 +52,27 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         }
 
         try {
+            console.log('Fetching notes from Firestore');
             const ref = collection(firestore, "users", user.uid, "notes");
             const queryNotes = query(ref, orderBy('createdAt', 'desc'));
             const snapshot = await getDocs(queryNotes);
-            const array: Note[] = snapshot.docs.map(doc => (
-                console.log(doc.data()),
-                {
+
+            if (snapshot.empty) {
+                console.log("No notes found");
+                return;
+            }
+
+            const notes: Note[] = snapshot.docs.map(doc => ({
                     ...doc.data(),
                 }) as Note);
 
-            setNotes(array);
+            setNotes(notes);
         } catch (error) {
-            console.log('Error fetching notes: ', error);
-            setNotes([]);
+            if (error instanceof FirestoreError) {
+                console.error('Firestore error while fetching notes: ', error.message);
+            } else {
+                console.error('Error fetching notes: ', error);
+            }
         }
     }, [user]);
 
@@ -75,23 +83,35 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         }
 
         try {
+            console.log('Fetching projects from Firestore');
             const ref = collection(firestore, "users", user.uid, "projects");
             const queryProjects = query(ref, orderBy('createdAt', 'desc'));
             const snapshot = await getDocs(queryProjects);
-            const array: Project[] = snapshot.docs.map(doc => ({
+
+            if (snapshot.empty) {
+                console.log("No projects found");
+                return;
+            }
+
+            const projects: Project[] = snapshot.docs.map(doc => ({
                 ...doc.data(),
             }) as Project);
 
-            setProjects(array);
+            setProjects(projects);
         } catch (error) {
-            console.log('Error fetching projects: ', error);
+            if (error instanceof FirestoreError) {
+                console.error('Firestore error while fetching projects: ', error.message);
+            } else {
+                console.error('Error fetching projects: ', error);
+            }
         }
-    }, [user]);
+    }, [user, setProjects]);
+
 
 
     const fetchData = useCallback(async () => {
         if (!user) {
-            console.log("No user is logged in, fetching notes from local storage");
+            console.log("No user is logged in, fetching data from local storage");
             return;
         }
         try {
@@ -112,7 +132,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
                 return;
             }
 
-            const location = idea instanceof Note ? "notes" : "projects";
+            const location = idea.type == 'note'? "notes" : "projects";
             const ref = collection(firestore, "users", user.uid, location);
             let docRef;
 
@@ -125,26 +145,28 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
                 docRef = doc(ref, idea.id);
             }
 
+            console.log(`Attempting to ${operation} ${idea.type == 'note' ? 'note' : 'project'} in Firestore`);
+            console.log(idea);
             await runTransaction(firestore, async (transaction: Transaction) => {
                 const snapshot = await transaction.get(docRef);
 
                 if ((operation === "update" || operation === "delete") && !snapshot.exists()) {
-                    console.error(idea instanceof Note ? 'Note not found' : 'Project not found');
-                    throw new Error(idea instanceof Note ? 'Note not found' : 'Project not found');
+                    console.error(idea.type == 'note' ? 'Note not found' : 'Project not found');
+                    throw new Error(idea.type == 'note' ? 'Note not found' : 'Project not found');
                 }
 
                 switch (operation) {
                     case "create":
                         transaction.set(docRef, JSON.parse(idea.toJSON()));
-                        console.log(idea instanceof Note ? "Note created in Firestore" : "Project created in Firestore");
+                        console.log(idea.type == 'note' ? "Note created in Firestore" : "Project created in Firestore");
                         break;
                     case "update":
                         transaction.update(docRef, JSON.parse(idea.toJSON()));
-                        console.log(idea instanceof Note ? "Note updated in Firestore" : "Project updated in Firestore");
+                        console.log(idea.type == 'note' ? "Note updated in Firestore" : "Project updated in Firestore");
                         break;
                     case "delete":
                         transaction.delete(docRef);
-                        console.log(idea instanceof Note ? "Note deleted in Firestore" : "Project deleted in Firestore");
+                        console.log(idea.type == 'note' ? "Note deleted in Firestore" : "Project deleted in Firestore");
                         break;
                     default:
                         console.error("Invalid operation");
@@ -154,7 +176,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
             await fetchData();
         } catch (error) {
-            console.error(idea instanceof Note ? 'Error updating note: ' : 'Error updating project: ', error);
+            console.error(idea.type == 'note' ? 'Error updating note: ' : 'Error updating project: ', error);
         }
     }, [user, fetchData]);
 

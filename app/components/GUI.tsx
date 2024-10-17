@@ -28,10 +28,7 @@ const GUI: React.FC<GUIProps> = ({
     idea,
 }) => {
     const { createIdea, deleteIdea, updateIdea, setInfo } = useAppContext();
-
     const initialOperation = operation;
-    const [backgroundColorInUse, setBackgroundColorInUse] = useState<string>('');
-    const [isDarkMode, setIsDarkMode] = useState(false);
     const [isModalMode, setIsModalMode] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [isBackgroundMenuOpen, setIsBackgroundMenu] = useState(false);
@@ -84,7 +81,6 @@ const GUI: React.FC<GUIProps> = ({
             setContent('');
             setTitle('');
             setBackgroundColor('');
-            setBackgroundColorInUse('');
         }
 
         setIsModalMode(false);
@@ -140,20 +136,23 @@ const GUI: React.FC<GUIProps> = ({
             undefined
         );
 
-        const prevNote = idea;
+        // const prevNote = idea;
 
         if (initialOperation === 'create') {
-            if (currentNote.title !== prevNote.title || currentNote.content !== prevNote.content) {
+            // if (currentNote.title !== prevNote.title || currentNote.content !== prevNote.content) {
+            if (currentNote.title !== idea.title || currentNote.content !== idea.content) {
                 handleResetNote();
                 await createIdea(currentNote);
-                console.log('Created Note');
+                return;
             }
-        } else {
+        // } else if (currentNote.title !== prevNote.title || currentNote.content !== prevNote.content || currentNote.backgroundColor !== prevNote.backgroundColor) {
+        } else if (currentNote.title !== idea.title || currentNote.content !== idea.content || currentNote.backgroundColor !== idea.backgroundColor) {
             handleResetNote();
             await updateIdea(currentNote);
-            console.log('Updated Note');
+            return;
         }
 
+        console.log('No changes made');
         handleResetNote();
     }, [backgroundColor, isTrash, title, content, isArchived, isPinned, idea, initialOperation,
         handleResetNote, createIdea, updateIdea]);
@@ -256,57 +255,6 @@ const GUI: React.FC<GUIProps> = ({
         setIsHovering(false);
     };
 
-
-    useEffect(() => {
-        const handleBackgroundColorInUse = () => {
-
-            if (backgroundColor === "" && isDarkMode) {
-                setBackgroundColorInUse('#121212;');
-            } else if (backgroundColor === "") {
-                setBackgroundColorInUse('#fff');
-            }
-            if (backgroundColor === "#fff59c" && isDarkMode) {
-                setBackgroundColorInUse('#e6db81');
-            } else if (backgroundColor === "#fff59c") {
-                setBackgroundColorInUse('#fff59c');
-            }
-
-            if (backgroundColor === "#aaf0d1" && isDarkMode) {
-                setBackgroundColorInUse('#8ad5b4');
-            } else if (backgroundColor === "#aaf0d1") {
-                setBackgroundColorInUse('#aaf0d1');
-            }
-            
-            if (backgroundColor === "#b2dfdb" && isDarkMode) {
-                setBackgroundColorInUse("#91c4bf");
-            } else if (backgroundColor === "#b2dfdb") {
-                setBackgroundColorInUse("#b2dfdb");
-            }
-
-            if (backgroundColor === "#f5f5f5" && isDarkMode) {
-                setBackgroundColorInUse('#d6d6d6');
-            } else if (backgroundColor === "#f5f5f5") {
-                setBackgroundColorInUse("#f5f5f5");
-            }
-        };
-
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        const handleChange = (e: MediaQueryListEvent) => {
-            setIsDarkMode(e.matches);
-        };
-
-        setIsDarkMode(mediaQuery.matches);
-        handleBackgroundColorInUse();
-
-        mediaQuery.addEventListener('change', handleChange);
-
-        return () => {
-            mediaQuery.removeEventListener('change', handleChange);
-        };
-
-    }, [backgroundColor, isDarkMode]);
-
-
     // useEffect(() => {
     //     const previousOverflow = document.body.style.overflowY;
     //     document.body.style.overflowY = isModalMode ? 'hidden' : 'auto';
@@ -314,8 +262,6 @@ const GUI: React.FC<GUIProps> = ({
     //         document.body.style.overflowY = previousOverflow;
     //     };
     // }, [isModalMode]);
-
-
 
     return (
         <div
@@ -329,7 +275,7 @@ const GUI: React.FC<GUIProps> = ({
         >
             <Box
                 style={{
-                    backgroundColor: backgroundColorInUse,
+                    backgroundColor: backgroundColor,
                 }}
                 component={'form'}
                 className={!isModalMode ? (initialOperation === 'create' ? styles.create : styles.read) : styles.noteEdit}
@@ -368,11 +314,10 @@ const GUI: React.FC<GUIProps> = ({
 
                 <GUIFooter
                     type={idea.type}
-                    backgroundColorInUse={backgroundColorInUse}
+                    backgroundColor={backgroundColor}
                     contentArray={contentArray}
                     initialOperation={initialOperation}
                     isArchived={isArchived}
-                    isDarkMode={isDarkMode}
                     isEditMode={isEditMode}
                     isHovering={isHovering}
                     isBackgroundMenuOpen={isBackgroundMenuOpen}

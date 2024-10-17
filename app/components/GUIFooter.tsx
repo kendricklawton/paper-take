@@ -15,14 +15,15 @@ import {
 } from '@mui/icons-material';
 import styles from "./GUI.module.css"
 import React from 'react';
-import { BackgroundCircle, BackgroundIconButton, StyledIconButton, StyledTextButton, StyledNoteButton, TransparentIconButton, TransparentIcon, StyledTooltip } from './Styled';
+import { BackgroundCircle, BackgroundIconButton, StyledIconButton, StyledTextButton, StyledNoteButton, TransparentIconButton, TransparentIcon, 
+    StyledTooltip, 
+    BackgroundCircleYellow} from './Styled';
 
 interface GUIFooterProps {
     type: 'note' | 'project';
-    backgroundColorInUse: string;
+    backgroundColor: string;
     contentArray: string[];
     initialOperation: 'read' | 'create';
-    isDarkMode: boolean;
     isArchived: boolean;
     isEditMode: boolean;
     isHovering: boolean;
@@ -50,10 +51,10 @@ interface GUIFooterProps {
 
 export default function GUIFooter({
     type,
-    backgroundColorInUse,
+    backgroundColor,
     contentArray,
     isArchived,
-    isDarkMode,
+    // isDarkMode,
     isEditMode,
     isBackgroundMenuOpen,
     isHovering,
@@ -151,21 +152,25 @@ export default function GUIFooter({
                                             {isBackgroundMenuOpen && (
                                                 <div className={styles.backgroundMenu}
                                                     ref={backgroundMenuRef}>
-                                                    <BackgroundIconButton isButtonSelected={backgroundColorInUse === ''} onClick={() => handleBackgroundColor('')}>
-                                                        <BackgroundCircle isButtonSelected={backgroundColorInUse === ''} />
+                                                    <BackgroundIconButton selected={backgroundColor=== ''} onClick={() => handleBackgroundColor('')}>
+                                                        <BackgroundCircle selected={backgroundColor === ''} />
                                                     </BackgroundIconButton>
-                                                    <BackgroundIconButton isButtonSelected={backgroundColorInUse === '#fff59c' || backgroundColorInUse === '#e6db81'} onClick={() => handleBackgroundColor('#fff59c')}>
-                                                        <BackgroundCircle isButtonSelected={backgroundColorInUse === '#fff59c' || backgroundColorInUse === '#e6db81'} bgcolor={isDarkMode ? '#e6db81' : '#fff59c'} />
+                                                    <BackgroundIconButton selected={backgroundColor === '#fff59c'} onClick={() => handleBackgroundColor('#fff59c')}>
+                                                        <BackgroundCircleYellow selected={backgroundColor === '#fff59c'} />
                                                     </BackgroundIconButton>
-                                                    <BackgroundIconButton isButtonSelected={backgroundColorInUse === '#aaf0d1' || backgroundColorInUse === '#8ad5b4'} onClick={() => handleBackgroundColor('#aaf0d1')}>
-                                                        <BackgroundCircle isButtonSelected={backgroundColorInUse === '#aaf0d1' || backgroundColorInUse === '#8ad5b4'} bgcolor={isDarkMode ? '#8ad5b4' : '#fff59c'} />
+
+                                                    {/* <BackgroundIconButton isbuttonselected={backgroundColor === '#fff59c'} onClick={() => handleBackgroundColor('#fff59c')}>
+                                                        <BackgroundCircle isbuttonselected={backgroundColor === '#fff59c'} bgcolor={'#fff59c'} />
                                                     </BackgroundIconButton>
-                                                    <BackgroundIconButton isButtonSelected={backgroundColorInUse === '#b2dfdb' || backgroundColorInUse === '#91c4bf'} onClick={() => handleBackgroundColor('#b2dfdb')}>
-                                                        <BackgroundCircle isButtonSelected={backgroundColorInUse === '#b2dfdb' || backgroundColorInUse === '#91c4bf'} bgcolor={isDarkMode ? '#91c4bf' : '#b2dfdb'} />
+                                                    <BackgroundIconButton isbuttonselected={backgroundColor === '#aaf0d1'} onClick={() => handleBackgroundColor('#aaf0d1')}>
+                                                        <BackgroundCircle isbuttonselected={backgroundColor === '#aaf0d1'} bgcolor={'#fff59c'} />
                                                     </BackgroundIconButton>
-                                                    <BackgroundIconButton isButtonSelected={backgroundColorInUse === '#f5f5f5' || backgroundColorInUse === '#d6d6d6'} onClick={() => handleBackgroundColor('#f5f5f5')}>
-                                                        <BackgroundCircle isButtonSelected={backgroundColorInUse === '#f5f5f5' || backgroundColorInUse === '#d6d6d6'} bgcolor={isDarkMode ? '#d6d6d6' : '#f5f5f5'} />
+                                                    <BackgroundIconButton isbuttonselected={backgroundColor === '#b2dfdb'} onClick={() => handleBackgroundColor('#b2dfdb')}>
+                                                        <BackgroundCircle isbuttonselected={backgroundColor === '#b2dfdb'} bgcolor={'#b2dfdb'} />
                                                     </BackgroundIconButton>
+                                                    <BackgroundIconButton isbuttonselected={backgroundColor === '#f5f5f5'} onClick={() => handleBackgroundColor('#f5f5f5')}>
+                                                        <BackgroundCircle isbuttonselected={backgroundColor === '#f5f5f5'} bgcolor={'#f5f5f5'} />
+                                                    </BackgroundIconButton> */}
                                                 </div>
                                             )}
                                         </div>
@@ -179,14 +184,18 @@ export default function GUIFooter({
                                         {isEditMode && (
                                             <React.Fragment>
                                                 <StyledTooltip title={'Undo'} placement="top">
+                                                    <span>
                                                     <StyledIconButton aria-label="Undo" onClick={handleUndo} disabled={index.current === 0}>
                                                         <UndoOutlined />
                                                     </StyledIconButton>
+                                                    </span>
                                                 </StyledTooltip>
                                                 <StyledTooltip title={'Redo'} placement="top">
+                                                    <span>
                                                     <StyledIconButton aria-label="Redo" onClick={handleRedo} disabled={index.current === contentArray.length - 1}>
                                                         <RedoOutlined />
                                                     </StyledIconButton>
+                                                    </span>
                                                 </StyledTooltip>
                                             </React.Fragment>
                                         )}
