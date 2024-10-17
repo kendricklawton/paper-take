@@ -59,7 +59,7 @@ export const BackgroundCircle = styled(Circle)<BackgroundCircleProps>(({ selecte
     '@media (prefers-color-scheme: dark)': {
         backgroundColor: 'transparent',
         color: 'transparent',
-        border: `2px solid ${selected ? 'purple' : 'white'}`,
+        border: `2px solid ${selected ? 'purple' : 'transparent'}`,
     },
 }));
 
