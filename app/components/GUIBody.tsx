@@ -114,7 +114,6 @@ export default function GUIBody({
                     inputRef={inputBody => {
                         if (inputBody && isEditMode && focus === 'body') {
                             inputBody.focus();
-                            inputBody.setSelectionRange(content.length, content.length);
                         }
                     }}
                 />

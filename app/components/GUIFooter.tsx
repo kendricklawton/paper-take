@@ -16,13 +16,14 @@ import {
 import styles from "./GUI.module.css"
 import React from 'react';
 import {
-    BackgroundCircle, BackgroundIconButton, StyledIconButton, StyledTextButton, StyledNoteButton, TransparentIconButton, TransparentIcon,
+    BackgroundCircle, BackgroundIconButton, StyledIconButton, StyledTextButton,  TransparentIconButton, TransparentIcon,
     StyledTooltip,
     BackgroundCircleYellow,
     BackgroundCircleMintyGreen,
     BackgroundCircleTeal,
     BackgroundCircleChalk
 } from './Styled';
+import {  MenuItem } from '@mui/material';
 
 interface GUIFooterProps {
     type: 'note' | 'project';
@@ -34,6 +35,7 @@ interface GUIFooterProps {
     isHovering: boolean;
     isBackgroundMenuOpen: boolean;
     isFontMenuOpen: boolean;
+    isReminderMenuOpen: boolean;
     isOptionsMenuOpen: boolean;
     isTrash: boolean;
     backgroundMenuRef: React.RefObject<HTMLDivElement>;
@@ -42,6 +44,8 @@ interface GUIFooterProps {
     fontMenuRefButton: React.RefObject<HTMLButtonElement>;
     optionsMenuRef: React.RefObject<HTMLDivElement>;
     optionsMenuRefButton: React.RefObject<HTMLButtonElement>;
+    reminderMenuRef: React.RefObject<HTMLDivElement>;
+    reminderMenuRefButton: React.RefObject<HTMLButtonElement>;
     index: React.MutableRefObject<number>;
     handleBackgroundColor: (
         backgroundColor: "#ffffff" | "#fff59c" | "#aaf0d1" | "#b2dfdb" | "#f5f5f5", 
@@ -52,6 +56,7 @@ interface GUIFooterProps {
     handleUndo: (event: React.MouseEvent<HTMLButtonElement>) => void;
     setIsBackgroundMenu: React.Dispatch<React.SetStateAction<boolean>>;
     setIsFontMenu: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsReminderMenu: React.Dispatch<React.SetStateAction<boolean>>;
     setIsOptionsMenu: React.Dispatch<React.SetStateAction<boolean>>;
     toggleArchive: () => void;
     toggleDelete: () => void;
@@ -67,6 +72,7 @@ export default function GUIFooter({
     isBackgroundMenuOpen,
     isHovering,
     // isFontMenuOpen,
+    isReminderMenuOpen,
     isOptionsMenuOpen,
     isTrash,
     initialOperation,
@@ -74,6 +80,8 @@ export default function GUIFooter({
     backgroundMenuRefButton,
     // fontMenuRef,
     // fontMenuRefButton,
+    reminderMenuRef,
+    reminderMenuRefButton,
     optionsMenuRef,
     optionsMenuRefButton,
     index,
@@ -81,10 +89,10 @@ export default function GUIFooter({
     handleDeleteNote,
     handleRedo,
     handleUndo,
-
     setIsBackgroundMenu,
     // setIsFontMenu,
     setIsOptionsMenu,
+    setIsReminderMenu,
     toggleArchive,
     toggleDelete
 }: GUIFooterProps) {
@@ -134,23 +142,38 @@ export default function GUIFooter({
                                 showFooterIcons ? (
                                     <div className={styles.footerLeading}>
                                         <StyledTooltip  title={'Pin note'}>
-                                            <StyledIconButton ref={backgroundMenuRefButton} className={styles.menuButton}
+                                            <StyledIconButton className={styles.menuButton}
                                             // onClick={() => setIsBackgroundMenu(prev => !prev)}
                                             >
                                                 <PushPinOutlined />
                                             </StyledIconButton>
                                         </StyledTooltip>
-                                        <StyledTooltip  title={'Reminder'}>
-                                            <StyledIconButton ref={backgroundMenuRefButton} className={styles.menuButton}
-                                                onClick={() => setIsBackgroundMenu(prev => !prev)}>
+                                        <div  className={styles.anchor}>
+
+                                        {/* <StyledTooltip  title={'Reminder'}> */}
+                                            <StyledIconButton ref={reminderMenuRefButton} className={styles.menuButton}
+                                                onClick={() => setIsReminderMenu(prev => !prev)}>
                                                 <AlarmAddOutlined />
                                             </StyledIconButton>
-                                        </StyledTooltip>
-                                        <div className={styles.backgroundAnchor}>
+                                        {/* </StyledTooltip> */}
 
-                                            {/* <StyledTooltip
-                                                
-                                                title={'Background options'}> */}
+                                            {isReminderMenuOpen && (
+                                                <div className={styles.menu} ref={reminderMenuRef}>
+                                                    {/* <Button sx={MenuButtonStyles} type="button" >In 6 hours</Button>
+                                                    <Button sx={MenuButtonStyles} type="button" >In 12 hours</Button>
+                                                    <Button sx={MenuButtonStyles} type="button" >In 24 hours</Button>
+                                                    <Button sx={MenuButtonStyles} type="button" >Pick date & time</Button> */}
+                                                    <MenuItem>Remind me</MenuItem>
+                                                    <MenuItem>In 6 hours</MenuItem>
+                                                    <MenuItem>In 12 hours</MenuItem>
+                                                    <MenuItem>In 24 hours</MenuItem>
+                                                    <MenuItem>Pick date & time</MenuItem>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className={styles.anchor}>
+
+                                            {/* <StyledTooltip title={'Background options'}> */}
                                                 <StyledIconButton ref={backgroundMenuRefButton} className={styles.menuButton}
                                                     onClick={() => setIsBackgroundMenu(prev => !prev)}>
                                                     <PaletteOutlined />
@@ -203,7 +226,7 @@ export default function GUIFooter({
                                                 </StyledTooltip>
                                             </React.Fragment>
                                         )}
-                                        <div className={styles.settingsAnchor} >
+                                        <div className={styles.anchor}>
                                             {/* <StyledTooltip title={'Options'} > */}
                                                 <StyledIconButton ref={optionsMenuRefButton} className={styles.menuButton}
                                                     onClick={() => setIsOptionsMenu(prev => !prev)}>
@@ -212,7 +235,7 @@ export default function GUIFooter({
                                             {/* </StyledTooltip> */}
                                             {isOptionsMenuOpen && (
                                                 <div className={styles.menu} ref={optionsMenuRef}>
-                                                    <StyledNoteButton type="button" onClick={toggleDelete}>Delete</StyledNoteButton>
+                                                    <MenuItem onClick={toggleDelete}>Delete</MenuItem>
                                                 </div>
                                             )}
                                         </div>

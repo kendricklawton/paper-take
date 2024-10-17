@@ -65,8 +65,7 @@ export default function GUIHeader({
 
                     inputRef={input => {
                         if (input && isEditMode && focus === 'title') {
-                            input.focus();
-                            input.setSelectionRange(title.length, title.length);
+                            input.focus();   
                         }
                     }}
                 />
