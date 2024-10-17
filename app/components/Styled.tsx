@@ -82,9 +82,9 @@ export const BackgroundCircleYellow = styled(Circle)<BackgroundCircleProps>(({ s
 
 export const BackgroundCircleMintyGreen = styled(Circle)<BackgroundCircleProps>(({ selected }) => ({
     fontSize: '2rem',
-    backgroundColor: '#fff59c',
+    backgroundColor: '#aaf0d1',
     color: 'transparent',
-    border: `2px solid ${selected ? 'purple' : '#fff59c'}`,
+    border: `2px solid ${selected ? 'purple' : '#aaf0d1'}`,
     borderRadius: '50%',
     '&:hover': {
         borderColor: 'inherit',
@@ -109,6 +109,23 @@ export const BackgroundCircleTeal = styled(Circle)<BackgroundCircleProps>(({ sel
         backgroundColor: '#005C5A',
         color: 'transparent',
         border: `2px solid ${selected ? 'purple' : '#005C5A'}`,
+    },
+}
+));
+
+export const BackgroundCircleChalk = styled(Circle)<BackgroundCircleProps>(({ selected }) => ({
+    fontSize: '2rem',
+    backgroundColor: '#f5f5f5',
+    color: 'transparent',
+    border: `2px solid ${selected ? 'purple' : '#f5f5f5'}`,
+    borderRadius: '50%',
+    '&:hover': {
+        borderColor: 'inherit',
+    },
+    '@media (prefers-color-scheme: dark)': {
+        backgroundColor: '#004d40',
+        color: 'transparent',
+        border: `2px solid ${selected ? 'purple' : '#004d40'}`,
     },
 }
 ));

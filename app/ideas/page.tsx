@@ -12,7 +12,7 @@ import {
     Note,
     Project
 } from "../models";
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
 
 const Notes: React.FC = () => {
     const {
@@ -61,10 +61,23 @@ const Notes: React.FC = () => {
     //     setDraggingNoteIndex(null);
     // };
 
+    // createdAt: Timestamp | undefined;
+    // id: string;
+    // title: string;
+    // backgroundColor: '' | '#fff59c' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5';
+    // backgroundColorDark: '' | '#a68f00' | '#4c8c7d' | '#005c5a' | '#004d40';
+    // content: string;
+    // isArchived: boolean;
+    // isPinned: boolean;
+    // isTrash: boolean;
+    // images: string[];
+    // reminder: Timestamp | undefined;
+    // type: 'note';
     const newNote = new Note(
         undefined,
         '',
-        uuidv4(),
+        '',
+        '',
         '',
         '',
         false,
@@ -72,6 +85,14 @@ const Notes: React.FC = () => {
         false,
         [],
         undefined
+        // uuidv4(),
+        // '',
+        // '',
+        // false,
+        // false,
+        // false,
+        // [],
+        // undefined
     )
 
     return (

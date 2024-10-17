@@ -44,6 +44,7 @@ const GUI: React.FC<GUIProps> = ({
     const [title, setTitle] = useState(idea.title);
     const [content, setContent] = useState(idea.type === 'note' ? idea.content : '');
     const [backgroundColor, setBackgroundColor] = useState(idea.type === 'note' ? idea.backgroundColor : '');
+    const [backgroundColorDark, setBackgroundColorDark] = useState(idea.type === 'note' ? idea.backgroundColorDark : '');
 
     const index = useRef(0);
     const nestedIndex = useRef(0);
@@ -126,6 +127,7 @@ const GUI: React.FC<GUIProps> = ({
         const currentNote = new Note(
             undefined,
             backgroundColor,
+            backgroundColorDark,
             idea.id,
             title,
             content,
@@ -154,7 +156,7 @@ const GUI: React.FC<GUIProps> = ({
 
         console.log('No changes made');
         handleResetNote();
-    }, [backgroundColor, isTrash, title, content, isArchived, isPinned, idea, initialOperation,
+    }, [backgroundColor, backgroundColorDark, isTrash, title, content, isArchived, isPinned, idea, initialOperation,
         handleResetNote, createIdea, updateIdea]);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -211,11 +213,25 @@ const GUI: React.FC<GUIProps> = ({
         setIsOptionsMenu(false);
     };
 
-    const handleBackgroundColor = async (color: "" | "#fff59c" | "#aaf0d1" | "#b2dfdb" | "#f5f5f5") => {
-        setBackgroundColor(color);
+    // backgroundColor: '' | '#fff59c' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5';
+    // backgroundColorsDark: '' | '#a68f00' | '#4c8c7d' | '#005c5a' | '#004d40' | '#424242';
+    const handleBackgroundColor = async (backgroundColor: "" | "#fff59c" | "#aaf0d1" | "#b2dfdb" | "#f5f5f5", 
+        backgroundColorDark: '' | '#a68f00' | '#4c8c7d' | '#005c5a' | '#004d40') => {
+        console.log('Background color:', backgroundColor);
+        console.log('Background color dark:', backgroundColorDark);
+        setBackgroundColor(backgroundColor);
+        setBackgroundColorDark(backgroundColorDark);
         if (initialOperation === 'read' && !isTrash) {
-            await updateIdea({ ...idea, backgroundColor: color } as Note);
+            await updateIdea({ ...idea, backgroundColor: backgroundColor, backgroundColorDark: backgroundColorDark } as Note);
         }
+    };
+
+    const handleMouseEnter = () => {
+        setIsHovering(true);
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovering(false);
     };
 
     const toggleDelete = async () => {
@@ -240,20 +256,6 @@ const GUI: React.FC<GUIProps> = ({
         }
     };
 
-    useEffect(() => {
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [handleClickOutside]);
-
-    const handleMouseEnter = () => {
-        setIsHovering(true);
-    };
-
-    const handleMouseLeave = () => {
-        setIsHovering(false);
-    };
 
     // useEffect(() => {
     //     const previousOverflow = document.body.style.overflowY;
@@ -262,6 +264,13 @@ const GUI: React.FC<GUIProps> = ({
     //         document.body.style.overflowY = previousOverflow;
     //     };
     // }, [isModalMode]);
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [handleClickOutside]);
 
     return (
         <div
@@ -274,14 +283,18 @@ const GUI: React.FC<GUIProps> = ({
             onMouseLeave={handleMouseLeave}
         >
             <Box
-                style={{
-                    backgroundColor: backgroundColor,
-                }}
+        
                 component={'form'}
                 className={!isModalMode ? (initialOperation === 'create' ? styles.create : styles.read) : styles.noteEdit}
                 onSubmit={handleSubmit}
                 ref={initialOperation === 'create' ? noteCreateRef : noteEditRef}
-
+                // style={{ backgroundColor: backgroundColor }}
+                sx={{
+                    backgroundColor: backgroundColor,
+                    '@media (prefers-color-scheme: dark)': {
+                        backgroundColor: backgroundColorDark,
+                    },
+                }}
             >
                 <div
                     className={(initialOperation === 'read' && !isModalMode) ? styles.infoContainerRead : styles.infoContainer}

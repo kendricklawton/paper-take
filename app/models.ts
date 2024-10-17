@@ -4,7 +4,8 @@ export class Note {
     createdAt: Timestamp | undefined;
     id: string;
     title: string;
-    backgroundColor: '' | '#fff59c' | '#aaf0d1' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5';
+    backgroundColor: '' | '#fff59c' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5';
+    backgroundColorDark: '' | '#a68f00' | '#4c8c7d' | '#005c5a' | '#004d40';
     content: string;
     isArchived: boolean;
     isPinned: boolean;
@@ -15,7 +16,8 @@ export class Note {
 
     constructor(
         createdAt: Timestamp | undefined,
-        backgroundColor: '' | '#fff59c' | '#aaf0d1' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5',
+        backgroundColor: '' | '#fff59c' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5',
+        backgroundColorDark: '' | '#a68f00' | '#4c8c7d' | '#005c5a' | '#004d40',
         id: string,
         title: string,
         content: string,
@@ -27,6 +29,7 @@ export class Note {
     ) {
         this.createdAt = createdAt;
         this.backgroundColor = backgroundColor;
+        this.backgroundColorDark = backgroundColorDark;
         this.id = id;
         this.title = title;
         this.content = content;
@@ -40,13 +43,14 @@ export class Note {
 
     static fromJSON(jsonString: string): Note | null {
         try {
-            const { createdAt, backgroundColor, id, title, content, isArchived,
+            const { createdAt, backgroundColor, backgroundColorDark, id, title, content, isArchived,
                 isPinned, isTrash, reminder, images = [],
             } = JSON.parse(jsonString);
 
             return new Note(
                 createdAt,
                 backgroundColor,
+                backgroundColorDark,
                 id,
                 title,
                 content,
@@ -66,6 +70,7 @@ export class Note {
         return JSON.stringify({
             createdAt: this.createdAt,
             backgroundColor: this.backgroundColor,
+            backgroundColorDark: this.backgroundColorDark,
             id: this.id,
             title: this.title,
             content: this.content,

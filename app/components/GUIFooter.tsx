@@ -15,9 +15,14 @@ import {
 } from '@mui/icons-material';
 import styles from "./GUI.module.css"
 import React from 'react';
-import { BackgroundCircle, BackgroundIconButton, StyledIconButton, StyledTextButton, StyledNoteButton, TransparentIconButton, TransparentIcon, 
-    StyledTooltip, 
-    BackgroundCircleYellow} from './Styled';
+import {
+    BackgroundCircle, BackgroundIconButton, StyledIconButton, StyledTextButton, StyledNoteButton, TransparentIconButton, TransparentIcon,
+    StyledTooltip,
+    BackgroundCircleYellow,
+    BackgroundCircleMintyGreen,
+    BackgroundCircleTeal,
+    BackgroundCircleChalk
+} from './Styled';
 
 interface GUIFooterProps {
     type: 'note' | 'project';
@@ -38,7 +43,7 @@ interface GUIFooterProps {
     optionsMenuRef: React.RefObject<HTMLDivElement>;
     optionsMenuRefButton: React.RefObject<HTMLButtonElement>;
     index: React.MutableRefObject<number>;
-    handleBackgroundColor: (color: '' | '#fff59c' | '#aaf0d1' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5') => void;
+    handleBackgroundColor: (backgroundColor: "" | "#fff59c" | "#aaf0d1" | "#b2dfdb" | "#f5f5f5", backgroundColorDark: "" | "#a68f00" | "#4c8c7d" | "#005c5a" | "#004d40" ) => Promise<void>;
     handleDeleteNote: () => void;
     handleRedo: (event: React.MouseEvent<HTMLButtonElement>) => void;
     handleUndo: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -95,9 +100,9 @@ export default function GUIFooter({
                                 showFooterIcons && (
                                     <React.Fragment>
                                         <StyledTooltip title={type === 'note' ? 'Delete note forever' : 'Delete project forever'}>
-                                                <StyledIconButton aria-label="Delete note forever" onClick={() => handleDeleteNote()}>
-                                                    <DeleteForeverOutlined />
-                                                </StyledIconButton>                                    
+                                            <StyledIconButton aria-label="Delete note forever" onClick={() => handleDeleteNote()}>
+                                                <DeleteForeverOutlined />
+                                            </StyledIconButton>
                                         </StyledTooltip>
                                         <StyledIconButton aria-label="Delete note forever" onClick={() => handleDeleteNote()}>
                                             <DeleteForeverOutlined />
@@ -132,17 +137,17 @@ export default function GUIFooter({
                                                 <PushPinOutlined />
                                             </StyledIconButton>
                                         </StyledTooltip>
-                                        <StyledTooltip placement="top"  title={'Reminder'}>
+                                        <StyledTooltip placement="top" title={'Reminder'}>
                                             <StyledIconButton ref={backgroundMenuRefButton} className={styles.menuButton}
                                                 onClick={() => setIsBackgroundMenu(prev => !prev)}>
                                                 <AlarmAddOutlined />
                                             </StyledIconButton>
                                         </StyledTooltip>
                                         <div className={styles.backgroundAnchor}>
-               
-                                            <StyledTooltip 
+
+                                            <StyledTooltip
                                                 placement="top"
-                                            title={'Background options'}>
+                                                title={'Background options'}>
                                                 <StyledIconButton ref={backgroundMenuRefButton} className={styles.menuButton}
                                                     onClick={() => setIsBackgroundMenu(prev => !prev)}>
                                                     <PaletteOutlined />
@@ -152,25 +157,21 @@ export default function GUIFooter({
                                             {isBackgroundMenuOpen && (
                                                 <div className={styles.backgroundMenu}
                                                     ref={backgroundMenuRef}>
-                                                    <BackgroundIconButton selected={backgroundColor=== ''} onClick={() => handleBackgroundColor('')}>
+                                                    <BackgroundIconButton selected={backgroundColor === ''} onClick={() => handleBackgroundColor('','')}>
                                                         <BackgroundCircle selected={backgroundColor === ''} />
                                                     </BackgroundIconButton>
-                                                    <BackgroundIconButton selected={backgroundColor === '#fff59c'} onClick={() => handleBackgroundColor('#fff59c')}>
+                                                    <BackgroundIconButton selected={backgroundColor === '#fff59c'} onClick={() => handleBackgroundColor('#fff59c', '#a68f00')}>
                                                         <BackgroundCircleYellow selected={backgroundColor === '#fff59c'} />
                                                     </BackgroundIconButton>
-
-                                                    {/* <BackgroundIconButton isbuttonselected={backgroundColor === '#fff59c'} onClick={() => handleBackgroundColor('#fff59c')}>
-                                                        <BackgroundCircle isbuttonselected={backgroundColor === '#fff59c'} bgcolor={'#fff59c'} />
+                                                    <BackgroundIconButton selected={backgroundColor === '#aaf0d1'} onClick={() => handleBackgroundColor('#aaf0d1', '#4c8c7d')}>
+                                                        <BackgroundCircleMintyGreen selected={backgroundColor === '#aaf0d1'} />
                                                     </BackgroundIconButton>
-                                                    <BackgroundIconButton isbuttonselected={backgroundColor === '#aaf0d1'} onClick={() => handleBackgroundColor('#aaf0d1')}>
-                                                        <BackgroundCircle isbuttonselected={backgroundColor === '#aaf0d1'} bgcolor={'#fff59c'} />
-                                                    </BackgroundIconButton>
-                                                    <BackgroundIconButton isbuttonselected={backgroundColor === '#b2dfdb'} onClick={() => handleBackgroundColor('#b2dfdb')}>
-                                                        <BackgroundCircle isbuttonselected={backgroundColor === '#b2dfdb'} bgcolor={'#b2dfdb'} />
-                                                    </BackgroundIconButton>
-                                                    <BackgroundIconButton isbuttonselected={backgroundColor === '#f5f5f5'} onClick={() => handleBackgroundColor('#f5f5f5')}>
-                                                        <BackgroundCircle isbuttonselected={backgroundColor === '#f5f5f5'} bgcolor={'#f5f5f5'} />
-                                                    </BackgroundIconButton> */}
+                                                    <BackgroundIconButton selected={backgroundColor === '#b2dfdb'} onClick={() => handleBackgroundColor('#b2dfdb', '#005c5a')}>
+                                                        <BackgroundCircleTeal selected={backgroundColor === '#b2dfdb'} />
+                                                    </BackgroundIconButton> 
+                                                    <BackgroundIconButton selected={backgroundColor === '#f5f5f5'} onClick={() => handleBackgroundColor('#f5f5f5', '#004d40')}>
+                                                        <BackgroundCircleChalk selected={backgroundColor === '#f5f5f5'} />
+                                                    </BackgroundIconButton> 
                                                 </div>
                                             )}
                                         </div>
@@ -185,16 +186,16 @@ export default function GUIFooter({
                                             <React.Fragment>
                                                 <StyledTooltip title={'Undo'} placement="top">
                                                     <span>
-                                                    <StyledIconButton aria-label="Undo" onClick={handleUndo} disabled={index.current === 0}>
-                                                        <UndoOutlined />
-                                                    </StyledIconButton>
+                                                        <StyledIconButton aria-label="Undo" onClick={handleUndo} disabled={index.current === 0}>
+                                                            <UndoOutlined />
+                                                        </StyledIconButton>
                                                     </span>
                                                 </StyledTooltip>
                                                 <StyledTooltip title={'Redo'} placement="top">
                                                     <span>
-                                                    <StyledIconButton aria-label="Redo" onClick={handleRedo} disabled={index.current === contentArray.length - 1}>
-                                                        <RedoOutlined />
-                                                    </StyledIconButton>
+                                                        <StyledIconButton aria-label="Redo" onClick={handleRedo} disabled={index.current === contentArray.length - 1}>
+                                                            <RedoOutlined />
+                                                        </StyledIconButton>
                                                     </span>
                                                 </StyledTooltip>
                                             </React.Fragment>
@@ -214,12 +215,12 @@ export default function GUIFooter({
                                         </div>
                                     </div>
                                 )
-                                : (
-                                    <div className={styles.footerLeading}>
-                                        <TransparentIconButton>
-                                            <TransparentIcon />
-                                        </TransparentIconButton>
-                                    </div>)
+                                    : (
+                                        <div className={styles.footerLeading}>
+                                            <TransparentIconButton>
+                                                <TransparentIcon />
+                                            </TransparentIconButton>
+                                        </div>)
                             }
                             <React.Fragment>
                                 {showCloseButton && (
