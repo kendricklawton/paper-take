@@ -292,7 +292,7 @@ const GUI: React.FC<GUIProps> = ({
             }
         }
     };
-    
+
     const toggleDelete = async () => {
         if (isTrash) {
             setInfo('Note restored');
@@ -403,8 +403,6 @@ const GUI: React.FC<GUIProps> = ({
                         toggleModeTrue={toggleModeTrue}
                     />
                 </div>
-
-
                 <GUIFooter
                     type={idea.type}
                     backgroundColor={backgroundColor}
@@ -440,7 +438,6 @@ const GUI: React.FC<GUIProps> = ({
                 />
             </Box>
         </div>
-
     );
 };
 

@@ -163,11 +163,37 @@ export default function GUIFooter({
                                                     <Button sx={MenuButtonStyles} type="button" >In 12 hours</Button>
                                                     <Button sx={MenuButtonStyles} type="button" >In 24 hours</Button>
                                                     <Button sx={MenuButtonStyles} type="button" >Pick date & time</Button> */}
-                                                    <MenuItem>Remind me</MenuItem>
-                                                    <MenuItem>In 6 hours</MenuItem>
-                                                    <MenuItem>In 12 hours</MenuItem>
-                                                    <MenuItem>In 24 hours</MenuItem>
-                                                    <MenuItem>Pick date & time</MenuItem>
+                                                    <div style={{
+                                                        padding: '1.2rem',
+                                                        display: 'flex',
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'flex-start',
+                                                        fontFamily: 'monospace',
+                                                    }}><p style={{
+                                                        fontFamily: 'monospace',
+                                                        fontSize: '1.25rem',
+                                                    }}>Remind me</p></div>
+                                                    <MenuItem disableGutters sx={{
+                                                        fontFamily: 'monospace',
+                                                        paddingLeft: '1.2rem',
+                                                        paddingRight: '1.2rem',
+                                                    }}>In 6 hours</MenuItem>
+                                                    <MenuItem disableGutters sx={{
+                                                        fontFamily: 'monospace',
+                                                        paddingLeft: '1.2rem',
+                                                        paddingRight: '1.2rem',
+                                                    }}>In 12 hours</MenuItem>
+                                                    <MenuItem disableGutters sx={{
+                                                        fontFamily: 'monospace',
+                                                        paddingLeft: '1.2rem',
+                                                        paddingRight: '1.2rem',
+                                                    }}>In 24 hours</MenuItem>
+                                                    <MenuItem disableGutters sx={{
+                                                        fontFamily: 'monospace',
+                                                        paddingLeft: '1.2rem',
+                                                        paddingRight: '1.2rem',
+                                                    }}> Pick date & time</MenuItem>
                                                 </div>
                                             )}
                                         </div>
