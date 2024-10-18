@@ -17,6 +17,8 @@ interface GUIProps {
     noteIndex?: number;
     operation: 'read' | 'create';
     idea: Note | Project;
+    // note?: Note;
+    // project?: Project;
 }
 
 const GUI: React.FC<GUIProps> = ({
@@ -25,10 +27,11 @@ const GUI: React.FC<GUIProps> = ({
     // handleDrop,
     // noteIndex,
     operation,
-    idea,
+    idea: idea,
 }) => {
-    const { createIdea, deleteIdea, updateIdea, setInfo } = useAppContext();
+    const { createNote, deleteNote, updateNote, setInfo } = useAppContext();
     const initialOperation = operation;
+
     const [isModalMode, setIsModalMode] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [isBackgroundMenuOpen, setIsBackgroundMenu] = useState(false);
@@ -115,7 +118,7 @@ const GUI: React.FC<GUIProps> = ({
     const handleDeleteNote = async () => {
         try {
             if (isTrash) {
-                await deleteIdea(idea);
+                await deleteNote(idea as Note);
                 setInfo('Note deleted');
             }
         } catch (error) {
@@ -149,35 +152,38 @@ const GUI: React.FC<GUIProps> = ({
             isArchived,
             isPinned,
             isTrash,
-            idea.images,
+            idea.type === 'note' ? idea.images : [],
             idea.reminder,
         );
 
-        // const prevNote = idea;
+        const prevNote = idea as Note;
       
         console.log('Current note:', currentNote);
-        console.log('Previous idea:', idea);
+        console.log('Previous note:', idea);
 
         if (initialOperation === 'create') {
-            
-            // if (currentNote.title !== prevNote.title || currentNote.content !== prevNote.content) {
-            if (currentNote.title !== idea.title || currentNote.content !== idea.content) {
-     
-                await createIdea(currentNote);
+            if (currentNote.title !== prevNote.title || currentNote.content !== prevNote.content) {
                 handleResetNote();
+                await createNote(currentNote);
                 return;
             }
-        // } else if (currentNote.title !== prevNote.title || currentNote.content !== prevNote.content || currentNote.backgroundColor !== prevNote.backgroundColor) {
-        } else if (currentNote.title !== idea.title || currentNote.content !== idea.content || currentNote.backgroundColor !== idea.backgroundColor) {
+        } else if (
+            currentNote.title !== prevNote.title || 
+            currentNote.content !== prevNote.content || 
+            currentNote.backgroundColor !== prevNote.backgroundColor || 
+            currentNote.backgroundColorDark !== prevNote.backgroundColorDark ||
+            currentNote.isArchived !== prevNote.isArchived ||
+            currentNote.isPinned !== prevNote.isPinned ||
+            currentNote.isTrash !== prevNote.isTrash
+        ) {
             handleResetNote();
-            await updateIdea(currentNote);
+            await updateNote(currentNote);
             return;
         }
 
         console.log('No changes made');
         handleResetNote();
-    }, [backgroundColor, backgroundColorDark, isTrash, title, content, isArchived, isPinned, idea, initialOperation,
-        handleResetNote, createIdea, updateIdea]);
+    }, [idea, isTrash, backgroundColor, backgroundColorDark, title, content, isArchived, isPinned, initialOperation, handleResetNote, createNote, updateNote]);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         console.log('clicking submit')
@@ -188,7 +194,7 @@ const GUI: React.FC<GUIProps> = ({
     const handleClickOutside = useCallback((event: MouseEvent | TouchEvent) => {
         event.stopPropagation();
         if (
-            isBackgroundMenuOpen &&
+            isBackgroundMenuOpen && 
             backgroundMenuRef.current &&
             !backgroundMenuRef.current.contains(event.target as Node) &&
             !(backgroundMenuRefButton.current && backgroundMenuRefButton.current.contains(event.target as Node))
@@ -197,12 +203,19 @@ const GUI: React.FC<GUIProps> = ({
         }
 
         if (
-            isFontMenuOpen &&
-            fontMenuRef.current &&
-            !fontMenuRef.current.contains(event.target as Node) &&
+            isFontMenuOpen && 
+            fontMenuRef.current && 
+            !fontMenuRef.current.contains(event.target as Node) && 
             !(fontMenuRefButton.current && fontMenuRefButton.current.contains(event.target as Node))
         ) {
             setIsFontMenu(false);
+        }
+
+        if (isReminderMenuOpen && 
+            reminderMenuRef.current && 
+            !reminderMenuRef.current.contains(event.target as Node) && 
+            !(reminderMenuRefButton.current && reminderMenuRefButton.current.contains(event.target as Node))) {
+            setIsReminderMenu(false);
         }
 
         if (
@@ -221,30 +234,7 @@ const GUI: React.FC<GUIProps> = ({
                 handleNote();
             }
         }
-    }, [isOptionsMenuOpen, isBackgroundMenuOpen, isFontMenuOpen, isEditMode, isTrash, initialOperation, handleNote]);
-
-    const toggleArchive = async () => {
-        if (isArchived) {
-            setInfo('Note unarchived');
-        } else {
-            setInfo('Note archived');
-        }
-        await updateIdea({ ...idea, isArchived: !isArchived } as Note);
-        setIsOptionsMenu(false);
-    };
-
-    // backgroundColor: '' | '#fff59c' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5';
-    // backgroundColorsDark: '' | '#a68f00' | '#4c8c7d' | '#005c5a' | '#004d40' | '#424242';
-    const handleBackgroundColor = async (backgroundColor: "#ffffff" | "#fff59c" | "#aaf0d1" | "#b2dfdb" | "#f5f5f5", 
-        backgroundColorDark: '#121212' | '#a68f00' | '#4c8c7d' | '#005c5a' | '#004d40') => {
-        console.log('Background color:', backgroundColor);
-        console.log('Background color dark:', backgroundColorDark);
-        setBackgroundColor(backgroundColor);
-        setBackgroundColorDark(backgroundColorDark);
-        if (initialOperation === 'read' && !isTrash) {
-            await updateIdea({ ...idea, backgroundColor: backgroundColor, backgroundColorDark: backgroundColorDark } as Note);
-        }
-    };
+    }, [isBackgroundMenuOpen, isFontMenuOpen, isReminderMenuOpen, isOptionsMenuOpen, isEditMode, isTrash, initialOperation, handleNote]);
 
     const handleMouseEnter = () => {
         setIsHovering(true);
@@ -254,13 +244,77 @@ const GUI: React.FC<GUIProps> = ({
         setIsHovering(false);
     };
 
-    const toggleDelete = async () => {
-        if (initialOperation === 'create') {
-            handleResetNote();
-            setInfo('Note deleted');
+    const toggleArchive = async () => {
+        if (isArchived) {
+            setInfo('Note unarchived');
         } else {
-            await updateIdea({ ...idea, isTrash: !isTrash } as Note);
-            setInfo(isTrash ? 'Note restored' : 'Note moved to trash');
+            setInfo('Note archived');
+        }
+        if(idea.type == 'note') {
+            const updatedNote = new Note(
+                idea.createdAt,
+                backgroundColor,
+                backgroundColorDark,
+                idea.id,
+                title,
+                content,
+                !isArchived,
+                isPinned,
+                isTrash,
+                idea.images,
+                idea.reminder,
+            );
+            await updateNote(updatedNote);
+        }
+        setIsOptionsMenu(false);
+    };
+
+    const toggleBackgroundColor = async (backgroundColor: "#ffffff" | "#fff59c" | "#aaf0d1" | "#b2dfdb" | "#f5f5f5",
+        backgroundColorDark: '#121212' | '#a68f00' | '#4c8c7d' | '#005c5a' | '#004d40') => {
+        setBackgroundColor(backgroundColor);
+        setBackgroundColorDark(backgroundColorDark);
+        if (initialOperation === 'read' && !isTrash) {
+            if (idea.type == 'note') {
+                const updatedNote = new Note(
+                    idea.createdAt,
+                    backgroundColor,
+                    backgroundColorDark,
+                    idea.id,
+                    title,
+                    content,
+                    isArchived,
+                    isPinned,
+                    isTrash,
+                    idea.images,
+                    idea.reminder,
+                );
+                await updateNote(updatedNote);
+            }
+        }
+    };
+    
+    const toggleDelete = async () => {
+        if (isTrash) {
+            setInfo('Note restored');
+        } else {
+            setInfo('Note moved to trash');
+        }
+
+        if(idea.type == 'note') {
+            const updatedNote = new Note(
+                idea.createdAt,
+                backgroundColor,
+                backgroundColorDark,
+                idea.id,
+                title,
+                content,
+                isArchived,
+                isPinned,
+                !isTrash,
+                idea.images,
+                idea.reminder,
+            );
+            await updateNote(updatedNote);
         }
         setIsOptionsMenu(false);
     };
@@ -275,7 +329,6 @@ const GUI: React.FC<GUIProps> = ({
             setIsEditMode(true);
         }
     };
-
 
     // useEffect(() => {
     //     const previousOverflow = document.body.style.overflowY;
@@ -374,7 +427,7 @@ const GUI: React.FC<GUIProps> = ({
                     optionsMenuRef={optionsMenuRef}
                     optionsMenuRefButton={optionsMenuRefButton}
                     index={index}
-                    handleBackgroundColor={handleBackgroundColor}
+                    toggleBackgroundColor={toggleBackgroundColor}
                     handleDeleteNote={handleDeleteNote}
                     handleRedo={handleRedo}
                     handleUndo={handleUndo}

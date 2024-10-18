@@ -35,7 +35,7 @@ const Notes: React.FC = () => {
     return (
         <React.Fragment>
             <GUI operation={'create'} idea={newNote} />
-            {activeNotes.length === 0 ? (
+            {activeIdeas.length === 0 ? (
                 <div className={styles.pageText}>
                     <p>Ideas you create will appear here</p>
                 </div>

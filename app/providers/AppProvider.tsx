@@ -1,8 +1,8 @@
 'use client'
 
-import React, { createContext, useContext, useCallback, useEffect, useState, useMemo, ReactNode } from 'react';
+import React, { createContext, useContext, useCallback, useState, useMemo, ReactNode, useEffect } from 'react';
 import { firestore } from '../firebase';
-import { collection, doc, FirestoreError, getDocs, orderBy, query, runTransaction, Timestamp, Transaction } from "firebase/firestore";
+import { collection, doc, FirestoreError, getDocs, orderBy, query, runTransaction, Timestamp } from "firebase/firestore";
 import { Note, Project } from '../models';
 import { useAuthContext } from './AuthProvider';
 
@@ -15,13 +15,15 @@ interface AppContextType {
     projects: Project[];
     searchTerm: string;
     clearAppError: () => void;
-    createIdea: (idea: Note | Project) => Promise<void>;
-    deleteIdea: (idea: Note | Project) => Promise<void>;
-    updateIdea: (idea: Note | Project) => Promise<void>;
+    createNote: (note: Note) => Promise<void>;
+    createProject: (project: Project) => Promise<void>;
+    deleteNote: (note: Note) => Promise<void>;
+    deleteProject: (project: Project) => Promise<void>;
+    updateNote: (note: Note) => Promise<void>;
+    updateProject: (project: Project) => Promise<void>;
     fetchData: () => void;
     handleCloseSearch: () => void;
     handleSearch: (term: string) => void;
-    setIsLoadingApp: React.Dispatch<React.SetStateAction<boolean>>;
     setInfo: React.Dispatch<React.SetStateAction<string>>;
     setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
     setProjects: React.Dispatch<React.SetStateAction<Project[]>>;
@@ -54,7 +56,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         try {
             console.log('Fetching notes from Firestore');
             const ref = collection(firestore, "users", user.uid, "notes");
-            const queryNotes = query(ref, orderBy('createdAt', 'desc'));
+            const queryNotes = query(ref);
             const snapshot = await getDocs(queryNotes);
 
             if (snapshot.empty) {
@@ -62,11 +64,14 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
                 return;
             }
 
-            const notes: Note[] = snapshot.docs.map(doc => ({
-                    ...doc.data(),
-                }) as Note);
+            const firestoreNotes: Note[] = snapshot.docs.map(doc => ({
+                ...doc.data(),
+            }) as Note);
 
-            setNotes(notes);
+
+            setNotes(firestoreNotes);
+
+
         } catch (error) {
             if (error instanceof FirestoreError) {
                 console.error('Firestore error while fetching notes: ', error.message);
@@ -107,8 +112,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         }
     }, [user, setProjects]);
 
-
-
     const fetchData = useCallback(async () => {
         if (!user) {
             console.log("No user is logged in, fetching data from local storage");
@@ -116,57 +119,51 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         }
         try {
             setIsLoadingApp(true);
+
             await fetchNotes();
             await fetchProjects();
+
         } catch (error) {
             console.error('Unexpected error: ', error);
         } finally {
             setIsLoadingApp(false);
         }
     }, [fetchNotes, fetchProjects, user]);
-
-    const apiService = useCallback(async (operation: "create" | "update" | "delete", idea: Note | Project) => {
+    
+    const firestoreService = useCallback(async (collectionName: string, operation: string, item: Note | Project) => {
         try {
+            setIsLoadingApp(true);
             if (!user) {
-                console.log('No user is logged in, updating note list in local storage');
+                console.log(`No user is logged in, updating ${collectionName} list in local storage`);
                 return;
             }
 
-            const location = idea.type == 'note'? "notes" : "projects";
-            const ref = collection(firestore, "users", user.uid, location);
-            let docRef;
+            const ref = collection(firestore, "users", user.uid, collectionName);
+            const docRef = doc(ref, item.id);
 
-            if (operation === "create") {
-                const docRefId = doc(ref);
-                docRef = doc(ref, docRefId.id);
-                idea.id = docRefId.id;
-                idea.createdAt = Timestamp.now();
-            } else {
-                docRef = doc(ref, idea.id);
-            }
+            console.log(`Attempting to ${operation} ${collectionName} in Firestore`);
+            console.log(item);
 
-            console.log(`Attempting to ${operation} ${idea.type == 'note' ? 'note' : 'project'} in Firestore`);
-            console.log(idea);
-            await runTransaction(firestore, async (transaction: Transaction) => {
+            await runTransaction(firestore, async (transaction) => {
                 const snapshot = await transaction.get(docRef);
 
                 if ((operation === "update" || operation === "delete") && !snapshot.exists()) {
-                    console.error(idea.type == 'note' ? 'Note not found' : 'Project not found');
-                    throw new Error(idea.type == 'note' ? 'Note not found' : 'Project not found');
+                    console.error(`${collectionName.charAt(0).toUpperCase() + collectionName.slice(1)} not found`);
+                    throw new Error(`${collectionName.charAt(0).toUpperCase() + collectionName.slice(1)} not found`);
                 }
 
                 switch (operation) {
                     case "create":
-                        transaction.set(docRef, JSON.parse(idea.toJSON()));
-                        console.log(idea.type == 'note' ? "Note created in Firestore" : "Project created in Firestore");
+                        transaction.set(docRef, JSON.parse(item.toJSON()));
+                        console.log(`${collectionName.charAt(0).toUpperCase() + collectionName.slice(1)} created in Firestore`);
                         break;
                     case "update":
-                        transaction.update(docRef, JSON.parse(idea.toJSON()));
-                        console.log(idea.type == 'note' ? "Note updated in Firestore" : "Project updated in Firestore");
+                        transaction.update(docRef, JSON.parse(item.toJSON()));
+                        console.log(`${collectionName.charAt(0).toUpperCase() + collectionName.slice(1)} updated in Firestore`);
                         break;
                     case "delete":
                         transaction.delete(docRef);
-                        console.log(idea.type == 'note' ? "Note deleted in Firestore" : "Project deleted in Firestore");
+                        console.log(`${collectionName.charAt(0).toUpperCase() + collectionName.slice(1)} deleted in Firestore`);
                         break;
                     default:
                         console.error("Invalid operation");
@@ -174,12 +171,12 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
                 }
             });
 
-            await fetchData();
         } catch (error) {
-            console.error(idea.type == 'note' ? 'Error updating note: ' : 'Error updating project: ', error);
+            console.error(`Error updating ${collectionName}: `, error);
+        } finally {
+            setIsLoadingApp(false);
         }
-    }, [user, fetchData]);
-
+    }, [user]);
 
     useEffect(() => {
         if (user) {
@@ -190,39 +187,78 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         }
     }, [user, fetchData]);
 
-    const createIdea = useCallback(async (idea: Note | Project) => {
-        if (idea.type === "note") {
-            setNotes(prevNotes => [idea, ...prevNotes]);
-        } else if (idea.type === "project") {
-            setProjects(prevProjects => [idea, ...prevProjects]);
-        } else {
-            throw new Error("Invalid idea type");
+    const createNote = useCallback(async (newNote: Note) => {
+        const prevNotes = notes;
+        newNote.createdAt = Timestamp.now();
+        setNotes([newNote, ...notes]);
+        try {
+            await firestoreService("notes", "create", newNote);
+        } catch (error) {
+            console.error('Error creating note: ', error);
+            setAppError('Error creating note');
+            setNotes(prevNotes);
         }
+    }, [notes, firestoreService]);
 
-        await apiService("create", idea);
-    }, [apiService]);
-
-    const updateIdea = useCallback(async (idea: Note | Project) => {
-        if (idea.type === "note") {
-            setNotes(prevNotes => prevNotes.map(note => note.id === idea.id ? idea : note));
-        } else if (idea.type === "project") {
-            setProjects(prevProjects => prevProjects.map(project => project.id === idea.id ? idea : project));
-        } else {
-            throw new Error("Invalid idea type");
+    const createProject = useCallback(async (newProject: Project) => {
+        const prevProjects = projects;
+        setProjects([newProject, ...projects]);
+        try {
+            await firestoreService("projects", "create", newProject);
+        } catch (error) {
+            console.error('Error creating project: ', error);
+            setAppError('Error creating project');
+            setProjects(prevProjects);
         }
-        await apiService("update", idea);
-    }, [apiService]);
+    }, [projects, firestoreService]);
 
-    const deleteIdea = useCallback(async (idea: Note | Project) => {
-        if (idea.type === "note") {
-            setNotes(prevNotes => prevNotes.filter(note => note.id !== idea.id));
-        } else if (idea.type === "project") {
-            setProjects(prevProjects => prevProjects.filter(project => project.id !== idea.id));
-        } else {
-            throw new Error("Invalid idea type");
+    const updateNote = useCallback(async (updatedNote: Note) => {
+        const prevNotes = notes;
+        setNotes(notes.map(note => note.id === updatedNote.id ? updatedNote : note));
+        try {
+            await firestoreService("notes", "update", updatedNote);
+        } catch (error) {
+            console.error('Error updating note: ', error);
+            setAppError('Error updating note');
+            setNotes(prevNotes);
         }
-        await apiService("delete", idea);
-    }, [apiService]);
+    }, [notes, firestoreService]);
+
+    const updateProject = useCallback(async (updatedProject: Project) => {
+        const prevProjects = projects;
+        setProjects(projects.map(project => project.id === updatedProject.id ? updatedProject : project));
+        try {
+            await firestoreService("projects", "update", updatedProject);
+        } catch (error) {
+            console.error('Error updating project: ', error);
+            setAppError('Error updating project');
+            setProjects(prevProjects); // Revert to previous state
+        }
+    }, [projects, firestoreService]);
+
+    const deleteNote = useCallback(async (deleteNote: Note) => {
+        const prevNotes = notes;
+        setNotes(notes.filter(n => n.id !== deleteNote.id));
+        try {
+            await firestoreService("notes","delete", deleteNote);
+        } catch (error) {
+            console.error('Error deleting note: ', error);
+            setAppError('Error deleting note');
+            setNotes(prevNotes); // Revert to previous state
+        }
+    }, [notes, firestoreService]);
+
+    const deleteProject = useCallback(async (deleteProject: Project) => {
+        const prevProjects = projects;
+        setProjects(projects.filter(p => p.id !== deleteProject.id));
+        try {
+            await firestoreService("projects","delete", deleteProject);
+        } catch (error) {
+            console.error('Error deleting project: ', error);
+            setAppError('Error deleting project');
+            setProjects(prevProjects); // Revert to previous state
+        }
+    }, [projects, firestoreService]);
 
     const handleSearch = useCallback((term: string) => {
         setSearchTerm(term);
@@ -246,10 +282,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
     const contextValue = useMemo(() => ({
         appError, filtered, info, isLoadingApp, notes, projects, searchTerm,
-        clearAppError, createIdea, fetchData, deleteIdea, handleSearch, handleCloseSearch, setIsLoadingApp, setInfo, setNotes, setProjects, updateIdea
+        clearAppError, fetchData, handleSearch, handleCloseSearch, setInfo, setNotes, setProjects, updateNote, updateProject, createNote, createProject, deleteNote, deleteProject
     }), [
         appError, filtered, info, isLoadingApp, notes, projects, searchTerm,
-        clearAppError, createIdea, deleteIdea, fetchData, handleSearch, handleCloseSearch, updateIdea
+        clearAppError, fetchData, handleSearch, handleCloseSearch, setInfo, setNotes, setProjects, updateNote, updateProject, createNote, createProject, deleteNote, deleteProject
     ]);
 
     return (

@@ -21,7 +21,6 @@ export const TransparentIconButton = styled(IconButton)<BackgroundIconButtonProp
 }));
 
 export const TransparentIcon = styled(Circle)({
-
     color: 'transparent',
     border: 'none',
     // borderRadius: '50%',
@@ -65,7 +64,6 @@ export const BackgroundCircle = styled(Circle)<BackgroundCircleProps>(({ selecte
         border: `2px solid ${selected ? 'purple' : 'lightgray'}`,
     },
 }));
-
 
 export const BackgroundCircleYellow = styled(Circle)<BackgroundCircleProps>(({ selected }) => ({
     fontSize: '2rem',
@@ -160,7 +158,6 @@ export const NoteBodyTextField = styled(TextField)({
         fontFamily: 'monospace',
         fontWeight: 'lighter',
         WebkitTapHighlightColor: 'transparent', 
-        touchAction: 'none',
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': { border: 'none' },
@@ -208,14 +205,11 @@ export const StyledNoteButton = styled(Button)({
 });
 
 export const StyledNoteButtonTwo = styled(Button)({
-
     width: '90px',
     fontFamily: 'monospace',
     fontWeight: 'lighter',
     color: 'grey',
     backgroundColor: 'transparent',
-
-
     borderRadius: '0px',
     '@media (prefers-color-scheme: dark)': {
         color: 'grey',
@@ -307,20 +301,21 @@ export const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} classes={{ popper: className }} />
 ))(() => ({
     [`& .${tooltipClasses.tooltip}`]: {
-        backgroundColor: 'white',
+        fontFamily: 'monospace',    
+        backgroundColor: 'gray',
         borderRadius: '0px',
-        color: 'inherit',
+        color: 'white',
         boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
         fontSize: '1rem',
         '@media (prefers-color-scheme: dark)': {
-            backgroundColor: '#121212',
-            color: 'white',
+            // backgroundColor: '#121212',
+            // color: 'white',
         },
     },
     [`& .${tooltipClasses.arrow}`]: {
         color: 'white',
         '@media (prefers-color-scheme: dark)': {
-            color: '#121212', // Dark mode arrow color
+            color: 'gray', // Dark mode arrow color
         },
     },
 }));

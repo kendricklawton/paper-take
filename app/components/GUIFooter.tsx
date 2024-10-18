@@ -47,7 +47,7 @@ interface GUIFooterProps {
     reminderMenuRef: React.RefObject<HTMLDivElement>;
     reminderMenuRefButton: React.RefObject<HTMLButtonElement>;
     index: React.MutableRefObject<number>;
-    handleBackgroundColor: (
+    toggleBackgroundColor: (
         backgroundColor: "#ffffff" | "#fff59c" | "#aaf0d1" | "#b2dfdb" | "#f5f5f5", 
         backgroundColorDark: "#121212" | "#a68f00" | "#4c8c7d" | "#005c5a" | "#004d40" 
     ) => Promise<void>;
@@ -85,7 +85,7 @@ export default function GUIFooter({
     optionsMenuRef,
     optionsMenuRefButton,
     index,
-    handleBackgroundColor,
+
     handleDeleteNote,
     handleRedo,
     handleUndo,
@@ -94,6 +94,7 @@ export default function GUIFooter({
     setIsOptionsMenu,
     setIsReminderMenu,
     toggleArchive,
+    toggleBackgroundColor,
     toggleDelete
 }: GUIFooterProps) {
 
@@ -110,17 +111,16 @@ export default function GUIFooter({
                             {
                                 showFooterIcons && (
                                     <React.Fragment>
-                                        <StyledTooltip title={type === 'note' ? 'Delete note forever' : 'Delete project forever'}>
-                                            <StyledIconButton aria-label="Delete note forever" onClick={() => handleDeleteNote()}>
+                                        <StyledTooltip title='Delete forever'>
+                                            <StyledIconButton aria-label="Delete forever" onClick={() => handleDeleteNote()}>
                                                 <DeleteForeverOutlined />
                                             </StyledIconButton>
                                         </StyledTooltip>
-                                        <StyledIconButton aria-label="Delete note forever" onClick={() => handleDeleteNote()}>
-                                            <DeleteForeverOutlined />
-                                        </StyledIconButton>
-                                        <StyledIconButton aria-label="Restore from trash" onClick={() => toggleDelete()}>
-                                            <RestoreFromTrashOutlined />
-                                        </StyledIconButton>
+                                        <StyledTooltip title='Restore'>
+                                            <StyledIconButton aria-label="Restore" onClick={() => toggleDelete()}>
+                                                <RestoreFromTrashOutlined />
+                                            </StyledIconButton>
+                                        </StyledTooltip>
                                     </React.Fragment>
                                 )
                             }
@@ -183,19 +183,19 @@ export default function GUIFooter({
                                             {isBackgroundMenuOpen && (
                                                 <div className={styles.backgroundMenu}
                                                     ref={backgroundMenuRef}>
-                                                    <BackgroundIconButton selected={backgroundColor === '#ffffff'} onClick={() => handleBackgroundColor('#ffffff','#121212')}>
+                                                    <BackgroundIconButton selected={backgroundColor === '#ffffff'} onClick={() => toggleBackgroundColor('#ffffff','#121212')}>
                                                         <BackgroundCircle selected={backgroundColor === '#ffffff'} />
                                                     </BackgroundIconButton>
-                                                    <BackgroundIconButton selected={backgroundColor === '#fff59c'} onClick={() => handleBackgroundColor('#fff59c', '#a68f00')}>
+                                                    <BackgroundIconButton selected={backgroundColor === '#fff59c'} onClick={() => toggleBackgroundColor('#fff59c', '#a68f00')}>
                                                         <BackgroundCircleYellow selected={backgroundColor === '#fff59c'} />
                                                     </BackgroundIconButton>
-                                                    <BackgroundIconButton selected={backgroundColor === '#aaf0d1'} onClick={() => handleBackgroundColor('#aaf0d1', '#4c8c7d')}>
+                                                    <BackgroundIconButton selected={backgroundColor === '#aaf0d1'} onClick={() => toggleBackgroundColor('#aaf0d1', '#4c8c7d')}>
                                                         <BackgroundCircleMintyGreen selected={backgroundColor === '#aaf0d1'} />
                                                     </BackgroundIconButton>
-                                                    <BackgroundIconButton selected={backgroundColor === '#b2dfdb'} onClick={() => handleBackgroundColor('#b2dfdb', '#005c5a')}>
+                                                    <BackgroundIconButton selected={backgroundColor === '#b2dfdb'} onClick={() => toggleBackgroundColor('#b2dfdb', '#005c5a')}>
                                                         <BackgroundCircleTeal selected={backgroundColor === '#b2dfdb'} />
                                                     </BackgroundIconButton> 
-                                                    <BackgroundIconButton selected={backgroundColor === '#f5f5f5'} onClick={() => handleBackgroundColor('#f5f5f5', '#004d40')}>
+                                                    <BackgroundIconButton selected={backgroundColor === '#f5f5f5'} onClick={() => toggleBackgroundColor('#f5f5f5', '#004d40')}>
                                                         <BackgroundCircleChalk selected={backgroundColor === '#f5f5f5'} />
                                                     </BackgroundIconButton> 
                                                 </div>
