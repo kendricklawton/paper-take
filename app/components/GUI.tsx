@@ -361,13 +361,13 @@ const GUI: React.FC<GUIProps> = ({
         }
     };
 
-    // useEffect(() => {
-    //     const previousOverflow = document.body.style.overflowY;
-    //     document.body.style.overflowY = isModalMode ? 'hidden' : 'auto';
-    //     return () => {
-    //         document.body.style.overflowY = previousOverflow;
-    //     };
-    // }, [isModalMode]);
+    useEffect(() => {
+        const previousOverflow = document.body.style.overflowY;
+        document.body.style.overflowY = isModalMode ? 'hidden' : 'auto';
+        return () => {
+            document.body.style.overflowY = previousOverflow;
+        };
+    }, [isModalMode]);
 
     useEffect(() => {
         const handleEvent = (event: MouseEvent ) => {
