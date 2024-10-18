@@ -33,21 +33,16 @@ export default function GUIBody({
     const readOnlyMode = initialOperation === 'read' && !isModalMode;
     const placeholderText = (initialOperation === 'create'  || isEditMode )? 'Create an idea...' : 'Empty note...';
     const router = useRouter();
-
     const dontShow = content.length === 0 && !isEditMode && title.length > 0;
-
-
+    
     const handleFocus = (event: React.FocusEvent<HTMLTextAreaElement>) => {
         event.preventDefault();
         setFocus('body');
-        // if (!readOnlyMode) {
-        //     toggleModeTrue();
-        // }
     };
 
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
         event.preventDefault();
-        if (readOnlyMode) {
+        if (readOnlyMode || initialOperation === 'create') {
             toggleModeTrue();   
         }
     };

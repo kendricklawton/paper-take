@@ -29,9 +29,6 @@ export default function GUIHeader({
     const handleFocus = (event: React.FocusEvent<HTMLTextAreaElement>) => {
         event.preventDefault();
         setFocus('title');
-        // if (!readOnlyMode) {
-        //     toggleModeTrue();
-        // }
     };
 
     const handleClick = () => {

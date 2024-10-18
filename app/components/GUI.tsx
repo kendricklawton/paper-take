@@ -221,6 +221,7 @@ const GUI: React.FC<GUIProps> = ({
     };
 
     const handleClickOutside = useCallback((event: MouseEvent | TouchEvent) => {
+        event.preventDefault();
         event.stopPropagation();
         if (
             isBackgroundMenuOpen && 
