@@ -30,7 +30,7 @@ const GUI: React.FC<GUIProps> = ({
     operation,
     idea: idea,
 }) => {
-    const { createNote, deleteNote, isModalOpen, updateNote, setInfo } = useAppContext();
+    const { createNote, deleteNote, updateNote, setInfo } = useAppContext();
     const initialOperation = operation;
 
     const [isModalMode, setIsModalMode] = useState(false);
@@ -414,7 +414,6 @@ const GUI: React.FC<GUIProps> = ({
                         setFocus={setFocus}
                         initialOperation={initialOperation}
                         isEditMode={isEditMode}
-                        isModalOpen={isModalOpen}
                         isModalMode={isModalMode}
                         title={title}
                         handleTitleChange={handleTitleChange}
@@ -429,7 +428,6 @@ const GUI: React.FC<GUIProps> = ({
                         handleContentChange={handleContentChange}
                         initialOperation={initialOperation}
                         isEditMode={isEditMode}
-                        isModalOpen={isModalOpen}
                         isModalMode={isModalMode}
                         setIsEditMode={setIsEditMode}
                         toggleModeTrue={toggleModeTrue}

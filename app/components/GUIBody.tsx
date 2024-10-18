@@ -12,7 +12,6 @@ interface GUIBodyProps {
     content: string;
     initialOperation: 'read' | 'create';
     isEditMode: boolean;
-    isModalOpen: boolean;
     isModalMode: boolean;
     handleContentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
     setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,7 +25,6 @@ export default function GUIBody({
     content,
     initialOperation,
     isEditMode,
-    isModalOpen,
     isModalMode,
     handleContentChange,
     setIsEditMode,
@@ -48,9 +46,6 @@ export default function GUIBody({
     };
 
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-        if (isModalOpen) {
-            return;
-        }
         event.preventDefault();
         if (readOnlyMode) {
             toggleModeTrue();   
