@@ -53,6 +53,7 @@ const GUI: React.FC<GUIProps> = ({
     const [backgroundColorDark, setBackgroundColorDark] = useState(idea.type === 'note' ? idea.backgroundColorDark : '#121212');
 
     const index = useRef(0);
+    const infoRef = useRef<HTMLDivElement | null>(null); 
     const nestedIndex = useRef(0);
     const noteCreateRef = useRef<HTMLFormElement | null>(null);
     const noteEditRef = useRef<HTMLFormElement | null>(null);
@@ -100,6 +101,11 @@ const GUI: React.FC<GUIProps> = ({
         setIsHovering(false);
         index.current = 0;
         nestedIndex.current = 0;
+        if (infoRef.current) {
+            infoRef.current.scrollTo(0,0);
+        }
+
+        window.scrollTo(0, 0);
     }, [initialOperation, content]);
 
     const handleUndo = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -133,17 +139,6 @@ const GUI: React.FC<GUIProps> = ({
         if (idea.type !== 'note') return;
 
         if (isTrash) return;
-        // createdAt: Timestamp | undefined;
-        // id: string;
-        // title: string;
-        // backgroundColor: '#ffffff' | '#fff59c' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5';
-        // backgroundColorDark: '#121212' | '#a68f00' | '#4c8c7d' | '#005c5a' | '#004d40';
-        // content: string;
-        // isArchived: boolean;
-        // isPinned: boolean;
-        // isTrash: boolean;
-        // images: string[];
-        // reminder: Timestamp | undefined;
 
         const currentNote = new Note(
             idea.createdAt,
@@ -222,40 +217,27 @@ const GUI: React.FC<GUIProps> = ({
 
     const handleClickOutside = useCallback((event: MouseEvent) => {
         event.stopPropagation();
-        if (
-            isBackgroundMenuOpen &&
-            backgroundMenuRef.current &&
-            !backgroundMenuRef.current.contains(event.target as Node) &&
-            !(backgroundMenuRefButton.current && backgroundMenuRefButton.current.contains(event.target as Node))
-        ) {
-            setIsBackgroundMenu(false);
-        }
 
-        if (
-            isFontMenuOpen &&
-            fontMenuRef.current &&
-            !fontMenuRef.current.contains(event.target as Node) &&
-            !(fontMenuRefButton.current && fontMenuRefButton.current.contains(event.target as Node))
-        ) {
-            setIsFontMenu(false);
-        }
+        const checkMenuClose = (
+            isMenuOpen: boolean,
+            menuRef: React.RefObject<HTMLElement>,
+            buttonRef: React.RefObject<HTMLElement>,
+            setMenu: React.Dispatch<React.SetStateAction<boolean>>
+        ) => {
+            if (
+                isMenuOpen &&
+                menuRef.current &&
+                !menuRef.current.contains(event.target as Node) &&
+                !(buttonRef.current && buttonRef.current.contains(event.target as Node))
+            ) {
+                setMenu(false);
+            }
+        };
 
-        if (isReminderMenuOpen &&
-            reminderMenuRef.current &&
-            !reminderMenuRef.current.contains(event.target as Node) &&
-            !(reminderMenuRefButton.current && reminderMenuRefButton.current.contains(event.target as Node))
-        ) {
-            setIsReminderMenu(false);
-        }
-
-        if (
-            isOptionsMenuOpen &&
-            optionsMenuRef.current &&
-            !optionsMenuRef.current.contains(event.target as Node) &&
-            !(optionsMenuRefButton.current && optionsMenuRefButton.current.contains(event.target as Node))
-        ) {
-            setIsOptionsMenu(false);
-        }
+        checkMenuClose(isBackgroundMenuOpen, backgroundMenuRef, backgroundMenuRefButton, setIsBackgroundMenu);
+        checkMenuClose(isFontMenuOpen, fontMenuRef, fontMenuRefButton, setIsFontMenu);
+        checkMenuClose(isReminderMenuOpen, reminderMenuRef, reminderMenuRefButton, setIsReminderMenu);
+        checkMenuClose(isOptionsMenuOpen, optionsMenuRef, optionsMenuRefButton, setIsOptionsMenu);
 
         if (isEditMode || isTrash) {
             if (initialOperation === 'create' && noteCreateRef.current && !noteCreateRef.current.contains(event.target as Node)) {
@@ -265,6 +247,54 @@ const GUI: React.FC<GUIProps> = ({
             }
         }
     }, [isBackgroundMenuOpen, isFontMenuOpen, isReminderMenuOpen, isOptionsMenuOpen, isEditMode, isTrash, initialOperation, handleNote]);
+
+
+
+    // const handleClickOutside = useCallback((event: MouseEvent) => {
+    //     event.stopPropagation();
+    //     if (
+    //         isBackgroundMenuOpen &&
+    //         backgroundMenuRef.current &&
+    //         !backgroundMenuRef.current.contains(event.target as Node) &&
+    //         !(backgroundMenuRefButton.current && backgroundMenuRefButton.current.contains(event.target as Node))
+    //     ) {
+    //         setIsBackgroundMenu(false);
+    //     }
+
+    //     if (
+    //         isFontMenuOpen &&
+    //         fontMenuRef.current &&
+    //         !fontMenuRef.current.contains(event.target as Node) &&
+    //         !(fontMenuRefButton.current && fontMenuRefButton.current.contains(event.target as Node))
+    //     ) {
+    //         setIsFontMenu(false);
+    //     }
+
+    //     if (isReminderMenuOpen &&
+    //         reminderMenuRef.current &&
+    //         !reminderMenuRef.current.contains(event.target as Node) &&
+    //         !(reminderMenuRefButton.current && reminderMenuRefButton.current.contains(event.target as Node))
+    //     ) {
+    //         setIsReminderMenu(false);
+    //     }
+
+    //     if (
+    //         isOptionsMenuOpen &&
+    //         optionsMenuRef.current &&
+    //         !optionsMenuRef.current.contains(event.target as Node) &&
+    //         !(optionsMenuRefButton.current && optionsMenuRefButton.current.contains(event.target as Node))
+    //     ) {
+    //         setIsOptionsMenu(false);
+    //     }
+
+        // if (isEditMode || isTrash) {
+        //     if (initialOperation === 'create' && noteCreateRef.current && !noteCreateRef.current.contains(event.target as Node)) {
+        //         handleNote();
+        //     } else if (noteEditRef.current && !noteEditRef.current.contains(event.target as Node)) {
+        //         handleNote();
+        //     }
+        // }
+    // }, [isBackgroundMenuOpen, isFontMenuOpen, isReminderMenuOpen, isOptionsMenuOpen, isEditMode, isTrash, initialOperation, handleNote]);
 
     const handleMouseEnter = () => {
         setIsHovering(true);
@@ -352,12 +382,13 @@ const GUI: React.FC<GUIProps> = ({
     const toggleModeTrue = () => {
         if (isTrash) {
             setInfo('Cannot edit note in trash');
-        } else if (initialOperation === 'read') {
-            setIsEditMode(true);
-            setIsModalMode(true);
-        } else {
-            setIsEditMode(true);
+            return;
         }
+        if (initialOperation === 'read') {
+
+            setIsModalMode(true);
+        }
+        setIsEditMode(true);
     };
 
     useEffect(() => {
@@ -398,8 +429,9 @@ const GUI: React.FC<GUIProps> = ({
                     backgroundColor: backgroundColor,
                     '@media (prefers-color-scheme: dark)': {
                         backgroundColor: backgroundColorDark,
-                    }}}>
-                <div className={(initialOperation === 'read' && !isModalMode) ? styles.infoContainerRead : styles.infoContainer}>
+                    }
+                }}>
+                <div ref={infoRef} className={(initialOperation === 'read' && !isModalMode) ? styles.infoContainerRead : styles.infoContainer}>
                     <GUIHeader
                         focus={focus}
                         initialOperation={initialOperation}
