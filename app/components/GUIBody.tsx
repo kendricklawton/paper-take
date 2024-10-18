@@ -43,8 +43,9 @@ export default function GUIBody({
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
         event.preventDefault();
         if (readOnlyMode || initialOperation === 'create') {
-            toggleModeTrue();   
+            toggleModeTrue();
         }
+        setFocus('body'); 
     };
 
     const handleNoteButton = (event: React.MouseEvent<HTMLButtonElement>) => {

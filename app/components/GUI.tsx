@@ -160,7 +160,7 @@ const GUI: React.FC<GUIProps> = ({
         );
 
         const prevNote = idea as Note;
-      
+
         console.log('Current note:', currentNote);
         console.log('Previous note:', idea);
 
@@ -171,9 +171,9 @@ const GUI: React.FC<GUIProps> = ({
                 return;
             }
         } else if (
-            currentNote.title !== prevNote.title || 
-            currentNote.content !== prevNote.content || 
-            currentNote.backgroundColor !== prevNote.backgroundColor || 
+            currentNote.title !== prevNote.title ||
+            currentNote.content !== prevNote.content ||
+            currentNote.backgroundColor !== prevNote.backgroundColor ||
             currentNote.backgroundColorDark !== prevNote.backgroundColorDark ||
             currentNote.isArchived !== prevNote.isArchived ||
             currentNote.isPinned !== prevNote.isPinned ||
@@ -221,10 +221,9 @@ const GUI: React.FC<GUIProps> = ({
     };
 
     const handleClickOutside = useCallback((event: MouseEvent) => {
-        event.preventDefault();
         event.stopPropagation();
         if (
-            isBackgroundMenuOpen && 
+            isBackgroundMenuOpen &&
             backgroundMenuRef.current &&
             !backgroundMenuRef.current.contains(event.target as Node) &&
             !(backgroundMenuRefButton.current && backgroundMenuRefButton.current.contains(event.target as Node))
@@ -233,17 +232,17 @@ const GUI: React.FC<GUIProps> = ({
         }
 
         if (
-            isFontMenuOpen && 
-            fontMenuRef.current && 
-            !fontMenuRef.current.contains(event.target as Node) && 
+            isFontMenuOpen &&
+            fontMenuRef.current &&
+            !fontMenuRef.current.contains(event.target as Node) &&
             !(fontMenuRefButton.current && fontMenuRefButton.current.contains(event.target as Node))
         ) {
             setIsFontMenu(false);
         }
 
-        if (isReminderMenuOpen && 
-            reminderMenuRef.current && 
-            !reminderMenuRef.current.contains(event.target as Node) && 
+        if (isReminderMenuOpen &&
+            reminderMenuRef.current &&
+            !reminderMenuRef.current.contains(event.target as Node) &&
             !(reminderMenuRefButton.current && reminderMenuRefButton.current.contains(event.target as Node))
         ) {
             setIsReminderMenu(false);
@@ -331,7 +330,7 @@ const GUI: React.FC<GUIProps> = ({
             setInfo('Note moved to trash');
         }
 
-        if(idea.type == 'note') {
+        if (idea.type == 'note') {
             const updatedNote = new Note(
                 idea.createdAt,
                 backgroundColor,
@@ -362,24 +361,21 @@ const GUI: React.FC<GUIProps> = ({
     };
 
     useEffect(() => {
-        const previousOverflow = document.body.style.overflowY;
-        document.body.style.overflowY = isModalMode ? 'hidden' : 'auto';
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = isModalMode ? 'hidden' : 'auto';
         return () => {
-            document.body.style.overflowY = previousOverflow;
+            document.body.style.overflow = previousOverflow;
         };
     }, [isModalMode]);
 
+
     useEffect(() => {
-        const handleEvent = (event: MouseEvent ) => {
+        const handleEvent = (event: MouseEvent) => {
             handleClickOutside(event);
         };
-
         document.addEventListener('mousedown', handleEvent);
-        // document.addEventListener('touchstart', handleEvent);
-
         return () => {
             document.removeEventListener('mousedown', handleEvent);
-            // document.removeEventListener('touchstart', handleEvent);
         };
     }, [handleClickOutside]);
 
@@ -394,42 +390,35 @@ const GUI: React.FC<GUIProps> = ({
             onMouseLeave={handleMouseLeave}
         >
             <Box
-
                 component={'form'}
                 className={!isModalMode ? (initialOperation === 'create' ? styles.create : styles.read) : styles.noteEdit}
                 onSubmit={handleSubmit}
                 ref={initialOperation === 'create' ? noteCreateRef : noteEditRef}
-                // style={{ backgroundColor: backgroundColor }}
                 sx={{
                     backgroundColor: backgroundColor,
                     '@media (prefers-color-scheme: dark)': {
                         backgroundColor: backgroundColorDark,
-                    },
-                }}
-            >
-                <div
-                    className={(initialOperation === 'read' && !isModalMode) ? styles.infoContainerRead : styles.infoContainer}
-                >
+                    }}}>
+                <div className={(initialOperation === 'read' && !isModalMode) ? styles.infoContainerRead : styles.infoContainer}>
                     <GUIHeader
                         focus={focus}
-                        setFocus={setFocus}
                         initialOperation={initialOperation}
                         isEditMode={isEditMode}
                         isModalMode={isModalMode}
                         title={title}
                         handleTitleChange={handleTitleChange}
+                        setFocus={setFocus}
                         toggleModeTrue={toggleModeTrue}
                     />
-
                     <GUIBody
                         focus={focus}
-                        setFocus={setFocus}
                         title={title}
                         content={content}
-                        handleContentChange={handleContentChange}
                         initialOperation={initialOperation}
                         isEditMode={isEditMode}
                         isModalMode={isModalMode}
+                        handleContentChange={handleContentChange}
+                        setFocus={setFocus}
                         setIsEditMode={setIsEditMode}
                         toggleModeTrue={toggleModeTrue}
                     />
