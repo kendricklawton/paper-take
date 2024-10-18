@@ -8,6 +8,7 @@ export interface GUIHeaderProps {
     title: string,
     initialOperation: 'read' | 'create';
     isEditMode: boolean,
+    isModalOpen: boolean,
     isModalMode: boolean,
     handleTitleChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void,
     toggleModeTrue: () => void,
@@ -18,6 +19,7 @@ export default function GUIHeader({
     setFocus,
     initialOperation,
     isEditMode,
+    isModalOpen,
     isModalMode,
     title,
     handleTitleChange,
@@ -29,12 +31,15 @@ export default function GUIHeader({
     const handleFocus = (event: React.FocusEvent<HTMLTextAreaElement>) => {
         event.preventDefault();
         setFocus('title');
-        if (!readOnlyMode) {
-            toggleModeTrue();
-        }
+        // if (!readOnlyMode) {
+        //     toggleModeTrue();
+        // }
     };
 
     const handleClick = () => {
+        if (isModalOpen) {
+            return;
+        }
         if (readOnlyMode) {
             toggleModeTrue();
         }

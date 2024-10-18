@@ -16,18 +16,27 @@ import {
 import styles from "./GUI.module.css"
 import React from 'react';
 import {
-    BackgroundCircle, BackgroundIconButton, StyledIconButton, StyledTextButton,  TransparentIconButton, TransparentIcon,
+    BackgroundCircle, BackgroundIconButton, StyledIconButton, StyledTextButton, TransparentIconButton, TransparentIcon,
     StyledTooltip,
     BackgroundCircleYellow,
     BackgroundCircleMintyGreen,
     BackgroundCircleTeal,
     BackgroundCircleChalk
 } from './Styled';
-import {  MenuItem } from '@mui/material';
+import { MenuItem } from '@mui/material';
+
+
+const MenuItemStyles = {
+    fontFamily: 'monospace',
+    paddingLeft: '1.2rem',
+    paddingRight: '1.2rem',
+}
 
 interface GUIFooterProps {
     type: 'note' | 'project';
     backgroundColor: string;
+    title: string;
+    content: string;
     contentArray: string[];
     initialOperation: 'read' | 'create';
     isArchived: boolean;
@@ -48,8 +57,8 @@ interface GUIFooterProps {
     reminderMenuRefButton: React.RefObject<HTMLButtonElement>;
     index: React.MutableRefObject<number>;
     toggleBackgroundColor: (
-        backgroundColor: "#ffffff" | "#fff59c" | "#aaf0d1" | "#b2dfdb" | "#f5f5f5", 
-        backgroundColorDark: "#121212" | "#a68f00" | "#4c8c7d" | "#005c5a" | "#004d40" 
+        backgroundColor: "#ffffff" | "#fff59c" | "#aaf0d1" | "#b2dfdb" | "#f5f5f5",
+        backgroundColorDark: "#121212" | "#a68f00" | "#4c8c7d" | "#005c5a" | "#004d40"
     ) => Promise<void>;
     handleDeleteNote: () => void;
     handleSend: () => void;
@@ -67,6 +76,8 @@ interface GUIFooterProps {
 export default function GUIFooter({
     type,
     backgroundColor,
+    content,
+    title,
     contentArray,
     isArchived,
     // isDarkMode,
@@ -103,8 +114,15 @@ export default function GUIFooter({
 }: GUIFooterProps) {
 
     const showFooter = isEditMode || initialOperation === 'read';
-    const showFooterIcons = isEditMode || (isHovering && initialOperation === 'read') || isBackgroundMenuOpen || isOptionsMenuOpen;
+    const showFooterIcons = isEditMode || (isHovering && initialOperation === 'read') || isBackgroundMenuOpen || isOptionsMenuOpen || isReminderMenuOpen;
     const showCloseButton = initialOperation === 'create' || isEditMode;
+    const showMakeACopyButton = initialOperation === 'create' && (content.length > 0 || title.length > 0) || initialOperation === 'read';
+
+    // const MenuHeader = (content: string) => {
+    //     return (
+    //         <div className={styles.menuHeader}> <p>{content}</p></div>
+    //     );
+    // }
 
     return (
         <React.Fragment>
@@ -132,7 +150,7 @@ export default function GUIFooter({
                         <StyledTooltip title={type === 'note' ? 'Note' : 'Project'}>
                             <span>
                                 <StyledIconButton disabled={true}>
-                                    <NoteOutlined/>
+                                    <NoteOutlined />
                                 </StyledIconButton>
                             </span>
                         </StyledTooltip>
@@ -145,75 +163,45 @@ export default function GUIFooter({
                             {
                                 showFooterIcons ? (
                                     <div className={styles.footerLeading}>
-                                        <StyledTooltip  title={'Pin note'}>
+                                        <StyledTooltip title={'Pin note'}>
                                             <StyledIconButton className={styles.menuButton}
                                             // onClick={() => setIsBackgroundMenu(prev => !prev)}
                                             >
                                                 <PushPinOutlined />
                                             </StyledIconButton>
                                         </StyledTooltip>
-                                        <div  className={styles.anchor}>
+                                        <div className={styles.anchor}>
 
-                                        {/* <StyledTooltip  title={'Reminder'}> */}
+                                            {/* <StyledTooltip  title={'Reminder'}> */}
                                             <StyledIconButton ref={reminderMenuRefButton} className={styles.menuButton}
                                                 onClick={() => setIsReminderMenu(prev => !prev)}>
                                                 <AlarmAddOutlined />
                                             </StyledIconButton>
-                                        {/* </StyledTooltip> */}
+                                            {/* </StyledTooltip> */}
 
                                             {isReminderMenuOpen && (
                                                 <div className={styles.menu} ref={reminderMenuRef}>
-                                                    {/* <Button sx={MenuButtonStyles} type="button" >In 6 hours</Button>
-                                                    <Button sx={MenuButtonStyles} type="button" >In 12 hours</Button>
-                                                    <Button sx={MenuButtonStyles} type="button" >In 24 hours</Button>
-                                                    <Button sx={MenuButtonStyles} type="button" >Pick date & time</Button> */}
-                                                    <div style={{
-                                                        padding: '1.2rem',
-                                                        display: 'flex',
-                                                        flexDirection: 'row',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'flex-start',
-                                                        fontFamily: 'monospace',
-                                                    }}><p style={{
-                                                        fontFamily: 'monospace',
-                                                        fontSize: '1.25rem',
-                                                    }}>Remind me in</p></div>
-                                                    <MenuItem disableGutters sx={{
-                                                        fontFamily: 'monospace',
-                                                        paddingLeft: '1.2rem',
-                                                        paddingRight: '1.2rem',
-                                                    }}>6 hours</MenuItem>
-                                                    <MenuItem disableGutters sx={{
-                                                        fontFamily: 'monospace',
-                                                        paddingLeft: '1.2rem',
-                                                        paddingRight: '1.2rem',
-                                                    }}>12 hours</MenuItem>
-                                                    <MenuItem disableGutters sx={{
-                                                        fontFamily: 'monospace',
-                                                        paddingLeft: '1.2rem',
-                                                        paddingRight: '1.2rem',
-                                                    }}>24 hours</MenuItem>
-                                                    <MenuItem disableGutters sx={{
-                                                        fontFamily: 'monospace',
-                                                        paddingLeft: '1.2rem',
-                                                        paddingRight: '1.2rem',
-                                                    }}>Pick date & time</MenuItem>
+                                                    {/* {MenuHeader('Reminder')} */}
+                                                    <MenuItem disableGutters sx={MenuItemStyles}>6 hours</MenuItem>
+                                                    <MenuItem disableGutters sx={MenuItemStyles}>12 hours</MenuItem>
+                                                    <MenuItem disableGutters sx={MenuItemStyles}>24 hours</MenuItem>
+                                                    <MenuItem disableGutters sx={MenuItemStyles}>Pick date & time</MenuItem>
                                                 </div>
                                             )}
                                         </div>
                                         <div className={styles.anchor}>
 
                                             {/* <StyledTooltip title={'Background options'}> */}
-                                                <StyledIconButton ref={backgroundMenuRefButton} className={styles.menuButton}
-                                                    onClick={() => setIsBackgroundMenu(prev => !prev)}>
-                                                    <PaletteOutlined />
-                                                </StyledIconButton>
+                                            <StyledIconButton ref={backgroundMenuRefButton} className={styles.menuButton}
+                                                onClick={() => setIsBackgroundMenu(prev => !prev)}>
+                                                <PaletteOutlined />
+                                            </StyledIconButton>
                                             {/* </StyledTooltip> */}
 
                                             {isBackgroundMenuOpen && (
                                                 <div className={styles.backgroundMenu}
                                                     ref={backgroundMenuRef}>
-                                                    <BackgroundIconButton selected={backgroundColor === '#ffffff'} onClick={() => toggleBackgroundColor('#ffffff','#121212')}>
+                                                    <BackgroundIconButton selected={backgroundColor === '#ffffff'} onClick={() => toggleBackgroundColor('#ffffff', '#121212')}>
                                                         <BackgroundCircle selected={backgroundColor === '#ffffff'} />
                                                     </BackgroundIconButton>
                                                     <BackgroundIconButton selected={backgroundColor === '#fff59c'} onClick={() => toggleBackgroundColor('#fff59c', '#a68f00')}>
@@ -224,10 +212,10 @@ export default function GUIFooter({
                                                     </BackgroundIconButton>
                                                     <BackgroundIconButton selected={backgroundColor === '#b2dfdb'} onClick={() => toggleBackgroundColor('#b2dfdb', '#005c5a')}>
                                                         <BackgroundCircleTeal selected={backgroundColor === '#b2dfdb'} />
-                                                    </BackgroundIconButton> 
+                                                    </BackgroundIconButton>
                                                     <BackgroundIconButton selected={backgroundColor === '#f5f5f5'} onClick={() => toggleBackgroundColor('#f5f5f5', '#004d40')}>
                                                         <BackgroundCircleChalk selected={backgroundColor === '#f5f5f5'} />
-                                                    </BackgroundIconButton> 
+                                                    </BackgroundIconButton>
                                                 </div>
                                             )}
                                         </div>
@@ -258,29 +246,20 @@ export default function GUIFooter({
                                         )}
                                         <div className={styles.anchor}>
                                             {/* <StyledTooltip title={'Options'} > */}
-                                                <StyledIconButton ref={optionsMenuRefButton} className={styles.menuButton}
-                                                    onClick={() => setIsOptionsMenu(prev => !prev)}>
-                                                    <MoreVert />
-                                                </StyledIconButton>
+                                            <StyledIconButton ref={optionsMenuRefButton} onClick={() => setIsOptionsMenu(prev => !prev)}>
+                                                <MoreVert />
+                                            </StyledIconButton>
                                             {/* </StyledTooltip> */}
                                             {isOptionsMenuOpen && (
                                                 <div className={styles.menu} ref={optionsMenuRef}>
-                        
-                                                    <MenuItem disableGutters sx={{
-                                                        fontFamily: 'monospace',
-                                                        paddingLeft: '1.2rem',
-                                                        paddingRight: '1.2rem',
-                                                    }} onClick={handleSend}>Send</MenuItem>
-                                                    <MenuItem disableGutters sx={{
-                                                        fontFamily: 'monospace',
-                                                        paddingLeft: '1.2rem',
-                                                        paddingRight: '1.2rem',
-                                                    }} onClick={handleMakeACopy}>Make a copy</MenuItem>
-                                                    <MenuItem disableGutters sx={{
-                                                        fontFamily: 'monospace',
-                                                        paddingLeft: '1.2rem',
-                                                        paddingRight: '1.2rem',
-                                                    }} onClick={toggleDelete}>Delete</MenuItem>
+                                                    {/* {MenuHeader('Note Options')} */}
+                                                    <MenuItem disableGutters sx={MenuItemStyles} onClick={handleSend}>Send</MenuItem>
+                                                    {
+                                                        showMakeACopyButton && (
+                                                            <MenuItem disableGutters sx={MenuItemStyles} onClick={handleMakeACopy}>Make a copy</MenuItem>
+                                                        )
+                                                    }
+                                                    <MenuItem disableGutters sx={MenuItemStyles} onClick={toggleDelete}>Delete</MenuItem>
                                                 </div>
                                             )}
                                         </div>

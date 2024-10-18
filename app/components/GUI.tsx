@@ -30,7 +30,7 @@ const GUI: React.FC<GUIProps> = ({
     operation,
     idea: idea,
 }) => {
-    const { createNote, deleteNote, updateNote, setInfo } = useAppContext();
+    const { createNote, deleteNote, isModalOpen, updateNote, setInfo } = useAppContext();
     const initialOperation = operation;
 
     const [isModalMode, setIsModalMode] = useState(false);
@@ -91,6 +91,7 @@ const GUI: React.FC<GUIProps> = ({
             setTitle('');
             setBackgroundColor('#ffffff');
             setBackgroundColorDark('#121212');
+            setReminder(undefined);
         }
 
         setIsModalMode(false);
@@ -207,7 +208,7 @@ const GUI: React.FC<GUIProps> = ({
             false,
             false,
             [],
-            undefined,
+            reminder,
         );
 
         await createNote(newNote);
@@ -242,7 +243,8 @@ const GUI: React.FC<GUIProps> = ({
         if (isReminderMenuOpen && 
             reminderMenuRef.current && 
             !reminderMenuRef.current.contains(event.target as Node) && 
-            !(reminderMenuRefButton.current && reminderMenuRefButton.current.contains(event.target as Node))) {
+            !(reminderMenuRefButton.current && reminderMenuRefButton.current.contains(event.target as Node))
+        ) {
             setIsReminderMenu(false);
         }
 
@@ -391,7 +393,7 @@ const GUI: React.FC<GUIProps> = ({
             onMouseLeave={handleMouseLeave}
         >
             <Box
-        
+
                 component={'form'}
                 className={!isModalMode ? (initialOperation === 'create' ? styles.create : styles.read) : styles.noteEdit}
                 onSubmit={handleSubmit}
@@ -412,6 +414,7 @@ const GUI: React.FC<GUIProps> = ({
                         setFocus={setFocus}
                         initialOperation={initialOperation}
                         isEditMode={isEditMode}
+                        isModalOpen={isModalOpen}
                         isModalMode={isModalMode}
                         title={title}
                         handleTitleChange={handleTitleChange}
@@ -426,12 +429,15 @@ const GUI: React.FC<GUIProps> = ({
                         handleContentChange={handleContentChange}
                         initialOperation={initialOperation}
                         isEditMode={isEditMode}
+                        isModalOpen={isModalOpen}
                         isModalMode={isModalMode}
                         setIsEditMode={setIsEditMode}
                         toggleModeTrue={toggleModeTrue}
                     />
                 </div>
                 <GUIFooter
+                    content={content}
+                    title={title}
                     type={idea.type}
                     backgroundColor={backgroundColor}
                     contentArray={contentArray}

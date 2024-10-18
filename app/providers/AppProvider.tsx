@@ -11,6 +11,7 @@ interface AppContextType {
     filtered: (Note | Project)[];
     info: string;
     isLoadingApp: boolean;
+    isModalOpen: boolean;
     notes: Note[];
     projects: Project[];
     searchTerm: string;
@@ -24,6 +25,7 @@ interface AppContextType {
     fetchData: () => void;
     handleCloseSearch: () => void;
     handleSearch: (term: string) => void;
+    setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
     setInfo: React.Dispatch<React.SetStateAction<string>>;
     setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
     setProjects: React.Dispatch<React.SetStateAction<Project[]>>;
@@ -40,6 +42,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     const [appError, setAppError] = useState<string>('');
     const [notes, setNotes] = useState<Note[]>([]);
     const [projects, setProjects] = useState<Project[]>([]);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [filtered, setFiltered] = useState<(Note | Project)[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [info, setInfo] = useState<string>('');
@@ -281,11 +284,11 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }, []);
 
     const contextValue = useMemo(() => ({
-        appError, filtered, info, isLoadingApp, notes, projects, searchTerm,
-        clearAppError, fetchData, handleSearch, handleCloseSearch, setInfo, setNotes, setProjects, updateNote, updateProject, createNote, createProject, deleteNote, deleteProject
+        appError, filtered, info, isLoadingApp, notes, projects, searchTerm, isModalOpen,
+        clearAppError, fetchData, handleSearch, handleCloseSearch, setIsModalOpen, setInfo, setNotes, setProjects, updateNote, updateProject, createNote, createProject, deleteNote, deleteProject
     }), [
-        appError, filtered, info, isLoadingApp, notes, projects, searchTerm,
-        clearAppError, fetchData, handleSearch, handleCloseSearch, setInfo, setNotes, setProjects, updateNote, updateProject, createNote, createProject, deleteNote, deleteProject
+        appError, filtered, info, isLoadingApp, notes, projects, searchTerm, isModalOpen,
+        clearAppError, fetchData, handleSearch, handleCloseSearch, updateNote, updateProject, createNote, createProject, deleteNote, deleteProject
     ]);
 
     return (
