@@ -220,7 +220,7 @@ const GUI: React.FC<GUIProps> = ({
         console.log('Sending note');
     };
 
-    const handleClickOutside = useCallback((event: MouseEvent | TouchEvent) => {
+    const handleClickOutside = useCallback((event: MouseEvent) => {
         event.preventDefault();
         event.stopPropagation();
         if (
@@ -370,16 +370,16 @@ const GUI: React.FC<GUIProps> = ({
     // }, [isModalMode]);
 
     useEffect(() => {
-        const handleEvent = (event: MouseEvent | TouchEvent) => {
+        const handleEvent = (event: MouseEvent ) => {
             handleClickOutside(event);
         };
 
         document.addEventListener('mousedown', handleEvent);
-        document.addEventListener('touchstart', handleEvent);
+        // document.addEventListener('touchstart', handleEvent);
 
         return () => {
             document.removeEventListener('mousedown', handleEvent);
-            document.removeEventListener('touchstart', handleEvent);
+            // document.removeEventListener('touchstart', handleEvent);
         };
     }, [handleClickOutside]);
 
