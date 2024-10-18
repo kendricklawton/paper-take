@@ -167,7 +167,9 @@ export class Project {
     isPinned: boolean;
     isTrash: boolean;
     tasks: Task[];
+    reminder: Timestamp | undefined;
     type: 'project';
+   
 
     constructor(
         createdAt: Timestamp | undefined,
@@ -179,6 +181,7 @@ export class Project {
         isPinned: boolean,
         isTrash: boolean,
         tasks: Task[] = [],
+        reminder: Timestamp | undefined,
     ) {
         this.createdAt = createdAt;
         this.id = id;
@@ -189,6 +192,7 @@ export class Project {
         this.isPinned = isPinned;
         this.isTrash = isTrash;
         this.tasks = tasks;
+        this.reminder = reminder;
         this.type = 'project';
     }
 
@@ -203,6 +207,7 @@ export class Project {
                 isArchived,
                 isPinned,
                 isTrash,
+                reminder,
                 tasks = []
             } = JSON.parse(jsonString);
 
@@ -223,6 +228,8 @@ export class Project {
                 isPinned,
                 isTrash,
                 parsedTasks,
+                reminder,
+
             );
         } catch (error) {
             console.error('Failed to parse Project JSON:', error);

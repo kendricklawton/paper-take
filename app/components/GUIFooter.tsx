@@ -52,8 +52,10 @@ interface GUIFooterProps {
         backgroundColorDark: "#121212" | "#a68f00" | "#4c8c7d" | "#005c5a" | "#004d40" 
     ) => Promise<void>;
     handleDeleteNote: () => void;
+    handleSend: () => void;
     handleRedo: (event: React.MouseEvent<HTMLButtonElement>) => void;
     handleUndo: (event: React.MouseEvent<HTMLButtonElement>) => void;
+    handleMakeACopy: () => void;
     setIsBackgroundMenu: React.Dispatch<React.SetStateAction<boolean>>;
     setIsFontMenu: React.Dispatch<React.SetStateAction<boolean>>;
     setIsReminderMenu: React.Dispatch<React.SetStateAction<boolean>>;
@@ -87,6 +89,8 @@ export default function GUIFooter({
     index,
 
     handleDeleteNote,
+    handleMakeACopy,
+    handleSend,
     handleRedo,
     handleUndo,
     setIsBackgroundMenu,
@@ -173,27 +177,27 @@ export default function GUIFooter({
                                                     }}><p style={{
                                                         fontFamily: 'monospace',
                                                         fontSize: '1.25rem',
-                                                    }}>Remind me</p></div>
+                                                    }}>Remind me in</p></div>
                                                     <MenuItem disableGutters sx={{
                                                         fontFamily: 'monospace',
                                                         paddingLeft: '1.2rem',
                                                         paddingRight: '1.2rem',
-                                                    }}>In 6 hours</MenuItem>
+                                                    }}>6 hours</MenuItem>
                                                     <MenuItem disableGutters sx={{
                                                         fontFamily: 'monospace',
                                                         paddingLeft: '1.2rem',
                                                         paddingRight: '1.2rem',
-                                                    }}>In 12 hours</MenuItem>
+                                                    }}>12 hours</MenuItem>
                                                     <MenuItem disableGutters sx={{
                                                         fontFamily: 'monospace',
                                                         paddingLeft: '1.2rem',
                                                         paddingRight: '1.2rem',
-                                                    }}>In 24 hours</MenuItem>
+                                                    }}>24 hours</MenuItem>
                                                     <MenuItem disableGutters sx={{
                                                         fontFamily: 'monospace',
                                                         paddingLeft: '1.2rem',
                                                         paddingRight: '1.2rem',
-                                                    }}> Pick date & time</MenuItem>
+                                                    }}>Pick date & time</MenuItem>
                                                 </div>
                                             )}
                                         </div>
@@ -261,7 +265,22 @@ export default function GUIFooter({
                                             {/* </StyledTooltip> */}
                                             {isOptionsMenuOpen && (
                                                 <div className={styles.menu} ref={optionsMenuRef}>
-                                                    <MenuItem onClick={toggleDelete}>Delete</MenuItem>
+                        
+                                                    <MenuItem disableGutters sx={{
+                                                        fontFamily: 'monospace',
+                                                        paddingLeft: '1.2rem',
+                                                        paddingRight: '1.2rem',
+                                                    }} onClick={handleSend}>Send</MenuItem>
+                                                    <MenuItem disableGutters sx={{
+                                                        fontFamily: 'monospace',
+                                                        paddingLeft: '1.2rem',
+                                                        paddingRight: '1.2rem',
+                                                    }} onClick={handleMakeACopy}>Make a copy</MenuItem>
+                                                    <MenuItem disableGutters sx={{
+                                                        fontFamily: 'monospace',
+                                                        paddingLeft: '1.2rem',
+                                                        paddingRight: '1.2rem',
+                                                    }} onClick={toggleDelete}>Delete</MenuItem>
                                                 </div>
                                             )}
                                         </div>

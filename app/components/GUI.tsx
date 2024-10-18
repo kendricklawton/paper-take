@@ -8,6 +8,7 @@ import GUIFooter from './GUIFooter';
 import styles from "./GUI.module.css"
 import { Note, Project } from '../models';
 import { Box } from '@mui/material';
+import { v4 as uuidv4 } from 'uuid';
 
 interface GUIProps {
     // draggable?: boolean;
@@ -47,6 +48,7 @@ const GUI: React.FC<GUIProps> = ({
     const isTrash = idea.isTrash;
     const [title, setTitle] = useState(idea.title);
     const [content, setContent] = useState(idea.type === 'note' ? idea.content : '');
+    const [reminder, setReminder] = useState(idea.reminder);
     const [backgroundColor, setBackgroundColor] = useState(idea.type === 'note' ? idea.backgroundColor : '#ffffff');
     const [backgroundColorDark, setBackgroundColorDark] = useState(idea.type === 'note' ? idea.backgroundColorDark : '#121212');
 
@@ -191,6 +193,32 @@ const GUI: React.FC<GUIProps> = ({
         handleNote();
     };
 
+    const handleMakeACopy = async () => {
+        if (isTrash) return;
+
+        const newNote = new Note(
+            undefined,
+            backgroundColor,
+            backgroundColorDark,
+            uuidv4(),
+            title,
+            content,
+            false,
+            false,
+            false,
+            [],
+            undefined,
+        );
+
+        await createNote(newNote);
+        setIsOptionsMenu(false);
+    };
+
+    const handleSend = async () => {
+        if (isTrash) return;
+        console.log('Sending note');
+    };
+
     const handleClickOutside = useCallback((event: MouseEvent | TouchEvent) => {
         event.stopPropagation();
         if (
@@ -250,7 +278,7 @@ const GUI: React.FC<GUIProps> = ({
         } else {
             setInfo('Note archived');
         }
-        if(idea.type == 'note') {
+        if (idea.type == 'note') {
             const updatedNote = new Note(
                 idea.createdAt,
                 backgroundColor,
@@ -427,6 +455,8 @@ const GUI: React.FC<GUIProps> = ({
                     index={index}
                     toggleBackgroundColor={toggleBackgroundColor}
                     handleDeleteNote={handleDeleteNote}
+                    handleMakeACopy={handleMakeACopy}
+                    handleSend={handleSend}
                     handleRedo={handleRedo}
                     handleUndo={handleUndo}
                     setIsBackgroundMenu={setIsBackgroundMenu}
