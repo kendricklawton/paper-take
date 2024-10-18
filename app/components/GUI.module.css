@@ -7,41 +7,19 @@
 
 .containerModal {
     position: fixed;
+    height: 100vh;
     padding-top: 5rem;
     padding-bottom: 5rem;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 999;
     padding-left: 1rem;
     padding-right: 1rem;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 999;
+
     transition: all 0.25s;
     overflow: none;
+    left: 0;
+    right: 0;
     top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
-
-
-@media screen and (max-width: 768px) {
-    .containerModalMobile {
-        position: fixed;
-        padding-top: 5rem;
-        padding-bottom: 5rem;
-        background-color: rgba(0, 0, 0, 0.7);
-        z-index: 999;
-        padding-left: 1rem;
-        padding-right: 1rem;
-        transition: all 0.25s;
-        overflow: none;
-        /* height: 100%; */
-    }
-}
-
-
-.containerModalMobile {
-    height: 100vh;
-    left: 0;
-    right: 0;
 }
 
 .container {
