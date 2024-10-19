@@ -213,6 +213,10 @@
   .modal {
     border: 0.5px solid lightgray;
   }
+
+  .information {
+    border: 0.5px solid lightgray;
+  }
 }
 
 @media screen and (max-width: 768px) {
