@@ -24,14 +24,15 @@ import {
     BackgroundCircleChalk
 } from './Styled';
 import { MenuItem } from '@mui/material';
-
+import { Timestamp } from 'firebase/firestore';
 
 const MenuItemStyles = {
     fontFamily: 'monospace',
     paddingLeft: '1.2rem',
     paddingRight: '1.2rem',
-    width: '280px',
+    // maxWidth: '280px',
     display: 'flex',
+    gap: '64px',
     justifyContent: 'space-between',
 }
 
@@ -74,6 +75,7 @@ interface GUIFooterProps {
     setIsOptionsMenu: React.Dispatch<React.SetStateAction<boolean>>;
     toggleArchive: () => void;
     toggleDelete: () => void;
+    toggleReminder: (reminder: Timestamp | undefined) => void;
     toggleModeTrue: () => void;
 }
 
@@ -116,6 +118,7 @@ export default function GUIFooter({
     toggleBackgroundColor,
     toggleDelete,
     toggleModeTrue,
+    toggleReminder,
 }: GUIFooterProps) {
 
     const showFooter = isEditMode || initialOperation === 'read';
@@ -123,26 +126,38 @@ export default function GUIFooter({
     const showCloseButton = initialOperation === 'create' || isEditMode;
     const showMakeACopyButton = initialOperation === 'create' && (content.length > 0 || title.length > 0) || initialOperation === 'read';
 
-    // Function to add hours and format time
-    const getTimePlusHours = (hours: number): string => {
-        const currentTime = new Date();
-        const newTime = new Date(currentTime);
-        newTime.setHours(newTime.getHours() + hours);
+    const sixHours = Timestamp.fromDate(new Date(
+        new Date().setHours(new Date().getHours() + 6)
+    ));
 
-        // Format the date and time
-        const dateString = newTime.toLocaleDateString([], { 
-            month: 'short', 
-            day: 'numeric', 
-            // year: '2-digit' 
-        });
-        const timeString = newTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const sixHoursString = sixHours.toDate().toLocaleString([], {
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
 
-        return `${dateString} ${timeString}`;
-    };
+    const twelveHours = Timestamp.fromDate(new Date(
+        new Date().setHours(new Date().getHours() + 12)
+    ));
 
-    const sixHoursString: string = getTimePlusHours(6);
-    const twelveHoursString: string = getTimePlusHours(12);
-    const twentyFourHoursString: string = getTimePlusHours(24);
+    const twelveHoursString = twelveHours.toDate().toLocaleString([], {
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+
+    const twentyFourHours = Timestamp.fromDate(new Date(
+        new Date().setHours(new Date().getHours() + 24)
+    ));
+
+    const twentyFourHoursString = twentyFourHours.toDate().toLocaleString([], {
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
 
 
     //     return (
@@ -206,10 +221,10 @@ export default function GUIFooter({
                                             {isReminderMenuOpen && (
                                                 <div className={styles.menu} ref={reminderMenuRef}>
                                                     {/* {MenuHeader('Reminder')} */}
-                                                    <MenuItem disableGutters sx={MenuItemStyles}>6 hours  <span>{sixHoursString}</span></MenuItem>
-                                                    <MenuItem disableGutters sx={MenuItemStyles}>12 hours <span>{twelveHoursString}</span></MenuItem>
-                                                    <MenuItem disableGutters sx={MenuItemStyles}>24 hours <span>{twentyFourHoursString}</span></MenuItem>
-                                                    <MenuItem disableGutters sx={MenuItemStyles}>Pick date & time</MenuItem>
+                                                    <MenuItem disableGutters sx={MenuItemStyles} onClick={()=> toggleReminder(sixHours)} >6 hours  <span>{sixHoursString}</span></MenuItem>
+                                                    <MenuItem disableGutters sx={MenuItemStyles} onClick={()=> toggleReminder(twelveHours)}>12 hours <span>{twelveHoursString}</span></MenuItem>
+                                                    <MenuItem disableGutters sx={MenuItemStyles} onClick={()=> toggleReminder(twentyFourHours)}>24 hours <span>{twentyFourHoursString}</span></MenuItem>
+                                                    {/* <MenuItem disableGutters sx={MenuItemStyles}>Pick date & time</MenuItem> */}
                                                 </div>
                                             )}
                                         </div>
@@ -221,7 +236,6 @@ export default function GUIFooter({
                                                 <PaletteOutlined />
                                             </StyledIconButton>
                                             {/* </StyledTooltip> */}
-
                                             {isBackgroundMenuOpen && (
                                                 <div className={styles.backgroundMenu}
                                                     ref={backgroundMenuRef}>

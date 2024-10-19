@@ -89,7 +89,7 @@ export class Task {
     id: string;
     title: string;
     description: string;
-    dueDate: Date | undefined;
+    dueDate: Timestamp | undefined;
     status: 'new' | 'active' | 'closed';
 
     constructor(
@@ -97,7 +97,7 @@ export class Task {
         id: string,
         title: string,
         description: string,
-        dueDate: Date | undefined,
+        dueDate: Timestamp | undefined,
         status: 'new' | 'active' | 'closed',
     ) {
         if (!['new', 'active', 'closed'].includes(status)) {
@@ -136,7 +136,7 @@ export class Task {
                 id,
                 title,
                 description,
-                dueDate ? new Date(dueDate) : undefined,
+                dueDate,
                 status as 'new' | 'active' | 'closed',
             );
         } catch (error) {
@@ -152,7 +152,7 @@ export class Task {
             title: this.title,
             description: this.description,
             status: this.status,
-            dueDate: this.dueDate?.toISOString()
+            dueDate: this.dueDate,
         });
     }
 }
@@ -162,7 +162,7 @@ export class Project {
     id: string;
     title: string;
     description: string;
-    dueDate: Date | undefined;
+    dueDate: Timestamp | undefined;
     isArchived: boolean;
     isPinned: boolean;
     isTrash: boolean;
@@ -176,7 +176,7 @@ export class Project {
         id: string,
         title: string,
         description: string,
-        dueDate: Date | undefined,
+        dueDate: Timestamp | undefined,
         isArchived: boolean,
         isPinned: boolean,
         isTrash: boolean,
@@ -223,7 +223,7 @@ export class Project {
                 id,
                 title,
                 description,
-                dueDate ? new Date(dueDate) : undefined,
+                dueDate,
                 isArchived,
                 isPinned,
                 isTrash,
@@ -247,7 +247,7 @@ export class Project {
             isPinned: this.isPinned,
             isTrash: this.isTrash,
             tasks: this.tasks.map(task => JSON.parse(task.toJSON())),
-            dueDate: this.dueDate?.toISOString() || null,
+            dueDate: this.dueDate,
             type: this.type
         });
     }

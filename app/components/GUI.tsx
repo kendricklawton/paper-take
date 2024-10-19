@@ -9,6 +9,9 @@ import styles from "./GUI.module.css"
 import { Note, Project } from '../models';
 import { Box } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
+import { StyledIconButton } from './Styled';
+import { AlarmAddOutlined, CloseOutlined } from '@mui/icons-material';
+import { Timestamp } from 'firebase/firestore';
 
 interface GUIProps {
     // draggable?: boolean;
@@ -48,12 +51,12 @@ const GUI: React.FC<GUIProps> = ({
     const isTrash = idea.isTrash;
     const [title, setTitle] = useState(idea.title);
     const [content, setContent] = useState(idea.type === 'note' ? idea.content : '');
-    const [reminder, setReminder] = useState(idea.reminder);
+    const [reminder, setReminder] = useState<Timestamp | undefined>(idea.reminder);
     const [backgroundColor, setBackgroundColor] = useState(idea.type === 'note' ? idea.backgroundColor : '#ffffff');
     const [backgroundColorDark, setBackgroundColorDark] = useState(idea.type === 'note' ? idea.backgroundColorDark : '#121212');
 
     const index = useRef(0);
-    const infoRef = useRef<HTMLDivElement | null>(null); 
+    const infoRef = useRef<HTMLDivElement | null>(null);
     const nestedIndex = useRef(0);
     const noteCreateRef = useRef<HTMLFormElement | null>(null);
     const noteEditRef = useRef<HTMLFormElement | null>(null);
@@ -65,6 +68,13 @@ const GUI: React.FC<GUIProps> = ({
     const reminderMenuRefButton = useRef<HTMLButtonElement | null>(null);
     const optionsMenuRef = useRef<HTMLDivElement | null>(null);
     const optionsMenuRefButton = useRef<HTMLButtonElement | null>(null);
+
+    const formattedDate = reminder ? new Date(reminder.seconds * 1000).toLocaleString([], {
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    }) : undefined;
 
     const handleTitleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (isTrash) return;
@@ -102,7 +112,7 @@ const GUI: React.FC<GUIProps> = ({
         index.current = 0;
         nestedIndex.current = 0;
         if (infoRef.current) {
-            infoRef.current.scrollTo(0,0);
+            infoRef.current.scrollTo(0, 0);
         }
 
         window.scrollTo(0, 0);
@@ -136,7 +146,9 @@ const GUI: React.FC<GUIProps> = ({
     };
 
     const handleNote = useCallback(async () => {
-        if (idea.type !== 'note') return;
+        if (idea.type !== 'note') {
+            throw new Error('Idea is not a note');
+        }
 
         if (isTrash) return;
 
@@ -151,7 +163,7 @@ const GUI: React.FC<GUIProps> = ({
             isPinned,
             isTrash,
             idea.type === 'note' ? idea.images : [],
-            idea.reminder,
+            reminder,
         );
 
         const prevNote = idea as Note;
@@ -160,19 +172,21 @@ const GUI: React.FC<GUIProps> = ({
         console.log('Previous note:', idea);
 
         if (initialOperation === 'create') {
-            if (currentNote.title !== prevNote.title || currentNote.content !== prevNote.content) {
+            if (currentNote.title !== prevNote.title || currentNote.content !== prevNote.content || currentNote.reminder !== prevNote.reminder) {
                 handleResetNote();
                 await createNote(currentNote);
                 return;
             }
         } else if (
             currentNote.title !== prevNote.title ||
-            currentNote.content !== prevNote.content ||
-            currentNote.backgroundColor !== prevNote.backgroundColor ||
-            currentNote.backgroundColorDark !== prevNote.backgroundColorDark ||
-            currentNote.isArchived !== prevNote.isArchived ||
-            currentNote.isPinned !== prevNote.isPinned ||
-            currentNote.isTrash !== prevNote.isTrash
+            currentNote.content !== prevNote.content
+            // ||
+            // currentNote.backgroundColor !== prevNote.backgroundColor ||
+            // currentNote.backgroundColorDark !== prevNote.backgroundColorDark ||
+            // currentNote.isArchived !== prevNote.isArchived ||
+            // currentNote.isPinned !== prevNote.isPinned ||
+            // currentNote.isTrash !== prevNote.isTrash ||
+            // currentNote.reminder !== prevNote.reminder
         ) {
             handleResetNote();
             await updateNote(currentNote);
@@ -181,7 +195,7 @@ const GUI: React.FC<GUIProps> = ({
 
         console.log('No changes made');
         handleResetNote();
-    }, [idea, isTrash, backgroundColor, backgroundColorDark, title, content, isArchived, isPinned, initialOperation, handleResetNote, createNote, updateNote]);
+    }, [idea, isTrash, backgroundColor, backgroundColorDark, reminder, title, content, isArchived, isPinned, initialOperation, handleResetNote, createNote, updateNote]);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         console.log('clicking submit')
@@ -288,13 +302,13 @@ const GUI: React.FC<GUIProps> = ({
     //         setIsOptionsMenu(false);
     //     }
 
-        // if (isEditMode || isTrash) {
-        //     if (initialOperation === 'create' && noteCreateRef.current && !noteCreateRef.current.contains(event.target as Node)) {
-        //         handleNote();
-        //     } else if (noteEditRef.current && !noteEditRef.current.contains(event.target as Node)) {
-        //         handleNote();
-        //     }
-        // }
+    // if (isEditMode || isTrash) {
+    //     if (initialOperation === 'create' && noteCreateRef.current && !noteCreateRef.current.contains(event.target as Node)) {
+    //         handleNote();
+    //     } else if (noteEditRef.current && !noteEditRef.current.contains(event.target as Node)) {
+    //         handleNote();
+    //     }
+    // }
     // }, [isBackgroundMenuOpen, isFontMenuOpen, isReminderMenuOpen, isOptionsMenuOpen, isEditMode, isTrash, initialOperation, handleNote]);
 
     const handleMouseEnter = () => {
@@ -354,6 +368,31 @@ const GUI: React.FC<GUIProps> = ({
         }
     };
 
+    const toggleReminder = async (reminder: Timestamp | undefined) => {
+        setReminder(reminder);
+        if (!isTrash) {
+            if (initialOperation === 'read' && !isTrash) {
+                if (idea.type == 'note') {
+                    const updatedNote = new Note(
+                        idea.createdAt,
+                        backgroundColor,
+                        backgroundColorDark,
+                        idea.id,
+                        title,
+                        content,
+                        isArchived,
+                        isPinned,
+                        isTrash,
+                        idea.images,
+                        reminder,
+                    );
+                    await updateNote(updatedNote);
+                }
+            } 
+        }
+        setIsReminderMenu(false);
+    }
+
     const toggleDelete = async () => {
         if (isTrash) {
             setInfo('Note restored');
@@ -398,7 +437,6 @@ const GUI: React.FC<GUIProps> = ({
             document.body.style.overflow = previousOverflow;
         };
     }, [isModalMode]);
-
 
     useEffect(() => {
         const handleEvent = (event: MouseEvent) => {
@@ -455,6 +493,21 @@ const GUI: React.FC<GUIProps> = ({
                         toggleModeTrue={toggleModeTrue}
                     />
                 </div>
+                {
+                    reminder && (
+                        <div className={styles.reminderContainer}>
+                            <div className={styles.reminder}>
+                                <StyledIconButton onClick={() => setIsReminderMenu(true)}>
+                                    <AlarmAddOutlined />
+                                </StyledIconButton>
+                                <p>{formattedDate}</p>
+                                <StyledIconButton onClick={() => toggleReminder(undefined)}>
+                                    <CloseOutlined />
+                                </StyledIconButton>
+                            </div>
+                        </div>
+                    )
+                }
                 <GUIFooter
                     content={content}
                     title={title}
@@ -489,6 +542,7 @@ const GUI: React.FC<GUIProps> = ({
                     setIsFontMenu={setIsFontMenu}
                     setIsOptionsMenu={setIsOptionsMenu}
                     setIsReminderMenu={setIsReminderMenu}
+                    toggleReminder={toggleReminder}
                     toggleArchive={toggleArchive}
                     toggleDelete={toggleDelete}
                     toggleModeTrue={toggleModeTrue}
