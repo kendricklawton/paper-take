@@ -122,6 +122,12 @@
     z-index: 6;
 }
 
+.backgroundMenu {
+    padding: 0.6rem;
+    align-items: center;
+    flex-direction: row;
+}
+
 .menu {
     flex-direction: column;
 }
@@ -139,10 +145,6 @@
     font-size: 1.25;
 }
 
-.backgroundMenu {
-    padding: 0.5rem;
-    flex-direction: row;
-}
 
 @media (prefers-color-scheme: dark) {
 

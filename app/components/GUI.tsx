@@ -210,6 +210,7 @@ const GUI: React.FC<GUIProps> = ({
         setIsOptionsMenu(false);
     };
 
+    // To be implemented
     const handleSend = async () => {
         if (isTrash) return;
         console.log('Sending note');
@@ -385,7 +386,6 @@ const GUI: React.FC<GUIProps> = ({
             return;
         }
         if (initialOperation === 'read') {
-
             setIsModalMode(true);
         }
         setIsEditMode(true);
@@ -491,6 +491,7 @@ const GUI: React.FC<GUIProps> = ({
                     setIsReminderMenu={setIsReminderMenu}
                     toggleArchive={toggleArchive}
                     toggleDelete={toggleDelete}
+                    toggleModeTrue={toggleModeTrue}
                 />
             </Box>
         </div>

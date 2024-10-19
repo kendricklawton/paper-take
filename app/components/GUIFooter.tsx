@@ -30,6 +30,9 @@ const MenuItemStyles = {
     fontFamily: 'monospace',
     paddingLeft: '1.2rem',
     paddingRight: '1.2rem',
+    width: '280px',
+    display: 'flex',
+    justifyContent: 'space-between',
 }
 
 interface GUIFooterProps {
@@ -57,8 +60,8 @@ interface GUIFooterProps {
     reminderMenuRefButton: React.RefObject<HTMLButtonElement>;
     index: React.MutableRefObject<number>;
     toggleBackgroundColor: (
-        backgroundColor: "#ffffff" | "#fff59c" | "#aaf0d1" | "#b2dfdb" | "#f5f5f5",
-        backgroundColorDark: "#121212" | "#a68f00" | "#4c8c7d" | "#005c5a" | "#004d40"
+        backgroundColor: '#ffffff' | '#fff59c' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5',
+        backgroundColorDark: '#121212' | "#9c955c" | '#5f8775' | '#005c5a' | '#8a8a8a'
     ) => Promise<void>;
     handleDeleteNote: () => void;
     handleSend: () => void;
@@ -71,6 +74,7 @@ interface GUIFooterProps {
     setIsOptionsMenu: React.Dispatch<React.SetStateAction<boolean>>;
     toggleArchive: () => void;
     toggleDelete: () => void;
+    toggleModeTrue: () => void;
 }
 
 export default function GUIFooter({
@@ -101,7 +105,7 @@ export default function GUIFooter({
 
     handleDeleteNote,
     handleMakeACopy,
-    handleSend,
+    // handleSend,
     handleRedo,
     handleUndo,
     setIsBackgroundMenu,
@@ -110,7 +114,8 @@ export default function GUIFooter({
     setIsReminderMenu,
     toggleArchive,
     toggleBackgroundColor,
-    toggleDelete
+    toggleDelete,
+    toggleModeTrue,
 }: GUIFooterProps) {
 
     const showFooter = isEditMode || initialOperation === 'read';
@@ -118,7 +123,28 @@ export default function GUIFooter({
     const showCloseButton = initialOperation === 'create' || isEditMode;
     const showMakeACopyButton = initialOperation === 'create' && (content.length > 0 || title.length > 0) || initialOperation === 'read';
 
-    // const MenuHeader = (content: string) => {
+    // Function to add hours and format time
+    const getTimePlusHours = (hours: number): string => {
+        const currentTime = new Date();
+        const newTime = new Date(currentTime);
+        newTime.setHours(newTime.getHours() + hours);
+
+        // Format the date and time
+        const dateString = newTime.toLocaleDateString([], { 
+            month: 'short', 
+            day: 'numeric', 
+            // year: '2-digit' 
+        });
+        const timeString = newTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        return `${dateString} ${timeString}`;
+    };
+
+    const sixHoursString: string = getTimePlusHours(6);
+    const twelveHoursString: string = getTimePlusHours(12);
+    const twentyFourHoursString: string = getTimePlusHours(24);
+
+
     //     return (
     //         <div className={styles.menuHeader}> <p>{content}</p></div>
     //     );
@@ -171,20 +197,18 @@ export default function GUIFooter({
                                             </StyledIconButton>
                                         </StyledTooltip>
                                         <div className={styles.anchor}>
-
                                             {/* <StyledTooltip  title={'Reminder'}> */}
                                             <StyledIconButton ref={reminderMenuRefButton} className={styles.menuButton}
                                                 onClick={() => setIsReminderMenu(prev => !prev)}>
                                                 <AlarmAddOutlined />
                                             </StyledIconButton>
                                             {/* </StyledTooltip> */}
-
                                             {isReminderMenuOpen && (
                                                 <div className={styles.menu} ref={reminderMenuRef}>
                                                     {/* {MenuHeader('Reminder')} */}
-                                                    <MenuItem disableGutters sx={MenuItemStyles}>6 hours</MenuItem>
-                                                    <MenuItem disableGutters sx={MenuItemStyles}>12 hours</MenuItem>
-                                                    <MenuItem disableGutters sx={MenuItemStyles}>24 hours</MenuItem>
+                                                    <MenuItem disableGutters sx={MenuItemStyles}>6 hours  <span>{sixHoursString}</span></MenuItem>
+                                                    <MenuItem disableGutters sx={MenuItemStyles}>12 hours <span>{twelveHoursString}</span></MenuItem>
+                                                    <MenuItem disableGutters sx={MenuItemStyles}>24 hours <span>{twentyFourHoursString}</span></MenuItem>
                                                     <MenuItem disableGutters sx={MenuItemStyles}>Pick date & time</MenuItem>
                                                 </div>
                                             )}
@@ -204,16 +228,16 @@ export default function GUIFooter({
                                                     <BackgroundIconButton selected={backgroundColor === '#ffffff'} onClick={() => toggleBackgroundColor('#ffffff', '#121212')}>
                                                         <BackgroundCircle selected={backgroundColor === '#ffffff'} />
                                                     </BackgroundIconButton>
-                                                    <BackgroundIconButton selected={backgroundColor === '#fff59c'} onClick={() => toggleBackgroundColor('#fff59c', '#a68f00')}>
+                                                    <BackgroundIconButton selected={backgroundColor === '#fff59c'} onClick={() => toggleBackgroundColor('#fff59c', '#9c955c')}>
                                                         <BackgroundCircleYellow selected={backgroundColor === '#fff59c'} />
                                                     </BackgroundIconButton>
-                                                    <BackgroundIconButton selected={backgroundColor === '#aaf0d1'} onClick={() => toggleBackgroundColor('#aaf0d1', '#4c8c7d')}>
+                                                    <BackgroundIconButton selected={backgroundColor === '#aaf0d1'} onClick={() => toggleBackgroundColor('#aaf0d1', '#5f8775')}>
                                                         <BackgroundCircleMintyGreen selected={backgroundColor === '#aaf0d1'} />
                                                     </BackgroundIconButton>
                                                     <BackgroundIconButton selected={backgroundColor === '#b2dfdb'} onClick={() => toggleBackgroundColor('#b2dfdb', '#005c5a')}>
                                                         <BackgroundCircleTeal selected={backgroundColor === '#b2dfdb'} />
                                                     </BackgroundIconButton>
-                                                    <BackgroundIconButton selected={backgroundColor === '#f5f5f5'} onClick={() => toggleBackgroundColor('#f5f5f5', '#004d40')}>
+                                                    <BackgroundIconButton selected={backgroundColor === '#f5f5f5'} onClick={() => toggleBackgroundColor('#f5f5f5', '#8a8a8a')}>
                                                         <BackgroundCircleChalk selected={backgroundColor === '#f5f5f5'} />
                                                     </BackgroundIconButton>
                                                 </div>
@@ -253,12 +277,10 @@ export default function GUIFooter({
                                             {isOptionsMenuOpen && (
                                                 <div className={styles.menu} ref={optionsMenuRef}>
                                                     {/* {MenuHeader('Note Options')} */}
-                                                    <MenuItem disableGutters sx={MenuItemStyles} onClick={handleSend}>Send</MenuItem>
-                                                    {
-                                                        showMakeACopyButton && (
-                                                            <MenuItem disableGutters sx={MenuItemStyles} onClick={handleMakeACopy}>Make a copy</MenuItem>
-                                                        )
-                                                    }
+                                                    {/* <MenuItem disableGutters sx={MenuItemStyles} onClick={handleSend}>Send</MenuItem> */}
+                                                    {showMakeACopyButton && (
+                                                        <MenuItem disableGutters sx={MenuItemStyles} onClick={handleMakeACopy}>Make a copy</MenuItem>
+                                                    )}
                                                     <MenuItem disableGutters sx={MenuItemStyles} onClick={toggleDelete}>Delete</MenuItem>
                                                 </div>
                                             )}
@@ -281,8 +303,8 @@ export default function GUIFooter({
                                 (initialOperation === 'read' && !isEditMode) && (
                                     <StyledTooltip title={type === 'note' ? 'Note' : 'Project'} >
                                         <span>
-                                            <StyledIconButton disabled={true}>
-                                                <NoteOutlined sx={{ color: 'gray' }} />
+                                            <StyledIconButton onClick={toggleModeTrue}>
+                                                <NoteOutlined  />
                                             </StyledIconButton>
                                         </span>
                                     </StyledTooltip>
