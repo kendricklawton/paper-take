@@ -330,8 +330,8 @@ const GUI: React.FC<GUIProps> = ({
         setIsOptionsMenu(false);
     };
 
-    const toggleBackgroundColor = async (backgroundColor: "#ffffff" | "#fff59c" | "#aaf0d1" | "#b2dfdb" | "#f5f5f5",
-        backgroundColorDark: '#121212' | '#a68f00' | '#4c8c7d' | '#005c5a' | '#004d40') => {
+    const toggleBackgroundColor = async (backgroundColor: '#ffffff' | '#fff59c' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5',
+        backgroundColorDark: '#121212' | "#9c955c" | '#5f8775' | '#005c5a' | '#8a8a8a') => {
         setBackgroundColor(backgroundColor);
         setBackgroundColorDark(backgroundColorDark);
         if (initialOperation === 'read' && !isTrash) {
