@@ -191,7 +191,7 @@ export const StyledButton = styled(Button)({
     },
     '@media (prefers-color-scheme: dark)': {
         color: 'black',
-        backgroundColor: 'white',
+        backgroundColor: 'lightgray',
     },
 });
 
