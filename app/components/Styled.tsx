@@ -151,7 +151,7 @@ export const NoteHeaderTextField = styled(TextField)({
     },
     '@media (prefers-color-scheme: dark)': {
         '& .MuiInputBase-input': {
-            color: 'white',
+            color: 'lightgray',
         }
     },
 });
@@ -170,7 +170,7 @@ export const NoteBodyTextField = styled(TextField)({
     },
     '@media (prefers-color-scheme: dark)': {
         '& .MuiInputBase-input': {
-            color: 'white',
+            color: 'lightgray',
         }
     },
 
@@ -256,7 +256,7 @@ export const FormTextField = styled(TextField)({
             backgroundColor: 'rgba(255, 255, 255, 0.2)',
         },
         '& .MuiInputBase-input': {
-            color: 'white',
+            color: 'lightgray',
         },
         '& label': {
             color: 'gray',
