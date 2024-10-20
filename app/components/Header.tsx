@@ -46,7 +46,7 @@ export default function Header() {
     const [isScrolled, setIsScrolled] = useState(false);
 
     const pathname = usePathname();
-    const searchParams = useSearchParams();
+    // const searchParams = useSearchParams();
     const router = useRouter();
 
     const accountMenuRef = useRef<HTMLDivElement>(null);
@@ -155,10 +155,10 @@ export default function Header() {
         }
     }, [handleCloseSearch, pathname]);
 
-    useEffect(() => {
-        const term = searchParams.get('term') || '';
-        setSearchTerm(term);
-    }, [searchParams]);
+    // useEffect(() => {
+    //     const term = searchParams.get('term') || '';
+    //     setSearchTerm(term);
+    // }, [searchParams]);
 
     useEffect(() => {
         const url = new URL(window.location.href);
