@@ -23,7 +23,6 @@ import { useAppContext } from '../providers/AppProvider';
 import { useAuthContext } from '../providers/AuthProvider';
 import styles from "./Header.module.css";
 import { StyledIconButton } from './Styled';
-import { Suspense } from 'react';
 
 export default function Header() {
     // Contexts
@@ -156,7 +155,7 @@ export default function Header() {
     }
 
     return (
-        <Suspense>
+
             <header className={isScrolled ? styles.headerScrolled : styles.header}>
                 {/* Nav Leading */}
                 <div className={styles.headerLeading}>
@@ -269,6 +268,5 @@ export default function Header() {
                     </div>
                 </div>
             </header>
-        </Suspense>
     );
 }
