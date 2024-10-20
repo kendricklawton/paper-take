@@ -8,7 +8,6 @@ interface ProjectBodyProps {
     currentPage: "taskboard" | "backlog" | "capacity" | "analytics" | "goal";
 }
 
-
 const toggleButtonStyles = {
     fontSize: 'large',
     fontWeight: 'lighter',
@@ -95,7 +94,6 @@ const ProjectBody: React.FC<ProjectBodyProps> = ({
     const Taskboard = () => {
         return (
             <React.Fragment>
-             
                 {Object.keys(columns).map((columnIndexStr) => {
                     const columnIndex = Number(columnIndexStr);
                     return (

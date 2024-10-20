@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Suspense } from 'react';
+import React from 'react';
 import styles from "../page.module.css";
 import { useAppContext } from "../providers/AppProvider";
 import GUI from "../components/GUI";
@@ -55,10 +55,8 @@ const Notes: React.FC = () => {
 
 export default function Ideas() {
     return (
-        <Suspense>
             <main className={styles.page}>
                 <Notes />
             </main>
-        </Suspense>
     );
 }

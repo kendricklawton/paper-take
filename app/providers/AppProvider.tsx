@@ -5,7 +5,6 @@ import { firestore } from '../firebase';
 import { collection, doc, FirestoreError, getDocs, orderBy, query as firestoreQuery, runTransaction, Timestamp } from "firebase/firestore";
 import { Note, Project } from '../models';
 import { useAuthContext } from './AuthProvider';
-import { useSearchParams } from 'next/navigation';
 
 interface AppContextType {
     appError: string;
@@ -27,6 +26,7 @@ interface AppContextType {
     fetchData: () => void;
     handleCloseSearch: () => void;
     handleSearch: (term: string) => void;
+    setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
     setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
     setInfo: React.Dispatch<React.SetStateAction<string>>;
     setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
@@ -41,7 +41,6 @@ interface AppProviderProps {
 
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     const { user } = useAuthContext();
-    const searchParams = useSearchParams();
     const [appError, setAppError] = useState<string>('');
     const [notes, setNotes] = useState<Note[]>([]);
     const [projects, setProjects] = useState<Project[]>([]);
@@ -200,34 +199,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     //     }
     // }, [query]);
 
-    useEffect(() => {
-        const term = searchParams.get('term') || '';
-        setSearchTerm(term);
-    }, [searchParams]);
-
-    useEffect(() => {
-        // const newFiltered = [
-        //     ...notes.filter(note =>
-        //         note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        //         note.content.toLowerCase().includes(searchTerm.toLowerCase())
-        //     ),
-        //     ...projects.filter(project =>
-        //         project.title.toLowerCase().includes(searchTerm.toLowerCase())
-        //     )
-        // ];
-        // setFiltered(newFiltered);
-
-        const url = new URL(window.location.href);
-        if (searchTerm) {
-            url.searchParams.set('term', searchTerm);
-        } else {
-            url.searchParams.delete('term');
-        }
-        window.history.replaceState({}, '', url);
-        console.log('URL updated with search term: ', searchTerm);
-        // console.log('Filtered items: ', newFiltered);
-    }, [searchTerm]);
-
 
     const createNote = useCallback(async (newNote: Note) => {
         const prevNotes = notes;
@@ -326,7 +297,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
     const contextValue = useMemo(() => ({
         appError, filtered, info, isLoadingApp, notes, projects, searchTerm, searchIsFocused, isModalOpen,
-        clearAppError, fetchData, handleSearch, handleCloseSearch, setIsModalOpen, setInfo, setNotes, setProjects, setSearchIsFocused, updateNote, updateProject, createNote, createProject, deleteNote, deleteProject
+        clearAppError, fetchData, handleSearch, handleCloseSearch, setIsModalOpen, setInfo, setNotes, setProjects, setSearchIsFocused, setSearchTerm, updateNote, updateProject, createNote, createProject, deleteNote, deleteProject
     }), [
         appError, filtered, info, isLoadingApp, notes, projects, searchTerm, searchIsFocused, isModalOpen,
         clearAppError, fetchData, handleSearch, handleCloseSearch, updateNote, updateProject, createNote, createProject, deleteNote, deleteProject

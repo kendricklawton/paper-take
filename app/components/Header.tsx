@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import React, { Suspense, useEffect, useRef, useState } from 'react';
+import { usePathname, useSearchParams, useRouter } from 'next/navigation';
+
 import Link from 'next/link';
 import CircularProgress from '@mui/material/CircularProgress';
 import {
@@ -28,10 +29,13 @@ export default function Header() {
     // Contexts
     const { isLoadingAuth, logOut, user } = useAuthContext();
     const {
-        searchTerm, handleSearch, handleCloseSearch, isLoadingApp,
-        fetchData
+        searchTerm,
+        handleSearch, 
+        handleCloseSearch, 
+        isLoadingApp,
+        fetchData,
+        setSearchTerm,
     } = useAppContext();
-
 
 
     // State Variables
@@ -42,7 +46,7 @@ export default function Header() {
     const [isScrolled, setIsScrolled] = useState(false);
 
     const pathname = usePathname();
-
+    const searchParams = useSearchParams();
     const router = useRouter();
 
     const accountMenuRef = useRef<HTMLDivElement>(null);
@@ -113,6 +117,7 @@ export default function Header() {
         };
     }, [accountButtonRef, accountMenuRef, navButtonRef, navMenuRef, settingsButtonRef, settingsMenuRef]);
 
+
     useEffect(() => {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 0);
@@ -150,12 +155,30 @@ export default function Header() {
         }
     }, [handleCloseSearch, pathname]);
 
+    useEffect(() => {
+        const term = searchParams.get('term') || '';
+        setSearchTerm(term);
+    }, [searchParams]);
+
+    useEffect(() => {
+        const url = new URL(window.location.href);
+        if (searchTerm) {
+            url.searchParams.set('term', searchTerm);
+        } else {
+            url.searchParams.delete('term');
+        }
+        window.history.replaceState({}, '', url);
+        console.log('URL updated with search term: ', searchTerm);
+        // console.log('Filtered items: ', newFiltered);
+    }, [searchTerm]);
+
+
     if (pathname === '/') {
         return null;
     }
 
     return (
-
+        <Suspense>
             <header className={isScrolled ? styles.headerScrolled : styles.header}>
                 {/* Nav Leading */}
                 <div className={styles.headerLeading}>
@@ -268,5 +291,6 @@ export default function Header() {
                     </div>
                 </div>
             </header>
+        </Suspense>
     );
 }

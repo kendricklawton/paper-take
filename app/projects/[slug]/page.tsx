@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState } from 'react';
+import { useState } from 'react';
 import styles from '../../page.module.css';
 import ProjectBody from '../ProjectBody';
 import ProjectHeader from '../ProjectHeader';
@@ -22,7 +22,7 @@ export default function Page({ params }: { params: { slug: string } }) {
 
 
     return (
-        <Suspense>
+
             <div className={styles.page}>
                 <h1>Under Construction</h1>
                 <ProjectHeader
@@ -34,6 +34,5 @@ export default function Page({ params }: { params: { slug: string } }) {
                 <div className={styles.spacer} />
                 <ProjectBody currentPage={currentPage} />
             </div>
-        </Suspense>
     );
 }

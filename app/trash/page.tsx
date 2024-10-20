@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Suspense } from "react";
+import React from "react";
 import GUI from "../components/GUI";
 import styles from "../page.module.css";
 import { useAppContext } from "../providers/AppProvider";
@@ -21,7 +21,6 @@ export default function Trash() {
     const trashIdeas: (Note | Project)[] = [...trashNotes, ...trashProjects];
 
     return (
-        <Suspense >
             <div className={styles.page}>
                 {
                     trashIdeas.length > 0 && (
@@ -38,6 +37,5 @@ export default function Trash() {
                         )
                     )}
             </div >
-        </Suspense >
     );
 }

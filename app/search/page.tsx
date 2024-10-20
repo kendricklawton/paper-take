@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Suspense } from "react";
+import React from "react";
 import GUI from "../components/GUI";
 import styles from "../page.module.css";
 import { useAppContext } from "../providers/AppProvider";
@@ -11,7 +11,6 @@ export default function Search() {
     } = useAppContext();
 
     return (
-        <Suspense >
             <div className={styles.page}>
                 {
                     filtered.length > 0 && (
@@ -27,6 +26,5 @@ export default function Search() {
                         )
                     )}
             </div >
-        </Suspense >
     );
 }

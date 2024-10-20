@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useState } from 'react';
+import { useState } from 'react';
 import styles from "../page.module.css";
 import { useAuthContext } from "../providers/AuthProvider";
 import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos';
@@ -42,7 +42,6 @@ export default function Account() {
     }
 
     return (
-        <Suspense>
             <div className={styles.page}>
                 <div className={styles.wrapperAccount}>
                     <div className={styles.container}>
@@ -111,6 +110,6 @@ export default function Account() {
 
                 <AccountModal isOpen={isAccountModalOpen} onClose={() => setIsAccountModalOpen(false)} method={method} />
             </div>
-        </Suspense >
+
     );
 }

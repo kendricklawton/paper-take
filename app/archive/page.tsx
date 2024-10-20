@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Suspense } from "react";
+import React from "react";
 import GUI from "../components/GUI";
 import styles from "../page.module.css";
 import { useAppContext } from "../providers/AppProvider";
@@ -21,7 +21,6 @@ export default function Archive() {
     const archiveIdeas: (Note | Project)[] = [...archiveNotes, ...archiveProjects];
 
     return (
-        <Suspense>
             <div className={styles.page}>
                 {
                     archiveIdeas.length === 0 &&
@@ -43,7 +42,5 @@ export default function Archive() {
                     ))
                 )}
             </div >
-        </Suspense>
-
     );
 }
