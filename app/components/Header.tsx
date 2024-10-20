@@ -1,7 +1,9 @@
 'use client';
 
 import React, { Suspense, useEffect, useRef, useState } from 'react';
-import { usePathname, useSearchParams, useRouter } from 'next/navigation';
+import { usePathname, 
+    // useSearchParams, 
+    useRouter } from 'next/navigation';
 
 import Link from 'next/link';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -34,7 +36,7 @@ export default function Header() {
         handleCloseSearch, 
         isLoadingApp,
         fetchData,
-        setSearchTerm,
+        // setSearchTerm,
     } = useAppContext();
 
 
