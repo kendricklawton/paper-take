@@ -12,9 +12,8 @@ const ProviderWrapper: React.FC<ProviderWrapperProps> = ({ children }) => {
     return (
         <AuthProvider>
                 <AppProvider>
-                    <Suspense>
+
                         {children}
-                    </Suspense>
                 </AppProvider>
         </AuthProvider>
     );

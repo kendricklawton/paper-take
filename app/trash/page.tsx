@@ -1,6 +1,6 @@
 'use client'
 
-import React from "react";
+import React, { Suspense } from "react";
 import GUI from "../components/GUI";
 import styles from "../page.module.css";
 import { useAppContext } from "../providers/AppProvider";
@@ -21,21 +21,23 @@ export default function Trash() {
     const trashIdeas: (Note | Project)[] = [...trashNotes, ...trashProjects];
 
     return (
-        <div className={styles.page}>
-            {
-                trashIdeas.length > 0 && (
-                    trashIdeas.map((idea, index) => (
-                        <React.Fragment key={index}>
-                            <div className={styles.spacer} />
-                            <GUI
-                                key={idea.id}
-                                operation={'read'}
-                                idea={idea}
-                            />
-                        </React.Fragment>
-                    )
-                    )
-                )}
-        </div >
+        <Suspense >
+            <div className={styles.page}>
+                {
+                    trashIdeas.length > 0 && (
+                        trashIdeas.map((idea, index) => (
+                            <React.Fragment key={index}>
+                                <div className={styles.spacer} />
+                                <GUI
+                                    key={idea.id}
+                                    operation={'read'}
+                                    idea={idea}
+                                />
+                            </React.Fragment>
+                        )
+                        )
+                    )}
+            </div >
+        </Suspense >
     );
 }

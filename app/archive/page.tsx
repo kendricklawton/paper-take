@@ -1,6 +1,6 @@
 'use client'
 
-import React from "react";
+import React, { Suspense } from "react";
 import GUI from "../components/GUI";
 import styles from "../page.module.css";
 import { useAppContext } from "../providers/AppProvider";
@@ -21,26 +21,29 @@ export default function Archive() {
     const archiveIdeas: (Note | Project)[] = [...archiveNotes, ...archiveProjects];
 
     return (
-        <div className={styles.page}>
-            {
-                archiveIdeas.length === 0 &&
-                <React.Fragment>
-                    <h2>Archive is empty</h2>
-                    <p>Archive contains all your archived notes and projects.</p>
-                </React.Fragment>
-            }
-            {archiveIdeas.length > 0 && (
-                archiveIdeas.map((idea, index) => (
-                    <React.Fragment key={index}>
-                        <div className={styles.spacer} />
-                        <GUI
-                            key={idea.id}
-                            operation={'read'}
-                            idea={idea}
-                        />
+        <Suspense>
+            <div className={styles.page}>
+                {
+                    archiveIdeas.length === 0 &&
+                    <React.Fragment>
+                        <h2>Archive is empty</h2>
+                        <p>Archive contains all your archived notes and projects.</p>
                     </React.Fragment>
-                ))
-            )}
-        </div >
+                }
+                {archiveIdeas.length > 0 && (
+                    archiveIdeas.map((idea, index) => (
+                        <React.Fragment key={index}>
+                            <div className={styles.spacer} />
+                            <GUI
+                                key={idea.id}
+                                operation={'read'}
+                                idea={idea}
+                            />
+                        </React.Fragment>
+                    ))
+                )}
+            </div >
+        </Suspense>
+
     );
 }
