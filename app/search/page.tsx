@@ -1,29 +1,30 @@
 'use client'
 
-import React from 'react';
-// import { useAppContext } from '../providers/AppProvider';
-// import NoteGUI from "../components/GUI";
+import React from "react";
+import GUI from "../components/GUI";
 import styles from "../page.module.css";
-// import { Note } from '../models';
+import { useAppContext } from "../providers/AppProvider";
 
 export default function Search() {
-    // const { filteredItems } = useAppContext();
-    // const searchNotes = filteredItems.filter(note => !note.isTrash);
+    const {
+        filtered
+    } = useAppContext();
 
     return (
-        <div className={styles.content}>
-            {/* {searchNotes.length === 0 ? (
-                <div className={styles.pageTitle}>
-                    <p>Search</p>
-                </div>
-            ) : (
-                searchNotes.map(note => (
-                    <React.Fragment key={note.id}>
-                        <div className={styles.spacer} key={note.id} />
-                        <NoteGUI note={note as Note} operation='read' key={note.id} />
-                    </React.Fragment>
-                ))
-            )} */}
-        </div>
+        <div className={styles.page}>
+            {
+                filtered.length > 0 && (
+                    filtered.map((idea, index) => (
+                        <React.Fragment key={index}>
+                            <div className={styles.spacer} />
+                            <GUI
+                                key={idea.id}
+                                operation={'read'}
+                                idea={idea}
+                            />
+                        </React.Fragment> )
+                    )
+                )}
+        </div >
     );
 }

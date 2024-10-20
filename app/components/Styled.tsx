@@ -1,11 +1,16 @@
 import { Button, IconButton, styled, TextField, ToggleButton, Tooltip, tooltipClasses, TooltipProps } from "@mui/material";
 import { Circle } from "@mui/icons-material";
 
+const defaultBorderRadius = '8px';
+
 export const StyledIconButton = styled(IconButton)({
     color: 'gray',
     '@media (prefers-color-scheme: dark)': {
         color: 'lightgray',
-    },
+        '&.Mui-disabled': {
+            color: 'gray'
+        }
+    }
 });
 
 interface BackgroundIconButtonProps {
@@ -157,7 +162,7 @@ export const NoteBodyTextField = styled(TextField)({
     '& .MuiInputBase-input': {
         fontFamily: 'monospace',
         fontWeight: 'lighter',
-        WebkitTapHighlightColor: 'transparent', 
+        WebkitTapHighlightColor: 'transparent',
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': { border: 'none' },
@@ -169,7 +174,7 @@ export const NoteBodyTextField = styled(TextField)({
             color: 'white',
         }
     },
-    
+
 });
 
 export const StyledButton = styled(Button)({
@@ -178,7 +183,8 @@ export const StyledButton = styled(Button)({
     fontWeight: 'lighter',
     color: 'white',
     backgroundColor: 'black',
-    borderRadius: '0px',
+    // borderRadius: '0px',
+    defaultBorderRadius,
     '&:disabled': {
         backgroundColor: '#f0f0f0',
         color: 'gray',
@@ -197,7 +203,8 @@ export const StyledNoteButton = styled(Button)({
     fontWeight: 'lighter',
     color: 'grey',
     backgroundColor: 'transparent',
-    borderRadius: '0px',
+    // borderRadius: '0px',
+    defaultBorderRadius,
     '@media (prefers-color-scheme: dark)': {
         color: 'grey',
         backgroundColor: 'transparent',
@@ -210,7 +217,8 @@ export const StyledNoteButtonTwo = styled(Button)({
     fontWeight: 'lighter',
     color: 'grey',
     backgroundColor: 'transparent',
-    borderRadius: '0px',
+    // borderRadius: '0px',
+    defaultBorderRadius,
     '@media (prefers-color-scheme: dark)': {
         color: 'grey',
         backgroundColor: 'transparent',
@@ -292,16 +300,18 @@ export const StyledToggleButton = styled(ToggleButton)({
 });
 
 export const StyledTextButton = styled(Button)({
-    borderRadius: '0px',
+    defaultBorderRadius,
+    // borderRadius: '0px',
     '@media (prefers-color-scheme: dark)': {
         color: 'lightgray',
-    }});
+    }
+});
 
 export const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} classes={{ popper: className }} />
 ))(() => ({
     [`& .${tooltipClasses.tooltip}`]: {
-        fontFamily: 'monospace',    
+        fontFamily: 'monospace',
         backgroundColor: 'gray',
         borderRadius: '0px',
         color: 'white',

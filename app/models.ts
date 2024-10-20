@@ -22,6 +22,7 @@ export class Note {
         title: string,
         content: string,
         isArchived: boolean,
+
         isPinned: boolean,
         isTrash: boolean,
         images: string[] = [],
@@ -34,6 +35,7 @@ export class Note {
         this.title = title;
         this.content = content;
         this.isArchived = isArchived;
+
         this.isPinned = isPinned;
         this.isTrash = isTrash;
         this.images = images;
@@ -44,7 +46,7 @@ export class Note {
     static fromJSON(jsonString: string): Note | null {
         try {
             const { createdAt, backgroundColor, backgroundColorDark, id, title, content, isArchived,
-                isPinned, isTrash, reminder, images = [],
+             isPinned, isTrash, reminder, images = [],
             } = JSON.parse(jsonString);
 
             return new Note(
@@ -55,6 +57,7 @@ export class Note {
                 title,
                 content,
                 isArchived,
+            
                 isPinned,
                 isTrash,
                 images,
@@ -164,6 +167,7 @@ export class Project {
     description: string;
     dueDate: Timestamp | undefined;
     isArchived: boolean;
+
     isPinned: boolean;
     isTrash: boolean;
     tasks: Task[];
@@ -178,6 +182,7 @@ export class Project {
         description: string,
         dueDate: Timestamp | undefined,
         isArchived: boolean,
+
         isPinned: boolean,
         isTrash: boolean,
         tasks: Task[] = [],
@@ -189,6 +194,7 @@ export class Project {
         this.description = description;
         this.dueDate = dueDate;
         this.isArchived = isArchived;
+
         this.isPinned = isPinned;
         this.isTrash = isTrash;
         this.tasks = tasks;
@@ -205,6 +211,7 @@ export class Project {
                 description,
                 dueDate,
                 isArchived,
+            
                 isPinned,
                 isTrash,
                 reminder,
@@ -227,6 +234,7 @@ export class Project {
                 isArchived,
                 isPinned,
                 isTrash,
+            
                 parsedTasks,
                 reminder,
 

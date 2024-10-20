@@ -45,12 +45,13 @@ const GUI: React.FC<GUIProps> = ({
     const [isHovering, setIsHovering] = useState<boolean>(false);
     const [focus, setFocus] = useState<'title' | 'body'>('body');
 
-    const [contentArray, setContentArray] = useState([idea.type === 'note' ? idea.content : '']);
+
     const isArchived = idea.isArchived;
     const isPinned = idea.isPinned;
     const isTrash = idea.isTrash;
     const [title, setTitle] = useState(idea.title);
     const [content, setContent] = useState(idea.type === 'note' ? idea.content : '');
+    const [contentArray, setContentArray] = useState([idea.type === 'note' ? idea.content : '']);
     const [reminder, setReminder] = useState<Timestamp | undefined>(idea.reminder);
     const [backgroundColor, setBackgroundColor] = useState(idea.type === 'note' ? idea.backgroundColor : '#ffffff');
     const [backgroundColorDark, setBackgroundColorDark] = useState(idea.type === 'note' ? idea.backgroundColorDark : '#121212');
@@ -96,6 +97,14 @@ const GUI: React.FC<GUIProps> = ({
         }
     };
 
+    const handleReminderMenu = () => {
+        if (isTrash) {
+            setInfo('Cannot edit note in trash');
+        } else {
+            setIsReminderMenu(prev => !prev);
+        }
+     
+    }
     const handleResetNote = useCallback(() => {
         if (initialOperation === 'create') {
             setContent('');
@@ -172,22 +181,16 @@ const GUI: React.FC<GUIProps> = ({
         console.log('Previous note:', idea);
 
         if (initialOperation === 'create') {
-            if (currentNote.title !== prevNote.title || currentNote.content !== prevNote.content || currentNote.reminder !== prevNote.reminder) {
+            if (
+                currentNote.title !== prevNote.title
+                || currentNote.content !== prevNote.content
+                || currentNote.reminder !== prevNote.reminder
+            ) {
                 handleResetNote();
                 await createNote(currentNote);
                 return;
             }
-        } else if (
-            currentNote.title !== prevNote.title ||
-            currentNote.content !== prevNote.content
-            // ||
-            // currentNote.backgroundColor !== prevNote.backgroundColor ||
-            // currentNote.backgroundColorDark !== prevNote.backgroundColorDark ||
-            // currentNote.isArchived !== prevNote.isArchived ||
-            // currentNote.isPinned !== prevNote.isPinned ||
-            // currentNote.isTrash !== prevNote.isTrash ||
-            // currentNote.reminder !== prevNote.reminder
-        ) {
+        } else if (currentNote.title !== prevNote.title || currentNote.content !== prevNote.content) {
             handleResetNote();
             await updateNote(currentNote);
             return;
@@ -227,13 +230,13 @@ const GUI: React.FC<GUIProps> = ({
     // To be implemented
     const handleSend = async () => {
         if (isTrash) return;
-        console.log('Sending note');
+        console.log('Sending needs to be implemented');
     };
 
     const handleClickOutside = useCallback((event: MouseEvent) => {
         event.stopPropagation();
 
-        const checkMenuClose = (
+        const checkIsMenuClose = (
             isMenuOpen: boolean,
             menuRef: React.RefObject<HTMLElement>,
             buttonRef: React.RefObject<HTMLElement>,
@@ -249,10 +252,10 @@ const GUI: React.FC<GUIProps> = ({
             }
         };
 
-        checkMenuClose(isBackgroundMenuOpen, backgroundMenuRef, backgroundMenuRefButton, setIsBackgroundMenu);
-        checkMenuClose(isFontMenuOpen, fontMenuRef, fontMenuRefButton, setIsFontMenu);
-        checkMenuClose(isReminderMenuOpen, reminderMenuRef, reminderMenuRefButton, setIsReminderMenu);
-        checkMenuClose(isOptionsMenuOpen, optionsMenuRef, optionsMenuRefButton, setIsOptionsMenu);
+        checkIsMenuClose(isBackgroundMenuOpen, backgroundMenuRef, backgroundMenuRefButton, setIsBackgroundMenu);
+        checkIsMenuClose(isFontMenuOpen, fontMenuRef, fontMenuRefButton, setIsFontMenu);
+        checkIsMenuClose(isReminderMenuOpen, reminderMenuRef, reminderMenuRefButton, setIsReminderMenu);
+        checkIsMenuClose(isOptionsMenuOpen, optionsMenuRef, optionsMenuRefButton, setIsOptionsMenu);
 
         if (isEditMode || isTrash) {
             if (initialOperation === 'create' && noteCreateRef.current && !noteCreateRef.current.contains(event.target as Node)) {
@@ -262,8 +265,6 @@ const GUI: React.FC<GUIProps> = ({
             }
         }
     }, [isBackgroundMenuOpen, isFontMenuOpen, isReminderMenuOpen, isOptionsMenuOpen, isEditMode, isTrash, initialOperation, handleNote]);
-
-
 
     // const handleClickOutside = useCallback((event: MouseEvent) => {
     //     event.stopPropagation();
@@ -311,9 +312,9 @@ const GUI: React.FC<GUIProps> = ({
     // }
     // }, [isBackgroundMenuOpen, isFontMenuOpen, isReminderMenuOpen, isOptionsMenuOpen, isEditMode, isTrash, initialOperation, handleNote]);
 
-    const handleMouseEnter = () => {
+    const handleMouseEnter = useCallback(() => {
         setIsHovering(true);
-    };
+    }, []);
 
     const handleMouseLeave = () => {
         setIsHovering(false);
@@ -335,10 +336,11 @@ const GUI: React.FC<GUIProps> = ({
                 content,
                 !isArchived,
                 isPinned,
-                isTrash,
+                    isTrash,
                 idea.images,
                 idea.reminder,
             );
+            console.log('Updated note:', updatedNote);
             await updateNote(updatedNote);
         }
         setIsOptionsMenu(false);
@@ -360,39 +362,15 @@ const GUI: React.FC<GUIProps> = ({
                     isArchived,
                     isPinned,
                     isTrash,
-                    idea.images,
+                            idea.images,
                     idea.reminder,
                 );
+                console.log('Updated note:', updatedNote);
                 await updateNote(updatedNote);
             }
         }
     };
-
-    const toggleReminder = async (reminder: Timestamp | undefined) => {
-        setReminder(reminder);
-        if (!isTrash) {
-            if (initialOperation === 'read' && !isTrash) {
-                if (idea.type == 'note') {
-                    const updatedNote = new Note(
-                        idea.createdAt,
-                        backgroundColor,
-                        backgroundColorDark,
-                        idea.id,
-                        title,
-                        content,
-                        isArchived,
-                        isPinned,
-                        isTrash,
-                        idea.images,
-                        reminder,
-                    );
-                    await updateNote(updatedNote);
-                }
-            } 
-        }
-        setIsReminderMenu(false);
-    }
-
+    
     const toggleDelete = async () => {
         if (isTrash) {
             setInfo('Note restored');
@@ -409,7 +387,7 @@ const GUI: React.FC<GUIProps> = ({
                 title,
                 content,
                 isArchived,
-                isPinned,
+                    isPinned,
                 !isTrash,
                 idea.images,
                 idea.reminder,
@@ -418,6 +396,34 @@ const GUI: React.FC<GUIProps> = ({
         }
         setIsOptionsMenu(false);
     };
+
+    const toggleReminder = async (reminder: Timestamp | undefined) => {
+        if (isTrash) {
+            setInfo('Cannot edit note in trash');
+            return;
+        }
+
+        setReminder(reminder);
+        if (initialOperation === 'read') {
+            if (idea.type == 'note') {
+                const updatedNote = new Note(
+                    idea.createdAt,
+                    backgroundColor,
+                    backgroundColorDark,
+                    idea.id,
+                    title,
+                    content,
+                    isArchived,
+                            isPinned,
+                    isTrash,
+                    idea.images,
+                    reminder,
+                );
+                await updateNote(updatedNote);
+            }
+        }
+        setIsReminderMenu(false);
+    }
 
     const toggleModeTrue = () => {
         if (isTrash) {
@@ -429,6 +435,8 @@ const GUI: React.FC<GUIProps> = ({
         }
         setIsEditMode(true);
     };
+
+
 
     useEffect(() => {
         const previousOverflow = document.body.style.overflow;
@@ -494,10 +502,10 @@ const GUI: React.FC<GUIProps> = ({
                     />
                 </div>
                 {
-                    reminder && (
+                    (reminder) && (
                         <div className={styles.reminderContainer}>
                             <div className={styles.reminder}>
-                                <StyledIconButton onClick={() => setIsReminderMenu(true)}>
+                                <StyledIconButton onClick={handleReminderMenu}>
                                     <AlarmAddOutlined />
                                 </StyledIconButton>
                                 <p>{formattedDate}</p>

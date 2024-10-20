@@ -22,12 +22,17 @@ export default function Archive() {
 
     return (
         <div className={styles.page}>
-            {archiveIdeas.length === 0 ? (
-                <p className={styles.pageText}>No Ideas In Archive</p>
-            ) : (
+            {
+                archiveIdeas.length === 0 &&
+                <React.Fragment>
+                    <h2>Archive is empty</h2>
+                    <p>Archive contains all your archived notes and projects.</p>
+                </React.Fragment>
+            }
+            {archiveIdeas.length > 0 && (
                 archiveIdeas.map((idea, index) => (
                     <React.Fragment key={index}>
-                        <div className={styles.spacer}/>
+                        <div className={styles.spacer} />
                         <GUI
                             key={idea.id}
                             operation={'read'}

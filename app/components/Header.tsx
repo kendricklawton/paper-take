@@ -32,6 +32,8 @@ export default function Header() {
         fetchData
     } = useAppContext();
 
+
+
     // State Variables
     const [title, setTitle] = useState('');
     const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
@@ -51,13 +53,26 @@ export default function Header() {
     const settingsButtonRef = useRef<HTMLButtonElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const handleOnFocusSearch = () => router.push('/search');
     const handleSearchButton = () => {
         router.push('/search');
         if (inputRef.current) {
             inputRef.current.focus();
         }
     };
+
+    const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        event.preventDefault();
+        router.push('/search');
+        handleSearch(event.target.value);
+
+    }
+
+    const handleOnFocus = () => {
+        router.push('/search');
+        if (inputRef.current) {
+            inputRef.current.focus();
+        }
+    }
 
     const handleLogOut = async () => {
         try {
@@ -68,7 +83,7 @@ export default function Header() {
         }
     };
     const handleCloseButton = () => {
-        router.back();
+        router.push('/ideas');
         handleCloseSearch();
         window.scrollTo({ top: 0 });
     };
@@ -112,9 +127,6 @@ export default function Header() {
     useEffect(() => {
         handleCloseSearch();
         switch (pathname) {
-            case '/ideas':
-                setTitle('Paper Take');
-                break;
             case '/account':
                 setTitle('Account');
                 break;
@@ -124,14 +136,11 @@ export default function Header() {
             case '/help':
                 setTitle('Help');
                 break;
-            case '/notes':
-                setTitle('Notes');
-                break;
-            case '/projects':
-                setTitle('Projects');
+            case '/ideas':
+                setTitle('Paper Take');
                 break;
             case '/search':
-                setTitle('Search');
+                setTitle('Paper Take');
                 break;
             case '/trash':
                 setTitle('Trash');
@@ -158,12 +167,6 @@ export default function Header() {
                             <Link className={pathname === '/ideas' ? styles.navLinkActive : styles.navLink} href='/ideas'>
                                 {pathname === '/ideas' ? <Lightbulb /> : <LightbulbOutlined />} Ideas
                             </Link>
-                            {/* <Link className={pathname === '/notes' ? styles.navLinkActive : styles.navLink} href='/notes'>
-                                {pathname === '/notes' ? <Note /> : <NoteOutlined />} Notes
-                            </Link>
-                            <Link className={pathname === '/projects' ? styles.navLinkActive : styles.navLink} href='/projects'>
-                                {pathname === '/projects' ? <AccountTree /> : <AccountTreeOutlined/>} Projects
-                            </Link> */}
                             <Link className={pathname === '/archive' ? styles.navLinkActive : styles.navLink} href='/archive'>
                                 {pathname === '/archive' ? <Archive /> : <ArchiveOutlined />} Archive
                             </Link>
@@ -190,9 +193,9 @@ export default function Header() {
                         id='headerInput'
                         type="text"
                         placeholder='Search...'
+                        onFocus={handleOnFocus}
                         value={searchTerm}
-                        onChange={(e) => handleSearch(e.target.value)}
-                        onFocus={handleOnFocusSearch}
+                        onChange={(event) => handleOnChange(event)}
                         ref={inputRef}
                     />
                     {pathname === '/search' && (

@@ -2,9 +2,10 @@
 
 import React, { createContext, useContext, useCallback, useState, useMemo, ReactNode, useEffect } from 'react';
 import { firestore } from '../firebase';
-import { collection, doc, FirestoreError, getDocs, orderBy, query, runTransaction, Timestamp } from "firebase/firestore";
+import { collection, doc, FirestoreError, getDocs, orderBy, query as firestoreQuery, runTransaction, Timestamp } from "firebase/firestore";
 import { Note, Project } from '../models';
 import { useAuthContext } from './AuthProvider';
+import { useSearchParams } from 'next/navigation';
 
 interface AppContextType {
     appError: string;
@@ -15,6 +16,7 @@ interface AppContextType {
     notes: Note[];
     projects: Project[];
     searchTerm: string;
+    searchIsFocused: boolean;
     clearAppError: () => void;
     createNote: (note: Note) => Promise<void>;
     createProject: (project: Project) => Promise<void>;
@@ -39,12 +41,14 @@ interface AppProviderProps {
 
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     const { user } = useAuthContext();
+    const searchParams = useSearchParams();
     const [appError, setAppError] = useState<string>('');
     const [notes, setNotes] = useState<Note[]>([]);
     const [projects, setProjects] = useState<Project[]>([]);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [filtered, setFiltered] = useState<(Note | Project)[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');
+    const [searchIsFocused, setSearchIsFocused] = useState<boolean>(false);
     const [info, setInfo] = useState<string>('');
     const [isLoadingApp, setIsLoadingApp] = useState<boolean>(false);
 
@@ -59,7 +63,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         try {
             console.log('Fetching notes from Firestore');
             const ref = collection(firestore, "users", user.uid, "notes");
-            const queryNotes = query(ref);
+            const queryNotes = (ref);
             const snapshot = await getDocs(queryNotes);
 
             if (snapshot.empty) {
@@ -93,7 +97,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         try {
             console.log('Fetching projects from Firestore');
             const ref = collection(firestore, "users", user.uid, "projects");
-            const queryProjects = query(ref, orderBy('createdAt', 'desc'));
+            const queryProjects = firestoreQuery(ref, orderBy('createdAt', 'desc'));
             const snapshot = await getDocs(queryProjects);
 
             if (snapshot.empty) {
@@ -190,6 +194,41 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         }
     }, [user, fetchData]);
 
+    // useEffect(() => {
+    //     if (query?.search) {
+    //         setSearchTerm(query.search as string);
+    //     }
+    // }, [query]);
+
+    useEffect(() => {
+        const term = searchParams.get('term') || '';
+        setSearchTerm(term);
+    }, [searchParams]);
+
+    useEffect(() => {
+        // const newFiltered = [
+        //     ...notes.filter(note =>
+        //         note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        //         note.content.toLowerCase().includes(searchTerm.toLowerCase())
+        //     ),
+        //     ...projects.filter(project =>
+        //         project.title.toLowerCase().includes(searchTerm.toLowerCase())
+        //     )
+        // ];
+        // setFiltered(newFiltered);
+
+        const url = new URL(window.location.href);
+        if (searchTerm) {
+            url.searchParams.set('term', searchTerm);
+        } else {
+            url.searchParams.delete('term');
+        }
+        window.history.replaceState({}, '', url);
+        console.log('URL updated with search term: ', searchTerm);
+        // console.log('Filtered items: ', newFiltered);
+    }, [searchTerm]);
+
+
     const createNote = useCallback(async (newNote: Note) => {
         const prevNotes = notes;
         newNote.createdAt = Timestamp.now();
@@ -263,6 +302,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         }
     }, [projects, firestoreService]);
 
+
     const handleSearch = useCallback((term: string) => {
         setSearchTerm(term);
         if (term.trim() === '') {
@@ -283,11 +323,12 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         setFiltered([]);
     }, []);
 
+
     const contextValue = useMemo(() => ({
-        appError, filtered, info, isLoadingApp, notes, projects, searchTerm, isModalOpen,
-        clearAppError, fetchData, handleSearch, handleCloseSearch, setIsModalOpen, setInfo, setNotes, setProjects, updateNote, updateProject, createNote, createProject, deleteNote, deleteProject
+        appError, filtered, info, isLoadingApp, notes, projects, searchTerm, searchIsFocused, isModalOpen,
+        clearAppError, fetchData, handleSearch, handleCloseSearch, setIsModalOpen, setInfo, setNotes, setProjects, setSearchIsFocused, updateNote, updateProject, createNote, createProject, deleteNote, deleteProject
     }), [
-        appError, filtered, info, isLoadingApp, notes, projects, searchTerm, isModalOpen,
+        appError, filtered, info, isLoadingApp, notes, projects, searchTerm, searchIsFocused, isModalOpen,
         clearAppError, fetchData, handleSearch, handleCloseSearch, updateNote, updateProject, createNote, createProject, deleteNote, deleteProject
     ]);
 

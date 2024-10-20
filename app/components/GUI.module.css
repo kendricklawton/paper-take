@@ -32,6 +32,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    border-radius: 8px;
 }
 
 .create,
@@ -44,12 +45,12 @@
 }
 
 .create {
-    box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
+    box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
 }
 
 .noteEdit,
 .read {
-    box-shadow: 0 2px 4px rgba(0.1, 0.1, 0.1, 0.1);
+    box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
 }
 
 .create,
@@ -76,13 +77,12 @@
     -moz-user-select: none;
     -webkit-user-select: none;
     user-select: none;
-    box-shadow: 0 0px 0px rgba(0, 0, 0, 0);
 }
 
 .create:hover,
 .read:hover,
 .noteEdit:hover {
-    /* box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1); */
+    box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
 }
 
 .footerWrapper {
@@ -114,12 +114,13 @@
 
 .menu,
 .backgroundMenu {
-    box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
+    box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
     background-color: white;
     display: flex;
     top: 44px;
     position: absolute;
     z-index: 6;
+    border-radius: 8px;
 }
 
 .backgroundMenu {
@@ -161,7 +162,8 @@
     justify-content: space-between;
     align-items: center;
     gap: 0.5rem;
-    border: 0.5px solid lightgrey;
+    /* border: 1px solid lightgrey; */
+    box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
     border-radius: 24px;
 }
 
@@ -169,7 +171,8 @@
 
     .create,
     .read,
-    .noteEdit {
+    .noteEdit,
+    .reminder {
         /* background-color: #121212; */
         border: 0.5px solid gray;
     }

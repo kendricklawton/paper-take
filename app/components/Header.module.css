@@ -66,6 +66,7 @@
 }
 
 .menu {
+    border-radius: 8px;
     background-color: white;
     display: flex;
     flex-direction: column;
@@ -111,6 +112,7 @@
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
     padding-right: 0.5rem;
+    border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
 }
 

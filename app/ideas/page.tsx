@@ -35,11 +35,7 @@ const Notes: React.FC = () => {
     return (
         <React.Fragment>
             <GUI operation={'create'} idea={newNote} />
-            {activeIdeas.length === 0 ? (
-                <div className={styles.pageText}>
-                    <p>Ideas you create will appear here</p>
-                </div>
-            ) : (
+            {
                 activeIdeas.map((idea, index) => (
                     <React.Fragment key={index}>
                         <div className={styles.spacer} />
@@ -51,7 +47,7 @@ const Notes: React.FC = () => {
                         />
                     </React.Fragment>
                 ))
-            )}
+            }
         </React.Fragment>
     );
 };

@@ -10,7 +10,6 @@ import React, {
     ReactNode,
 } from 'react';
 import { FirebaseError } from 'firebase/app';
-import { useRouter } from 'next/navigation';
 import {
     createUserWithEmailAndPassword,
     deleteUser,
@@ -53,8 +52,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [user, setUser] = useState<User | null>(null);
     const [userDisplayName, setUserDisplayName] = useState<string>('');
     const [userEmail, setUserEmail] = useState<string>('');
-    const [isLoadingAuth, setIsAuthLoading] = useState<boolean>(true);
-    const router = useRouter();
+    const [isLoadingAuth, setIsAuthLoading] = useState<boolean>(false);
 
     useEffect(() => {
         setIsAuthLoading(true);
@@ -67,14 +65,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 setUser(user);
-                router.push('/ideas'); 
             } else {
                 setUser(null);
             }
             setIsAuthLoading(false);
         });
         return () => unsubscribe();
-}, [ router ]);
+    }, []);
 
     useEffect(() => {
         if (user) {
@@ -179,12 +176,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const sendPasswordReset = useCallback(async (email: string): Promise<void> => {
         clearAuthError();
         try {
-            await sendPasswordResetEmail(auth, email, 
-            //     {
-            //     url: baseURL,
-            //     handleCodeInApp: true,
-            // }
-        );
+            await sendPasswordResetEmail(auth, email,
+                //     {
+                //     url: baseURL,
+                //     handleCodeInApp: true,
+                // }
+            );
         } catch (error) {
             handleAuthError(error);
             throw error;
@@ -196,11 +193,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         try {
             if (user) {
                 await sendEmailVerification(user,
-                //      {
-                //     url: baseURL,
-                //     handleCodeInApp: true,
-                // }
-            );
+                    //      {
+                    //     url: baseURL,
+                    //     handleCodeInApp: true,
+                    // }
+                );
             } else {
                 throw new Error('User not found.');
             }
@@ -232,11 +229,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 const credential = EmailAuthProvider.credential(user.email!, password);
                 await reauthenticateWithCredential(user, credential);
                 await verifyBeforeUpdateEmail(user, newEmail,
-                //      {
-                //     url: baseURL,
-                //     handleCodeInApp: true,
-                // }
-            );
+                    //      {
+                    //     url: baseURL,
+                    //     handleCodeInApp: true,
+                    // }
+                );
             } else {
                 throw new Error('User not found.');
             }

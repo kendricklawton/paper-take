@@ -12,6 +12,7 @@ import {
     NoteOutlined,
     AlarmAddOutlined,
     PushPinOutlined,
+    AccountTreeOutlined,
 } from '@mui/icons-material';
 import styles from "./GUI.module.css"
 import React from 'react';
@@ -51,6 +52,7 @@ interface GUIFooterProps {
     isReminderMenuOpen: boolean;
     isOptionsMenuOpen: boolean;
     isTrash: boolean;
+    // isHidden: boolean;
     backgroundMenuRef: React.RefObject<HTMLDivElement>;
     backgroundMenuRefButton: React.RefObject<HTMLButtonElement>;
     fontMenuRef: React.RefObject<HTMLDivElement>;
@@ -90,6 +92,7 @@ export default function GUIFooter({
     isEditMode,
     isBackgroundMenuOpen,
     isHovering,
+    // isHidden,
     // isFontMenuOpen,
     isReminderMenuOpen,
     isOptionsMenuOpen,
@@ -119,8 +122,7 @@ export default function GUIFooter({
     toggleDelete,
     toggleModeTrue,
     toggleReminder,
-}: GUIFooterProps) {
-
+}: GUIFooterProps) {    
     const showFooter = isEditMode || initialOperation === 'read';
     const showFooterIcons = isEditMode || (isHovering && initialOperation === 'read') || isBackgroundMenuOpen || isOptionsMenuOpen || isReminderMenuOpen;
     const showCloseButton = initialOperation === 'create' || isEditMode;
@@ -159,7 +161,6 @@ export default function GUIFooter({
         minute: '2-digit'
     });
 
-
     //     return (
     //         <div className={styles.menuHeader}> <p>{content}</p></div>
     //     );
@@ -188,10 +189,10 @@ export default function GUIFooter({
                                 )
                             }
                         </div>
-                        <StyledTooltip title={type === 'note' ? 'Note' : 'Project'}>
+                        <StyledTooltip title={type === 'note' ? 'Note' : 'Project'} >
                             <span>
-                                <StyledIconButton disabled={true}>
-                                    <NoteOutlined />
+                                <StyledIconButton onClick={toggleModeTrue}>
+                                    {type === 'note' ? <NoteOutlined /> : <AccountTreeOutlined />}
                                 </StyledIconButton>
                             </span>
                         </StyledTooltip>
@@ -257,6 +258,7 @@ export default function GUIFooter({
                                                 </div>
                                             )}
                                         </div>
+
                                         {initialOperation !== 'create' && (
                                             <StyledTooltip title={'Archive note'} >
                                                 <StyledIconButton aria-label="Archive" onClick={() => toggleArchive()}>
@@ -318,7 +320,7 @@ export default function GUIFooter({
                                     <StyledTooltip title={type === 'note' ? 'Note' : 'Project'} >
                                         <span>
                                             <StyledIconButton onClick={toggleModeTrue}>
-                                                <NoteOutlined  />
+                                                {type === 'note'  ? <NoteOutlined  /> : <AccountTreeOutlined />}
                                             </StyledIconButton>
                                         </span>
                                     </StyledTooltip>
