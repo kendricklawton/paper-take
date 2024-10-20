@@ -23,6 +23,7 @@ import { useAppContext } from '../providers/AppProvider';
 import { useAuthContext } from '../providers/AuthProvider';
 import styles from "./Header.module.css";
 import { StyledIconButton } from './Styled';
+import { Suspense } from 'react';
 
 export default function Header() {
     // Contexts
@@ -155,117 +156,119 @@ export default function Header() {
     }
 
     return (
-        <header className={isScrolled ? styles.headerScrolled : styles.header}>
-            {/* Nav Leading */}
-            <div className={styles.headerLeading}>
-                <div className={styles.navAnchor}>
-                    <StyledIconButton ref={navButtonRef} onClick={() => setIsNavMenuOpen(prev => !prev)}>
-                        {isNavMenuOpen ? <Close /> : <MenuOpen />}
-                    </StyledIconButton>
-                    {isNavMenuOpen && (
-                        <nav className={styles.menu} ref={navMenuRef}>
-                            <Link className={pathname === '/ideas' ? styles.navLinkActive : styles.navLink} href='/ideas'>
-                                {pathname === '/ideas' ? <Lightbulb /> : <LightbulbOutlined />} Ideas
-                            </Link>
-                            <Link className={pathname === '/archive' ? styles.navLinkActive : styles.navLink} href='/archive'>
-                                {pathname === '/archive' ? <Archive /> : <ArchiveOutlined />} Archive
-                            </Link>
-                            <Link className={pathname === '/trash' ? styles.navLinkActive : styles.navLink} href='/trash'>
-                                {pathname === '/trash' ? <Delete /> : <DeleteOutlined />} Trash
-                            </Link>
-                            <Link className={pathname === '/help' ? styles.navLinkActive : styles.navLink} href='/help'>
-                                {pathname === '/help' ? <HelpCenter /> : <HelpCenterOutlined />} Help
-                            </Link>
-                        </nav>
-                    )}
-                </div>
-                <div className={styles.headerTitle}>
-                    <p>{title}</p>
-                </div>
-                {/* Nav Input */}
-                <div className={styles.searchInputContainer}>
-                    <StyledIconButton onClick={handleSearchButton}>
-                        <Search />
-                    </StyledIconButton>
-                    <input
-                        autoComplete="off"
-                        className={styles.searchInput}
-                        id='headerInput'
-                        type="text"
-                        placeholder='Search...'
-                        onFocus={handleOnFocus}
-                        value={searchTerm}
-                        onChange={(event) => handleOnChange(event)}
-                        ref={inputRef}
-                    />
-                    {pathname === '/search' && (
-                        <StyledIconButton onClick={handleCloseButton}>
-                            <Close />
+        <Suspense>
+            <header className={isScrolled ? styles.headerScrolled : styles.header}>
+                {/* Nav Leading */}
+                <div className={styles.headerLeading}>
+                    <div className={styles.navAnchor}>
+                        <StyledIconButton ref={navButtonRef} onClick={() => setIsNavMenuOpen(prev => !prev)}>
+                            {isNavMenuOpen ? <Close /> : <MenuOpen />}
                         </StyledIconButton>
-                    )}
-                </div>
-            </div>
-            {/* Nav Trailing */}
-            <div className={styles.headerTrailing}>
-                {
-                    user && ((isLoadingApp || isLoadingAuth) ? (
-                        <StyledIconButton>
-                            <CircularProgress size={20} />
+                        {isNavMenuOpen && (
+                            <nav className={styles.menu} ref={navMenuRef}>
+                                <Link className={pathname === '/ideas' ? styles.navLinkActive : styles.navLink} href='/ideas'>
+                                    {pathname === '/ideas' ? <Lightbulb /> : <LightbulbOutlined />} Ideas
+                                </Link>
+                                <Link className={pathname === '/archive' ? styles.navLinkActive : styles.navLink} href='/archive'>
+                                    {pathname === '/archive' ? <Archive /> : <ArchiveOutlined />} Archive
+                                </Link>
+                                <Link className={pathname === '/trash' ? styles.navLinkActive : styles.navLink} href='/trash'>
+                                    {pathname === '/trash' ? <Delete /> : <DeleteOutlined />} Trash
+                                </Link>
+                                <Link className={pathname === '/help' ? styles.navLinkActive : styles.navLink} href='/help'>
+                                    {pathname === '/help' ? <HelpCenter /> : <HelpCenterOutlined />} Help
+                                </Link>
+                            </nav>
+                        )}
+                    </div>
+                    <div className={styles.headerTitle}>
+                        <p>{title}</p>
+                    </div>
+                    {/* Nav Input */}
+                    <div className={styles.searchInputContainer}>
+                        <StyledIconButton onClick={handleSearchButton}>
+                            <Search />
                         </StyledIconButton>
-                    ) : (
-                        <StyledIconButton onClick={fetchData}>
-                            <Refresh />
+                        <input
+                            autoComplete="off"
+                            className={styles.searchInput}
+                            id='headerInput'
+                            type="text"
+                            placeholder='Search...'
+                            onFocus={handleOnFocus}
+                            value={searchTerm}
+                            onChange={(event) => handleOnChange(event)}
+                            ref={inputRef}
+                        />
+                        {pathname === '/search' && (
+                            <StyledIconButton onClick={handleCloseButton}>
+                                <Close />
+                            </StyledIconButton>
+                        )}
+                    </div>
+                </div>
+                {/* Nav Trailing */}
+                <div className={styles.headerTrailing}>
+                    {
+                        user && ((isLoadingApp || isLoadingAuth) ? (
+                            <StyledIconButton>
+                                <CircularProgress size={20} />
+                            </StyledIconButton>
+                        ) : (
+                            <StyledIconButton onClick={fetchData}>
+                                <Refresh />
+                            </StyledIconButton>
+                        ))
+                    }
+                    <div className={styles.settingsAnchor}>
+                        <StyledIconButton
+                            ref={settingsButtonRef}
+                            onClick={() => setIsSettingsMenuOpen(prev => !prev)}>
+                            {isSettingsMenuOpen ? <Settings /> : <SettingsOutlined />}
                         </StyledIconButton>
-                    ))
-                }
-                <div className={styles.settingsAnchor}>
-                    <StyledIconButton
-                        ref={settingsButtonRef}
-                        onClick={() => setIsSettingsMenuOpen(prev => !prev)}>
-                        {isSettingsMenuOpen ? <Settings /> : <SettingsOutlined />}
-                    </StyledIconButton>
-                    {isSettingsMenuOpen && (
-                        <nav className={styles.menu} ref={settingsMenuRef}>
-                            <div className={styles.navLink}>
-                                Todo - Settings Menu
-                            </div>
-                            <div className={styles.navLink}>
-                                Todo - Project
-                            </div>
-                            <div className={styles.navLink}>
-                                Todo - Drag Drop Grid
-                            </div>
-                            <div className={styles.navLink}>
-                                Todo - Too Much
-                            </div>
-                        </nav>
-                    )}
+                        {isSettingsMenuOpen && (
+                            <nav className={styles.menu} ref={settingsMenuRef}>
+                                <div className={styles.navLink}>
+                                    Todo - Settings Menu
+                                </div>
+                                <div className={styles.navLink}>
+                                    Todo - Project
+                                </div>
+                                <div className={styles.navLink}>
+                                    Todo - Drag Drop Grid
+                                </div>
+                                <div className={styles.navLink}>
+                                    Todo - Too Much
+                                </div>
+                            </nav>
+                        )}
+                    </div>
+                    <div className={styles.accountAnchor}>
+                        <StyledIconButton ref={accountButtonRef} onClick={() => setIsAccountMenuOpen(prev => !prev)}>
+                            {isAccountMenuOpen ? <Circle /> : <CircleOutlined />}
+                        </StyledIconButton>
+                        {isAccountMenuOpen && (
+                            <nav className={styles.menu} ref={accountMenuRef}>
+                                {user && (
+                                    <Link className={styles.navLink}
+                                        onClick={() => setIsAccountMenuOpen(false)} href='/account'>
+                                        <AccountBoxOutlined /> Account
+                                    </Link>
+                                )}
+                                {user ? (
+                                    <Link className={styles.navLink} href='/' onClick={handleLogOut}>
+                                        <LogoutOutlined /> Log Out
+                                    </Link>
+                                ) : (
+                                    <Link className={styles.navLink} href='/' onClick={() => setIsAccountMenuOpen(false)}>
+                                        <LoginOutlined /> Login
+                                    </Link>
+                                )}
+                            </nav>
+                        )}
+                    </div>
                 </div>
-                <div className={styles.accountAnchor}>
-                    <StyledIconButton ref={accountButtonRef} onClick={() => setIsAccountMenuOpen(prev => !prev)}>
-                        {isAccountMenuOpen ? <Circle /> : <CircleOutlined />}
-                    </StyledIconButton>
-                    {isAccountMenuOpen && (
-                        <nav className={styles.menu} ref={accountMenuRef}>
-                            {user && (
-                                <Link className={styles.navLink}
-                                    onClick={() => setIsAccountMenuOpen(false)} href='/account'>
-                                    <AccountBoxOutlined /> Account
-                                </Link>
-                            )}
-                            {user ? (
-                                <Link className={styles.navLink} href='/' onClick={handleLogOut}>
-                                    <LogoutOutlined /> Log Out
-                                </Link>
-                            ) : (
-                                <Link className={styles.navLink} href='/' onClick={() => setIsAccountMenuOpen(false)}>
-                                    <LoginOutlined /> Login
-                                </Link>
-                            )}
-                        </nav>
-                    )}
-                </div>
-            </div>
-        </header>
+            </header>
+        </Suspense>
     );
 }

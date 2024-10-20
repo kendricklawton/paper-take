@@ -1,7 +1,7 @@
 import { Button, IconButton, styled, TextField, ToggleButton, Tooltip, tooltipClasses, TooltipProps } from "@mui/material";
 import { Circle } from "@mui/icons-material";
 
-const defaultBorderRadius = '8px';
+const defaultBorderRadius = '0px';
 
 export const StyledIconButton = styled(IconButton)({
     color: 'gray',
@@ -28,7 +28,6 @@ export const TransparentIconButton = styled(IconButton)<BackgroundIconButtonProp
 export const TransparentIcon = styled(Circle)({
     color: 'transparent',
     border: 'none',
-    // borderRadius: '50%',
 });
 export const BackgroundIconButton = styled(IconButton)<BackgroundIconButtonProps>(({ selected }) => ({
     padding: '0.25rem',
@@ -183,8 +182,7 @@ export const StyledButton = styled(Button)({
     fontWeight: 'lighter',
     color: 'white',
     backgroundColor: 'black',
-    // borderRadius: '0px',
-    defaultBorderRadius,
+    borderRadius: defaultBorderRadius,
     '&:disabled': {
         backgroundColor: '#f0f0f0',
         color: 'gray',
@@ -203,8 +201,7 @@ export const StyledNoteButton = styled(Button)({
     fontWeight: 'lighter',
     color: 'grey',
     backgroundColor: 'transparent',
-    // borderRadius: '0px',
-    defaultBorderRadius,
+    borderRadius: defaultBorderRadius,
     '@media (prefers-color-scheme: dark)': {
         color: 'grey',
         backgroundColor: 'transparent',
@@ -217,8 +214,8 @@ export const StyledNoteButtonTwo = styled(Button)({
     fontWeight: 'lighter',
     color: 'grey',
     backgroundColor: 'transparent',
-    // borderRadius: '0px',
-    defaultBorderRadius,
+
+    borderRadius: defaultBorderRadius,
     '@media (prefers-color-scheme: dark)': {
         color: 'grey',
         backgroundColor: 'transparent',
@@ -300,8 +297,7 @@ export const StyledToggleButton = styled(ToggleButton)({
 });
 
 export const StyledTextButton = styled(Button)({
-    defaultBorderRadius,
-    // borderRadius: '0px',
+    borderRadius: defaultBorderRadius,
     '@media (prefers-color-scheme: dark)': {
         color: 'lightgray',
     }
@@ -313,7 +309,7 @@ export const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
     [`& .${tooltipClasses.tooltip}`]: {
         fontFamily: 'monospace',
         backgroundColor: 'gray',
-        borderRadius: '0px',
+        borderRadius: defaultBorderRadius,
         color: 'white',
         boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
         fontSize: '1rem',

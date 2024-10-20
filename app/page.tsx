@@ -222,7 +222,7 @@ export default function Login() {
                                 <Divider orientation='horizontal'>OR</Divider>
                             </div>
                             <div className={styles.form}>
-                                <StyledButton className={styles.button} onClick={handleContinueWithoutAccount} startIcon={<Policy />}>
+                                <StyledButton  onClick={handleContinueWithoutAccount} startIcon={<Policy />}>
                                     Continue without an account
                                 </StyledButton>
                             </div>
