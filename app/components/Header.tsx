@@ -36,7 +36,6 @@ export default function Header() {
         handleCloseSearch, 
         isLoadingApp,
         fetchData,
-        // setSearchTerm,
     } = useAppContext();
 
 
@@ -157,11 +156,6 @@ export default function Header() {
         }
     }, [handleCloseSearch, pathname]);
 
-    // useEffect(() => {
-    //     const term = searchParams.get('term') || '';
-    //     setSearchTerm(term);
-    // }, [searchParams]);
-
     useEffect(() => {
         const url = new URL(window.location.href);
         if (searchTerm) {
@@ -206,7 +200,7 @@ export default function Header() {
                         )}
                     </div>
                     <div className={styles.headerTitle}>
-                        <p>{title}</p>
+                        <p>{title ? title : 'Paper Take'}</p>
                     </div>
                     {/* Nav Input */}
                     <div className={styles.searchInputContainer}>

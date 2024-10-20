@@ -26,7 +26,6 @@ interface AppContextType {
     fetchData: () => void;
     handleCloseSearch: () => void;
     handleSearch: (term: string) => void;
-    setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
     setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
     setInfo: React.Dispatch<React.SetStateAction<string>>;
     setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
@@ -193,13 +192,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         }
     }, [user, fetchData]);
 
-    // useEffect(() => {
-    //     if (query?.search) {
-    //         setSearchTerm(query.search as string);
-    //     }
-    // }, [query]);
-
-
     const createNote = useCallback(async (newNote: Note) => {
         const prevNotes = notes;
         newNote.createdAt = Timestamp.now();
@@ -297,7 +289,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
     const contextValue = useMemo(() => ({
         appError, filtered, info, isLoadingApp, notes, projects, searchTerm, searchIsFocused, isModalOpen,
-        clearAppError, fetchData, handleSearch, handleCloseSearch, setIsModalOpen, setInfo, setNotes, setProjects, setSearchIsFocused, setSearchTerm, updateNote, updateProject, createNote, createProject, deleteNote, deleteProject
+        clearAppError, fetchData, handleSearch, handleCloseSearch, setIsModalOpen, setInfo, setNotes, setProjects, setSearchIsFocused, updateNote, updateProject, createNote, createProject, deleteNote, deleteProject
     }), [
         appError, filtered, info, isLoadingApp, notes, projects, searchTerm, searchIsFocused, isModalOpen,
         clearAppError, fetchData, handleSearch, handleCloseSearch, updateNote, updateProject, createNote, createProject, deleteNote, deleteProject
