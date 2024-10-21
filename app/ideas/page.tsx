@@ -11,7 +11,7 @@ import {
 } from "../models";
 import { v4 as uuidv4 } from 'uuid';
 
-const Notes: React.FC = () => {
+const IdeasList: React.FC = () => {
     const { notes, projects } = useAppContext();
 
     const activeNotes: Note[] = notes.filter(note => !note.isArchived && !note.isTrash);
@@ -56,7 +56,7 @@ const Notes: React.FC = () => {
 export default function Ideas() {
     return (
             <main className={styles.page}>
-                <Notes />
+                <IdeasList />
             </main>
     );
 }
