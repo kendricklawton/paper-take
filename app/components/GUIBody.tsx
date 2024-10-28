@@ -31,10 +31,10 @@ export default function GUIBody({
     toggleModeTrue
 }: GUIBodyProps) {
     const readOnlyMode = initialOperation === 'read' && !isModalMode;
-    const placeholderText = (initialOperation === 'create'  || isEditMode )? 'Create an idea...' : 'Empty note...';
+    const placeholderText = (initialOperation === 'create' || isEditMode) ? 'Create an idea...' : 'Empty note...';
     const router = useRouter();
     const dontShow = content.length === 0 && !isEditMode && title.length > 0;
-    
+
     const handleFocus = (event: React.FocusEvent<HTMLTextAreaElement>) => {
         event.preventDefault();
         setFocus('body');
@@ -45,7 +45,7 @@ export default function GUIBody({
         if (readOnlyMode || initialOperation === 'create') {
             toggleModeTrue();
         }
-        setFocus('body'); 
+        setFocus('body');
     };
 
     const handleNoteButton = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -78,43 +78,39 @@ export default function GUIBody({
         <React.Fragment>
             {(
                 !dontShow
-            // initialOperation === "create" || 
-            // content.length > 0 || 
-            // isEditMode
-            // true
-        ) && (
-                <NoteBodyTextField
-                    inputProps={{
-                        readOnly: readOnlyMode
-                    }}
-                    autoComplete='off'
-                    multiline={isEditMode || content.length > 0}
-                    onChange={handleContentChange}
-                    onClick={handleClick}
-                    onFocus={handleFocus}
-                    placeholder={placeholderText}
-                    sx={{
-                        '& .MuiInputBase-input': {
-                            cursor: isEditMode ? 'text' : 'default',
-                        },
-                        '& .MuiOutlinedInput-root': {
-                            cursor: isEditMode ? 'text' : 'default',
-                        },
-                    }}
-                    slotProps={{
-                        input: {
-                            endAdornment: endAdornment,
-                        },
-                    }}
-                    value={content}
-                  
-                    inputRef={inputBody => {
-                        if (inputBody && isEditMode && focus === 'body') {
-                            inputBody.focus();
-                        }
-                    }}
-                />
-            )}
+            ) && (
+                    <NoteBodyTextField
+                        inputProps={{
+                            readOnly: readOnlyMode
+                        }}
+                        autoComplete='off'
+                        multiline={isEditMode || content.length > 0}
+                        onChange={handleContentChange}
+                        onClick={handleClick}
+                        onFocus={handleFocus}
+                        placeholder={placeholderText}
+                        sx={{
+                            '& .MuiInputBase-input': {
+                                cursor: isEditMode ? 'text' : 'default',
+                            },
+                            '& .MuiOutlinedInput-root': {
+                                cursor: isEditMode ? 'text' : 'default',
+                            },
+                        }}
+                        slotProps={{
+                            input: {
+                                endAdornment: endAdornment,
+                            },
+                        }}
+                        value={content}
+
+                        inputRef={inputBody => {
+                            if (inputBody && isEditMode && focus === 'body') {
+                                inputBody.focus();
+                            }
+                        }}
+                    />
+                )}
         </React.Fragment>
     );
 }

@@ -15,7 +15,6 @@ export default function Trash() {
         projects,
     } = useAppContext();
 
-
     const trashNotes = notes.filter(note => note.isTrash);
     const trashProjects = projects.filter(project => project.isTrash);
     const trashIdeas: (Note | Project)[] = [...trashNotes, ...trashProjects];
@@ -26,6 +25,7 @@ export default function Trash() {
                 trashIdeas.length === 0 &&
                 <React.Fragment>
                     <h2>Trash is empty</h2>
+                    <div className={styles.spacer} />
                 </React.Fragment>
             }
             <React.Fragment>

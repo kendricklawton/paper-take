@@ -164,7 +164,7 @@ export default function Header() {
             url.searchParams.delete('term');
         }
         window.history.replaceState({}, '', url);
-        console.log('URL updated with search term: ', searchTerm);
+        // console.log('URL updated with search term: ', searchTerm);
     }, [searchTerm]);
 
 

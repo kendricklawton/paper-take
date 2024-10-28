@@ -162,11 +162,6 @@ export default function GUIFooter({
         minute: '2-digit'
     });
 
-    //     return (
-    //         <div className={styles.menuHeader}> <p>{content}</p></div>
-    //     );
-    // }
-
     return (
         <React.Fragment>
             {isTrash ?

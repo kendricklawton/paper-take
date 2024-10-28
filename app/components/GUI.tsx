@@ -275,52 +275,6 @@ const GUI: React.FC<GUIProps> = ({
         }
     }, [isBackgroundMenuOpen, isFontMenuOpen, isReminderMenuOpen, isOptionsMenuOpen, isEditMode, isTrash, initialOperation, handleNote]);
 
-    // const handleClickOutside = useCallback((event: MouseEvent) => {
-    //     event.stopPropagation();
-    //     if (
-    //         isBackgroundMenuOpen &&
-    //         backgroundMenuRef.current &&
-    //         !backgroundMenuRef.current.contains(event.target as Node) &&
-    //         !(backgroundMenuRefButton.current && backgroundMenuRefButton.current.contains(event.target as Node))
-    //     ) {
-    //         setIsBackgroundMenu(false);
-    //     }
-
-    //     if (
-    //         isFontMenuOpen &&
-    //         fontMenuRef.current &&
-    //         !fontMenuRef.current.contains(event.target as Node) &&
-    //         !(fontMenuRefButton.current && fontMenuRefButton.current.contains(event.target as Node))
-    //     ) {
-    //         setIsFontMenu(false);
-    //     }
-
-    //     if (isReminderMenuOpen &&
-    //         reminderMenuRef.current &&
-    //         !reminderMenuRef.current.contains(event.target as Node) &&
-    //         !(reminderMenuRefButton.current && reminderMenuRefButton.current.contains(event.target as Node))
-    //     ) {
-    //         setIsReminderMenu(false);
-    //     }
-
-    //     if (
-    //         isOptionsMenuOpen &&
-    //         optionsMenuRef.current &&
-    //         !optionsMenuRef.current.contains(event.target as Node) &&
-    //         !(optionsMenuRefButton.current && optionsMenuRefButton.current.contains(event.target as Node))
-    //     ) {
-    //         setIsOptionsMenu(false);
-    //     }
-
-    // if (isEditMode || isTrash) {
-    //     if (initialOperation === 'create' && noteCreateRef.current && !noteCreateRef.current.contains(event.target as Node)) {
-    //         handleNote();
-    //     } else if (noteEditRef.current && !noteEditRef.current.contains(event.target as Node)) {
-    //         handleNote();
-    //     }
-    // }
-    // }, [isBackgroundMenuOpen, isFontMenuOpen, isReminderMenuOpen, isOptionsMenuOpen, isEditMode, isTrash, initialOperation, handleNote]);
-
     const handleMouseEnter = useCallback(() => {
         setIsHovering(true);
     }, []);
@@ -381,6 +335,7 @@ const GUI: React.FC<GUIProps> = ({
     };
     
     const toggleDelete = async () => {
+
         if (isTrash) {
             setInfo('Note restored');
         } else {

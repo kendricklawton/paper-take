@@ -11,25 +11,45 @@ import Link from 'next/link';
 
 const IdeasList: React.FC = () => {
     const { authChecked, user } = useAuthContext();
-    const { ideasIds, notes, projects } = useAppContext();
+    const { ideas, notes, projects, handleUpdateIdeas } = useAppContext();
 
     const [activeIdeas, setActiveIdeas] = useState<(Note | Project)[]>([]);
-    const [activeIdeasIds, setActiveIdeasIds] = useState<string[]>([]);
     const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
     const handleDragStart = (event: React.DragEvent<HTMLDivElement>, index: number) => {
-        event.dataTransfer.setData('text/plain', '');
+        event.dataTransfer.setData('text/plain', index.toString());
         setDraggedIndex(index);
-    }
 
-    const handleDrop = (index: number) => {
+        const dragImage = event.currentTarget.cloneNode(true) as HTMLElement;
+        document.body.appendChild(dragImage);
+        event.dataTransfer.setDragImage(dragImage, 0, 0);
+        setTimeout(() => {
+            document.body.removeChild(dragImage);
+        }, 0);
+    };
+
+    const handleDrop = async(event: React.DragEvent<HTMLDivElement>, index: number) => {
+        event.preventDefault();
+
+        const prevActiveIdeas = [...activeIdeas];
+
         if (draggedIndex === null) return;
-        const updatedIdeas = [...activeIdeas];
+
+        const updatedIdeas = [...ideas];
         const [movedIdea] = updatedIdeas.splice(draggedIndex, 1);
         updatedIdeas.splice(index, 0, movedIdea);
-        setActiveIdeas(updatedIdeas);
+
         setDraggedIndex(null);
-    }
+
+        try {
+            await handleUpdateIdeas(updatedIdeas);
+        } catch (error) {
+            console.error(error);
+            setActiveIdeas(prevActiveIdeas);
+            return;
+        }
+
+    };
 
     const newNote = new Note(
         null,
@@ -51,15 +71,22 @@ const IdeasList: React.FC = () => {
             ...projects.filter(project => !project.isArchived && !project.isTrash)
         ];
 
-        const updatedActiveIdeasIds = ideasIds.filter(id => updatedActiveIdeas.some(idea => idea.id === id));
+        const updatedActiveIdeasIds = ideas.filter(id =>
+            updatedActiveIdeas.some(idea => idea.id === id)
+        );
 
-        setActiveIdeas(updatedActiveIdeas);
-        setActiveIdeasIds(updatedActiveIdeasIds);
+        const orderedActiveIdeas = updatedActiveIdeasIds.map(id =>
+            updatedActiveIdeas.find(idea => idea.id === id)
+        ).filter((idea): idea is Note | Project => idea !== undefined);
+
+        setActiveIdeas(orderedActiveIdeas);
         
-    }, [ideasIds, notes, projects]);
+        console.log('notes', notes);
+        console.log('projects', projects);
+        console.log('ideas', ideas);
+        console.log('orderedActiveIdeas', orderedActiveIdeas);
 
-    // console.log('activeIdeas', activeIdeas);
-    console.log('activeIdeasIds', activeIdeasIds);
+    }, [ideas, notes, projects]);
 
     return (
         <React.Fragment>
@@ -78,7 +105,7 @@ const IdeasList: React.FC = () => {
                             idea={idea}
                             draggableProps={{
                                 onDragStart: (event) => handleDragStart(event, index),
-                                onDrop: () => handleDrop(index),
+                                onDrop: (event) => handleDrop(event, index),
                             }}
                         />
                     </React.Fragment>
