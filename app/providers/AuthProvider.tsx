@@ -333,7 +333,6 @@ import {
     User,
 } from "firebase/auth";
 import { auth } from '../firebase';
-import Cookies from 'js-cookie';
 
 interface AuthContextType {
     authChecked: boolean;
@@ -351,8 +350,6 @@ interface AuthContextType {
     sendUserVerification: () => Promise<void>;
     updateUserDisplayName: (newDisplayName: string) => Promise<void>;
     updateUserEmail: (newEmail: string, password: string) => Promise<void>;
-    getUserEmailFromCookie: () => string | undefined;
-    getUserDisplayNameFromCookie: () => string | undefined; // New method for display name
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -374,13 +371,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 const displayName = user.displayName || '';
                 setUserDisplayName(displayName);
                 setUserEmail(email);
-                Cookies.set('userEmail', email, { expires: 7 });
-                Cookies.set('userDisplayName', displayName, { expires: 7 }); // Store display name
             } else {
                 setUserDisplayName('');
                 setUserEmail('');
-                Cookies.remove('userEmail');
-                Cookies.remove('userDisplayName'); // Remove display name
             }
             setIsAuthLoading(false);
             setAuthChecked(true);
@@ -427,8 +420,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             await sendEmailVerification(userCredential.user);
             setUser(userCredential.user);
-            Cookies.set('userEmail', email, { expires: 7 });
-            Cookies.set('userDisplayName', userCredential.user.displayName || '', { expires: 7 }); // Store display name
         } catch (error) {
             handleAuthError(error);
             throw error;
@@ -443,8 +434,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 await reauthenticateWithCredential(user, credential);
                 await deleteUser(user);
                 setUser(null);
-                Cookies.remove('userEmail');
-                Cookies.remove('userDisplayName'); // Remove display name
             }
         } catch (error) {
             handleAuthError(error);
@@ -457,8 +446,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             setUser(userCredential.user);
-            Cookies.set('userEmail', email, { expires: 7 });
-            Cookies.set('userDisplayName', userCredential.user.displayName || '', { expires: 7 }); // Store display name
         } catch (error) {
             handleAuthError(error);
             throw error;
@@ -470,8 +457,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         try {
             await auth.signOut();
             setUser(null);
-            Cookies.remove('userEmail');
-            Cookies.remove('userDisplayName'); // Remove display name
         } catch (error) {
             handleAuthError(error);
             throw error;
@@ -508,7 +493,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             if (user) {
                 await updateProfile(user, { displayName: newDisplayName });
                 setUserDisplayName(newDisplayName);
-                Cookies.set('userDisplayName', newDisplayName, { expires: 7 }); // Update display name in cookies
             } else {
                 throw new Error('User not found.');
             }
@@ -525,7 +509,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 const credential = EmailAuthProvider.credential(user.email!, password);
                 await reauthenticateWithCredential(user, credential);
                 await verifyBeforeUpdateEmail(user, newEmail);
-                Cookies.set('userEmail', newEmail, { expires: 7 }); // Update email in cookies
             } else {
                 throw new Error('User not found.');
             }
@@ -534,14 +517,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             throw error;
         }
     }, [clearAuthError, handleAuthError, user]);
-
-    const getUserEmailFromCookie = useCallback((): string | undefined => {
-        return Cookies.get('userEmail');
-    }, []);
-
-    const getUserDisplayNameFromCookie = useCallback((): string | undefined => {
-        return Cookies.get('userDisplayName');
-    }, []);
 
     const contextValue = useMemo(() => ({
         authError,
@@ -559,8 +534,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         sendUserVerification,
         updateUserDisplayName,
         updateUserEmail,
-        getUserEmailFromCookie,
-        getUserDisplayNameFromCookie, // Include the new method
     }), [
         authError,
         authChecked,
@@ -577,8 +550,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         sendUserVerification,
         updateUserDisplayName,
         updateUserEmail,
-        getUserEmailFromCookie,
-        getUserDisplayNameFromCookie,
     ]);
 
     return (
