@@ -142,7 +142,8 @@ export const NoteHeaderTextField = styled(TextField)({
         fontFamily: 'monospace',
         fontWeight: 'lighter',
         WebkitTapHighlightColor: 'transparent',
-        // touchAction: 'none',
+        WebkitUserSelect: 'none',
+        color: '#121212',
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': { border: 'none' },
@@ -162,6 +163,8 @@ export const NoteBodyTextField = styled(TextField)({
         fontFamily: 'monospace',
         fontWeight: 'lighter',
         WebkitTapHighlightColor: 'transparent',
+        WebkitUserSelect: 'none',
+        color: '#121212',
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': { border: 'none' },
@@ -212,12 +215,12 @@ export const StyledNoteButtonTwo = styled(Button)({
     width: '90px',
     fontFamily: 'monospace',
     fontWeight: 'lighter',
-    color: 'grey',
+    color: '#121212',
     backgroundColor: 'transparent',
 
     borderRadius: defaultBorderRadius,
     '@media (prefers-color-scheme: dark)': {
-        color: 'grey',
+        color: 'lightgray',
         backgroundColor: 'transparent',
     },
 });

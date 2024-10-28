@@ -8,9 +8,13 @@ import AccountModal from '../components/AccountModal';
 import Link from 'next/link';
 
 export default function Account() {
-    const { user, userDisplayName, userEmail } = useAuthContext();
+    const { user, userDisplayName, userEmail, 
+        // getUserDisplayNameFromCookie, getUserEmailFromCookie
+     } = useAuthContext();
     const [method, setMethod] = useState('');
     const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+    // const userDisplayNameCookie = getUserDisplayNameFromCookie();
+    // const userEmailCookie = getUserEmailFromCookie();
 
     const pushToDeleteAccount = () => {
         // if (user?.emailVerified === false) {
@@ -52,7 +56,7 @@ export default function Account() {
                             user?.emailVerified === false && (
                                 <div className={styles.containerItem} onClick={pushToSendVerification}>
                                     <div className={styles.containerItemLeading}>
-                                        <p className={styles.textError}>Account Needs Email Verification!</p>
+                                        <p className={styles.textError}>Verify Account!</p>
                                     </div>
                                     <div className={styles.containerItemTrailing}>
                                         <ArrowForwardIos style={{
@@ -102,8 +106,7 @@ export default function Account() {
                             </div>
                         </div>
                     </div>
-                    <div className={styles.spacer} />
-                    <p className={styles.textTerms}>
+                    <p>
                         Need help with something else, please contact <Link href="mailto:support@machinename.dev?subject=Support%20Request&body=Please%20describe%20your%20issue%20here." className={styles.textTerms}>support</Link>
                     </p>
                 </div>

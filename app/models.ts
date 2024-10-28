@@ -1,7 +1,7 @@
 import { Timestamp } from "firebase/firestore"; 
 
 export class Note {
-    createdAt: Timestamp | undefined;
+    createdAt: Timestamp | null;
     id: string;
     title: string;
     backgroundColor: '#ffffff' | '#fff59c' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5';
@@ -11,11 +11,11 @@ export class Note {
     isPinned: boolean;
     isTrash: boolean;
     images: string[];
-    reminder: Timestamp | undefined;
+    reminder: Timestamp | null;
     type: 'note';
 
     constructor(
-        createdAt: Timestamp | undefined,
+        createdAt: Timestamp | null,
         backgroundColor: '#ffffff' | '#fff59c' | '#aaf0d1' | '#b2dfdb' | '#f5f5f5',
         backgroundColorDark: '#121212' | "#9c955c" | '#5f8775' | '#005c5a' | '#8a8a8a',
         id: string,
@@ -26,7 +26,7 @@ export class Note {
         isPinned: boolean,
         isTrash: boolean,
         images: string[] = [],
-        reminder: Timestamp | undefined,
+        reminder: Timestamp | null,
     ) {
         this.createdAt = createdAt;
         this.backgroundColor = backgroundColor;

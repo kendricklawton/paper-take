@@ -14,22 +14,18 @@ import { AlarmAddOutlined, CloseOutlined } from '@mui/icons-material';
 import { Timestamp } from 'firebase/firestore';
 
 interface GUIProps {
-    // draggable?: boolean;
-    // handleDragStart?: (e: React.DragEvent<HTMLDivElement>, index: number) => void;
-    // handleDragOver?: (e: React.DragEvent<HTMLDivElement>, index: number) => void;
-    // handleDrop?: (index: number) => void;
+    draggableProps?: {
+        onDragStart?: (event: React.DragEvent<HTMLDivElement>) => void;
+        onDrop?: (event: React.DragEvent<HTMLDivElement>) => void;
+        onDragOver?: (event: React.DragEvent<HTMLDivElement>) => void;
+    };
     noteIndex?: number;
     operation: 'read' | 'create';
     idea: Note | Project;
-    // note?: Note;
-    // project?: Project;
 }
 
 const GUI: React.FC<GUIProps> = ({
-    // handleDragStart,
-    // handleDragOver,
-    // handleDrop,
-    // noteIndex,
+    draggableProps,
     operation,
     idea: idea,
 }) => {
@@ -52,7 +48,7 @@ const GUI: React.FC<GUIProps> = ({
     const [title, setTitle] = useState(idea.title);
     const [content, setContent] = useState(idea.type === 'note' ? idea.content : '');
     const [contentArray, setContentArray] = useState([idea.type === 'note' ? idea.content : '']);
-    const [reminder, setReminder] = useState<Timestamp | undefined>(idea.reminder);
+    const [reminder, setReminder] = useState(idea.reminder);
     const [backgroundColor, setBackgroundColor] = useState(idea.type === 'note' ? idea.backgroundColor : '#ffffff');
     const [backgroundColorDark, setBackgroundColorDark] = useState(idea.type === 'note' ? idea.backgroundColorDark : '#121212');
 
@@ -77,6 +73,13 @@ const GUI: React.FC<GUIProps> = ({
         minute: '2-digit'
     }) : undefined;
 
+    const handleClearSelection = () => {
+        const selection = window.getSelection();
+        if (selection) {
+            selection.removeAllRanges();
+        }
+    };
+
     const handleTitleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (isTrash) return;
         const newValue = event.target.value;
@@ -96,6 +99,7 @@ const GUI: React.FC<GUIProps> = ({
             setContentArray([...contentArray.slice(0, index.current), newValue]);
         }
     };
+    
 
     const handleReminderMenu = () => {
         if (isTrash) {
@@ -106,6 +110,8 @@ const GUI: React.FC<GUIProps> = ({
      
     }
     const handleResetNote = useCallback(() => {
+        handleClearSelection();
+
         if (initialOperation === 'create') {
             setContent('');
             setTitle('');
@@ -114,10 +120,13 @@ const GUI: React.FC<GUIProps> = ({
             setReminder(undefined);
         }
 
+       
+
         setIsModalMode(false);
         setContentArray([content]);
         setIsEditMode(false);
         setIsHovering(false);
+
         index.current = 0;
         nestedIndex.current = 0;
         if (infoRef.current) {
@@ -172,7 +181,7 @@ const GUI: React.FC<GUIProps> = ({
             isPinned,
             isTrash,
             idea.type === 'note' ? idea.images : [],
-            reminder,
+            reminder ?? null,
         );
 
         const prevNote = idea as Note;
@@ -210,7 +219,7 @@ const GUI: React.FC<GUIProps> = ({
         if (isTrash) return;
 
         const newNote = new Note(
-            undefined,
+            null,
             backgroundColor,
             backgroundColorDark,
             uuidv4(),
@@ -220,7 +229,7 @@ const GUI: React.FC<GUIProps> = ({
             false,
             false,
             [],
-            reminder,
+            reminder ?? null,
         );
 
         await createNote(newNote);
@@ -403,7 +412,12 @@ const GUI: React.FC<GUIProps> = ({
             return;
         }
 
-        setReminder(reminder);
+        if(reminder === undefined) {
+            setReminder(null);
+        } else {
+            setReminder(reminder);
+        }
+ 
         if (initialOperation === 'read') {
             if (idea.type == 'note') {
                 const updatedNote = new Note(
@@ -414,11 +428,12 @@ const GUI: React.FC<GUIProps> = ({
                     title,
                     content,
                     isArchived,
-                            isPinned,
+                    isPinned,
                     isTrash,
                     idea.images,
-                    reminder,
+                    reminder ?? null,
                 );
+                console.log('Updated note:', updatedNote);
                 await updateNote(updatedNote);
             }
         }
@@ -426,6 +441,8 @@ const GUI: React.FC<GUIProps> = ({
     }
 
     const toggleModeTrue = () => {
+        handleClearSelection();
+        
         if (isTrash) {
             setInfo('Cannot edit note in trash');
             return;
@@ -435,8 +452,6 @@ const GUI: React.FC<GUIProps> = ({
         }
         setIsEditMode(true);
     };
-
-
 
     useEffect(() => {
         const previousOverflow = document.body.style.overflow;
@@ -458,10 +473,14 @@ const GUI: React.FC<GUIProps> = ({
 
     return (
         <div
-            // draggable={initialOperation === 'read' && !isModalMode}
-            // onDragStart={(e) => handleDragStart && handleDragStart(e, noteIndex ?? 0)}
-            // onDragOver={(e) => handleDragOver && handleDragOver(e, noteIndex ?? 0)}
-            // onDrop={() => handleDrop && handleDrop(noteIndex ?? 0)}
+            draggable={initialOperation === 'read' && !isTrash && !isModalMode}
+            {...draggableProps}
+            onDragOver={
+                (event) => {
+                    event.preventDefault();
+                    setIsHovering(false);
+                }
+            }
             className={(isModalMode ? styles.containerModal : styles.container)}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}

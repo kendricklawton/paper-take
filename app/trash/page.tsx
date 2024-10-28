@@ -21,21 +21,29 @@ export default function Trash() {
     const trashIdeas: (Note | Project)[] = [...trashNotes, ...trashProjects];
 
     return (
-            <div className={styles.page}>
-                {
-                    trashIdeas.length > 0 && (
-                        trashIdeas.map((idea, index) => (
-                            <React.Fragment key={index}>
-                                <div className={styles.spacer} />
-                                <GUI
-                                    key={idea.id}
-                                    operation={'read'}
-                                    idea={idea}
-                                />
-                            </React.Fragment>
-                        )
-                        )
-                    )}
-            </div >
+        <div className={styles.page}>
+            {
+                trashIdeas.length === 0 &&
+                <React.Fragment>
+                    <h2>Trash is empty</h2>
+                </React.Fragment>
+            }
+            <React.Fragment>
+                <p>Notes in trash will be delete after 7 days.</p>
+            </React.Fragment>
+            {trashIdeas.length > 0 && (
+                trashIdeas.map((idea, index) => (
+                    <React.Fragment key={index}>
+                        <div className={styles.spacer} />
+                        <GUI
+                            key={idea.id}
+                            operation={'read'}
+                            idea={idea}
+                        />
+                    </React.Fragment>
+                )
+                )
+            )}
+        </div >
     );
 }

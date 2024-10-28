@@ -26,7 +26,6 @@ export default function Archive() {
                     archiveIdeas.length === 0 &&
                     <React.Fragment>
                         <h2>Archive is empty</h2>
-                        <p>Archive contains all your archived notes and projects.</p>
                     </React.Fragment>
                 }
                 {archiveIdeas.length > 0 && (

@@ -29,7 +29,7 @@ import { StyledIconButton } from './Styled';
 
 export default function Header() {
     // Contexts
-    const { isLoadingAuth, logOut, user } = useAuthContext();
+    const { isAuthLoading, logOut, user } = useAuthContext();
     const {
         searchTerm,
         handleSearch, 
@@ -40,14 +40,12 @@ export default function Header() {
 
 
     // State Variables
-    const [title, setTitle] = useState('');
     const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
     const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
     const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
 
     const pathname = usePathname();
-    // const searchParams = useSearchParams();
     const router = useRouter();
 
     const accountMenuRef = useRef<HTMLDivElement>(null);
@@ -118,43 +116,45 @@ export default function Header() {
         };
     }, [accountButtonRef, accountMenuRef, navButtonRef, navMenuRef, settingsButtonRef, settingsMenuRef]);
 
-
     useEffect(() => {
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 0);
+            if (window.scrollY > 0) {
+                setIsScrolled(true);
+                // document.body.classList.remove('hide-scrollbar');
+            } else {
+                setIsScrolled(false);
+                // document.body.classList.add('hide-scrollbar');
+            }
         };
+
+        handleScroll();
 
         window.addEventListener('scroll', handleScroll);
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
     }, []);
+    
 
-    useEffect(() => {
-        handleCloseSearch();
+    const getTitle = () => {
         switch (pathname) {
             case '/account':
-                setTitle('Account');
-                break;
+                return 'Account';
             case '/archive':
-                setTitle('Archive');
-                break;
+                return 'Archive';
             case '/help':
-                setTitle('Help');
-                break;
-            case '/ideas':
-                setTitle('Paper Take');
-                break;
+                return 'Help';
+            case '/':
+                return 'Paper Take';
             case '/search':
-                setTitle('Paper Take');
-                break;
+                return 'Paper Take';
             case '/trash':
-                setTitle('Trash');
-                break;
+                return 'Trash';
             default:
-                setTitle('Paper Take');
+                return 'Paper Take';
         }
-    }, [handleCloseSearch, pathname]);
+    };
+
 
     useEffect(() => {
         const url = new URL(window.location.href);
@@ -165,11 +165,10 @@ export default function Header() {
         }
         window.history.replaceState({}, '', url);
         console.log('URL updated with search term: ', searchTerm);
-        // console.log('Filtered items: ', newFiltered);
     }, [searchTerm]);
 
 
-    if (pathname === '/') {
+    if (pathname === '/login') {
         return null;
     }
 
@@ -184,8 +183,8 @@ export default function Header() {
                         </StyledIconButton>
                         {isNavMenuOpen && (
                             <nav className={styles.menu} ref={navMenuRef}>
-                                <Link className={pathname === '/ideas' ? styles.navLinkActive : styles.navLink} href='/ideas'>
-                                    {pathname === '/ideas' ? <Lightbulb /> : <LightbulbOutlined />} Ideas
+                                <Link className={pathname === '/' ? styles.navLinkActive : styles.navLink} href='/'>
+                                    {pathname === '/' ? <Lightbulb /> : <LightbulbOutlined />} Ideas
                                 </Link>
                                 <Link className={pathname === '/archive' ? styles.navLinkActive : styles.navLink} href='/archive'>
                                     {pathname === '/archive' ? <Archive /> : <ArchiveOutlined />} Archive
@@ -200,7 +199,7 @@ export default function Header() {
                         )}
                     </div>
                     <div className={styles.headerTitle}>
-                        <p>{title ? title : 'Paper Take'}</p>
+                        <p>{getTitle()}</p>
                     </div>
                     {/* Nav Input */}
                     <div className={styles.searchInputContainer}>
@@ -228,7 +227,7 @@ export default function Header() {
                 {/* Nav Trailing */}
                 <div className={styles.headerTrailing}>
                     {
-                        user && ((isLoadingApp || isLoadingAuth) ? (
+                        (isLoadingApp || isAuthLoading) ? (
                             <StyledIconButton>
                                 <CircularProgress size={20} />
                             </StyledIconButton>
@@ -236,7 +235,7 @@ export default function Header() {
                             <StyledIconButton onClick={fetchData}>
                                 <Refresh />
                             </StyledIconButton>
-                        ))
+                        )
                     }
                     <div className={styles.settingsAnchor}>
                         <StyledIconButton
@@ -278,7 +277,7 @@ export default function Header() {
                                         <LogoutOutlined /> Log Out
                                     </Link>
                                 ) : (
-                                    <Link className={styles.navLink} href='/' onClick={() => setIsAccountMenuOpen(false)}>
+                                    <Link className={styles.navLink} href='/login' onClick={() => setIsAccountMenuOpen(false)}>
                                         <LoginOutlined /> Login
                                     </Link>
                                 )}

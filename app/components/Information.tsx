@@ -19,7 +19,7 @@ const Information: React.FC =()=> {
             <div className={styles.information} ref={informationRef}>
                 <p>{info}</p>
                 <IconButton onClick={() => setInfo('')}
-                    sx={{ color: 'white'}}>
+                    sx={{ color: 'lightgray'}}>
                     <Close />
                 </IconButton>
             </div>

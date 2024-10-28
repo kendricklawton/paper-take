@@ -12,7 +12,7 @@ import {
     NoteOutlined,
     AlarmAddOutlined,
     PushPinOutlined,
-    AccountTreeOutlined,
+    AccountTreeOutlined
 } from '@mui/icons-material';
 import styles from "./GUI.module.css"
 import React from 'react';
@@ -71,6 +71,8 @@ interface GUIFooterProps {
     handleRedo: (event: React.MouseEvent<HTMLButtonElement>) => void;
     handleUndo: (event: React.MouseEvent<HTMLButtonElement>) => void;
     handleMakeACopy: () => void;
+    handleMoveUp?: () => void;
+    handleMoveDown?: () => void;
     setIsBackgroundMenu: React.Dispatch<React.SetStateAction<boolean>>;
     setIsFontMenu: React.Dispatch<React.SetStateAction<boolean>>;
     setIsReminderMenu: React.Dispatch<React.SetStateAction<boolean>>;
@@ -107,7 +109,6 @@ export default function GUIFooter({
     optionsMenuRef,
     optionsMenuRefButton,
     index,
-
     handleDeleteNote,
     handleMakeACopy,
     // handleSend,
@@ -122,7 +123,7 @@ export default function GUIFooter({
     toggleDelete,
     toggleModeTrue,
     toggleReminder,
-}: GUIFooterProps) {    
+}: GUIFooterProps) {
     const showFooter = isEditMode || initialOperation === 'read';
     const showFooterIcons = isEditMode || (isHovering && initialOperation === 'read') || isBackgroundMenuOpen || isOptionsMenuOpen || isReminderMenuOpen;
     const showCloseButton = initialOperation === 'create' || isEditMode;
@@ -222,9 +223,9 @@ export default function GUIFooter({
                                             {isReminderMenuOpen && (
                                                 <div className={styles.menu} ref={reminderMenuRef}>
                                                     {/* {MenuHeader('Reminder')} */}
-                                                    <MenuItem disableGutters sx={MenuItemStyles} onClick={()=> toggleReminder(sixHours)} >6 hours  <span>{sixHoursString}</span></MenuItem>
-                                                    <MenuItem disableGutters sx={MenuItemStyles} onClick={()=> toggleReminder(twelveHours)}>12 hours <span>{twelveHoursString}</span></MenuItem>
-                                                    <MenuItem disableGutters sx={MenuItemStyles} onClick={()=> toggleReminder(twentyFourHours)}>24 hours <span>{twentyFourHoursString}</span></MenuItem>
+                                                    <MenuItem disableGutters sx={MenuItemStyles} onClick={() => toggleReminder(sixHours)} >6 hours  <span>{sixHoursString}</span></MenuItem>
+                                                    <MenuItem disableGutters sx={MenuItemStyles} onClick={() => toggleReminder(twelveHours)}>12 hours <span>{twelveHoursString}</span></MenuItem>
+                                                    <MenuItem disableGutters sx={MenuItemStyles} onClick={() => toggleReminder(twentyFourHours)}>24 hours <span>{twentyFourHoursString}</span></MenuItem>
                                                     {/* <MenuItem disableGutters sx={MenuItemStyles}>Pick date & time</MenuItem> */}
                                                 </div>
                                             )}
@@ -317,13 +318,15 @@ export default function GUIFooter({
                             </React.Fragment>
                             {
                                 (initialOperation === 'read' && !isEditMode) && (
-                                    <StyledTooltip title={type === 'note' ? 'Note' : 'Project'} >
-                                        <span>
-                                            <StyledIconButton onClick={toggleModeTrue}>
-                                                {type === 'note'  ? <NoteOutlined  /> : <AccountTreeOutlined />}
-                                            </StyledIconButton>
-                                        </span>
-                                    </StyledTooltip>
+                                    <div>
+                                        <StyledTooltip title={type === 'note' ? 'Note' : 'Project'} >
+                                            <span>
+                                                <StyledIconButton onClick={toggleModeTrue}>
+                                                    {type === 'note' ? <NoteOutlined /> : <AccountTreeOutlined />}
+                                                </StyledIconButton>
+                                            </span>
+                                        </StyledTooltip>
+                                    </div>
                                 )
                             }
                         </div>
