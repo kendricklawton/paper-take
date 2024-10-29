@@ -45,6 +45,10 @@ export default function Account() {
         setIsAccountModalOpen(true);
     }
 
+    if (!user) {
+        return null;
+    }
+
     return (
             <div className={styles.page}>
                 <div className={styles.wrapperAccount}>
