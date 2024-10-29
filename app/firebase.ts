@@ -2,7 +2,6 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
 
-// Define the type for the Firebase configuration object
 interface FirebaseConfig {
     apiKey: string;
     authDomain: string;
@@ -14,7 +13,6 @@ interface FirebaseConfig {
     measurementId?: string;
 }
 
-// Firebase configuration object
 const firebaseConfig: FirebaseConfig = {
     apiKey: process.env.FIREBASE_API_KEY as string,
     authDomain: process.env.FIREBASE_AUTH_DOMAIN as string,
@@ -24,14 +22,6 @@ const firebaseConfig: FirebaseConfig = {
     messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID as string,
     appId: process.env.FIREBASE_APP_ID as string,
     measurementId: process.env.FIREBASE_MEASUREMENT_ID,
-    // apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY as string,
-    // authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN as string,
-    // databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL as string,
-    // projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID as string,
-    // storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET as string,
-    // messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID as string,
-    // appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID as string,
-    // measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
 let app;
