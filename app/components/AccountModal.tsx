@@ -4,12 +4,13 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation'
 import styles from "../page.module.css";
 import { useAuthContext } from '../providers/AuthProvider';
-import { useAppContext } from '../providers/AppProvider'; 
+import { useAppContext } from '../providers/AppProvider';
 import {
     InputAdornment
- } from '@mui/material';
-import { 
-    VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material';
+} from '@mui/material';
+import {
+    VisibilityOffOutlined, VisibilityOutlined
+} from '@mui/icons-material';
 import { StyledButton, FormTextField } from './Styled';
 
 interface AccountModalProps {
@@ -22,8 +23,8 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
     const Router = useRouter();
 
     const { authError, user, userDisplayName, userEmail, clearAuthError, sendPasswordReset, updateUserDisplayName, updateUserEmail,
-        deleteUserAccount } = useAuthContext();
-    
+        deleteUserAccount, sendUserVerification } = useAuthContext();
+
     const { setInfo } = useAppContext();
 
     const [deleteAccount, setDeleteAccount] = useState('');
@@ -61,53 +62,75 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setErrors({ displayName: '', email: '', password: '' });
+
         try {
             console.log(method);
-            if (method === "email") {
-                if (email === user?.email) {
-                    setErrors({ ...errors, email: 'Email is the same as current email' });
-                    return;
-                }
-                await updateUserEmail(email, password);
-                clearValues();
-                setInfo('Please verify your new email address');
-            } else if (method === "password") {
-                if (user?.email) {
-                    await sendPasswordReset(user?.email);
+            switch (method) {
+                case "email":
+                    if (email === user?.email) {
+                        setErrors({ ...errors, email: 'Email is the same as current email' });
+                        return;
+                    }
+                    await updateUserEmail(email, password);
                     clearValues();
-                    setInfo('Password reset link sent to your email');
-                }
-            } else if (method === "delete") {
-                await deleteUserAccount(password);
-                clearValues();
-                Router.push('/');
-                setInfo('Account deleted successfully');
-            } else if (method === "displayName") {
-                if (newDisplayName === user?.displayName) {
-                    setErrors({ ...errors, displayName: 'Display name is the same as current display name' });
-                    return;
-                }
-                await updateUserDisplayName(newDisplayName);
-                clearValues();
+                    setInfo('Please verify your new email address');
+                    break;
+
+                case "password":
+                    if (user?.email) {
+                        await sendPasswordReset(user?.email);
+                        clearValues();
+                        setInfo('Password reset link sent to your email');
+                    }
+                    break;
+
+                case "delete":
+                    await deleteUserAccount(password);
+                    clearValues();
+                    Router.push('/');
+                    setInfo('Account deleted successfully');
+                    break;
+
+                case "displayName":
+                    if (newDisplayName === user?.displayName) {
+                        setErrors({ ...errors, displayName: 'Display name is the same as current display name' });
+                        return;
+                    }
+                    await updateUserDisplayName(newDisplayName);
+                    clearValues();
+                    setInfo('Display name updated successfully');
+                    break;
+
+                case "verification":
+                    if (email !== user?.email) {
+                        setErrors({ ...errors, email: 'Email is not the same as current email' });
+                        return;
+                    }
+                    await sendUserVerification();
+                    clearValues();
+                    setInfo('Please verify your new email address');
+                    break;
+
+                default:
+                    console.error('Unknown method:', method);
             }
         } catch (error) {
-            // clearValues();
             console.log(error);
-            // setInfo('An error occurred: ' + error);
+            setInfo('An error occurred: ' + error);
         }
     };
 
     const isButtonEnabled = () => {
         if (method === "email") {
-            return email.trim() !== '' && password.trim() !== '' && password.length > 6;
+            return email.trim() !== '' && password.trim() !== '';
         } else if (method === "password") {
             return user?.email === email;
         } else if (method === "delete") {
-            return deleteAccount === "delete-my-account" && password.trim() !== '' && password.length > 6;
+            return deleteAccount === "delete-my-account" && password.trim() !== '';
         } else if (method === "displayName") {
             return newDisplayName.trim() !== '' && newDisplayName.length > 1;
         } else if (method === "verification") {
-            return true;
+            return email.trim() !== ''
         }
         return false;
     };
@@ -118,11 +141,12 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                 return (
                     <React.Fragment>
                         <h1>Update email</h1>
-                       {
-                        userEmail && (
-                            <p>{userEmail}</p>
-                        )
-                       } 
+                        {
+                            userEmail && (
+                                <p>{userEmail}</p>
+                            )
+                        }
+                        <p>To continue, type your new email and password below</p>
                     </React.Fragment>
                 );
             case "password":
@@ -130,7 +154,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                     <React.Fragment>
                         <h1>Reset password</h1>
                         <p>Password reset link will be sent to {userEmail}</p>
-                        <p>Type your email below to continue</p>
+                        <p>To continue, type your email below</p>
                         {/* <p>Password reset link will be sent to the following email &apos;{userEmail}&apos;. To verify, type your email below.</p> */}
                     </React.Fragment>
                 );
@@ -138,24 +162,24 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                 return (
                     <React.Fragment>
                         <h1>Delete account</h1>
-                        <p>We will delete your account associated with the email &apos;{userEmail}&apos;</p>
-                        <p>Type &apos;delete-my-account&apos; and enter your password below to continue</p>
+                        <p>We will delete your account and all data associated with the email &apos;{userEmail}&apos;</p>
+                        <p>To continue, type &apos;delete-my-account&apos; and password below</p>
                     </React.Fragment>
                 );
             case "displayName":
                 return (
                     <React.Fragment>
                         <h1>Update display name</h1>
-                        { userDisplayName && ( <p>{userDisplayName}</p> )
-                    }
+                        {userDisplayName && (<p>{userDisplayName}</p>)}
+                        <p>To continue, type your new display name below</p>
                     </React.Fragment>
                 );
             case "verification":
                 return (
                     <React.Fragment>
                         <h1>Email verification</h1>
-                        <p>Email verification link will be sent to the following email &apos;{userEmail}&apos;.</p>
-                        <p>To verify, type your email below.</p>
+                        <p>Email verification link will be sent to &apos;{userEmail}&apos;</p>
+                        <p>To continue, type your email below</p>
                     </React.Fragment>
                 );
             default:
@@ -251,9 +275,9 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                             />
                         )}
                         <React.Fragment>
-                            { errors.email && (<p className={styles.textError} aria-live="polite">{errors.email}</p>) }
-                            { errors.password && (<p className={styles.textError} aria-live="polite">{errors.password}</p>) }
-                            { authError && (<p className={styles.textError} aria-live="polite">{authError}</p>)}
+                            {errors.email && (<p className={styles.textError} aria-live="polite">{errors.email}</p>)}
+                            {errors.password && (<p className={styles.textError} aria-live="polite">{errors.password}</p>)}
+                            {authError && (<p className={styles.textError} aria-live="polite">{authError}</p>)}
                             {
                                 method === "password" ?
                                     <StyledButton className={styles.button} disabled={!isButtonEnabled()} type="submit">
@@ -265,7 +289,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                                     </StyledButton>
                             }
                             {
-                                ( method === "displayName" && user?.displayName ) && (
+                                (method === "displayName" && user?.displayName) && (
                                     <StyledButton className={styles.button} type="button" onClick={handleRemoveDisplayName}>
                                         Remove Display Name
                                     </StyledButton>

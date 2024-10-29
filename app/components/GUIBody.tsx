@@ -3,7 +3,7 @@
 import { InputAdornment } from "@mui/material";
 import { NoteBodyTextField, StyledNoteButtonTwo } from "./Styled";
 import React from "react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 interface GUIBodyProps {
     focus: 'title' | 'content' | '',
@@ -32,7 +32,7 @@ export default function GUIBody({
 }: GUIBodyProps) {
     const readOnlyMode = !isEditMode && !isModalMode;
     const placeholderText = (initialOperation === 'create' || isEditMode) ? 'Create an idea...' : 'Empty note...';
-    const router = useRouter();
+    // const router = useRouter();
     const dontShow = content.length === 0 && !isEditMode && title.length > 0;
 
     const handleFocus = (event: React.FocusEvent<HTMLTextAreaElement>) => {
@@ -59,11 +59,11 @@ export default function GUIBody({
         setIsModalMode(true);
     }
 
-    const handleProjectButton = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-        setIsEditMode(false);
-        router.push('/projects/create');
-    }
+    // const handleProjectButton = (event: React.MouseEvent<HTMLButtonElement>) => {
+    //     event.preventDefault();
+    //     setIsEditMode(false);
+    //     router.push('/projects/create');
+    // }
 
     const endAdornment = initialOperation === "create" && !isEditMode ? (
         <React.Fragment>
@@ -72,11 +72,11 @@ export default function GUIBody({
                     Note
                 </StyledNoteButtonTwo>
             </InputAdornment>
-            <InputAdornment position="end">
+            {/* <InputAdornment position="end">
                 <StyledNoteButtonTwo variant="contained" onClick={handleProjectButton}>
                     Project
                 </StyledNoteButtonTwo>
-            </InputAdornment>
+            </InputAdornment> */}
         </React.Fragment>
     ) : null;
 

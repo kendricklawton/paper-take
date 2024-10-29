@@ -18,8 +18,8 @@ import {
     // Settings,
     Lightbulb,
     LightbulbOutlined,
-    Settings,
-    SettingsOutlined
+    // Settings,
+    // SettingsOutlined
 } from '@mui/icons-material';
 
 import { useAppContext } from '../providers/AppProvider';
@@ -42,7 +42,7 @@ export default function Header() {
     // State Variables
     const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
     const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
-    const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
+    // const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
 
     const pathname = usePathname();
@@ -86,7 +86,7 @@ export default function Header() {
         }
     };
     const handleCloseButton = () => {
-        router.push('/ideas');
+        router.push('/');
         handleCloseSearch();
         window.scrollTo({ top: 0 });
     };
@@ -103,11 +103,11 @@ export default function Header() {
                     setIsAccountMenuOpen(false);
                 }
             }
-            if (settingsMenuRef.current && !settingsMenuRef.current.contains(event.target as Node)) {
-                if (!settingsButtonRef.current?.contains(event.target as Node)) {
-                    setIsSettingsMenuOpen(false);
-                }
-            }
+            // if (settingsMenuRef.current && !settingsMenuRef.current.contains(event.target as Node)) {
+            //     if (!settingsButtonRef.current?.contains(event.target as Node)) {
+            //         setIsSettingsMenuOpen(false);
+            //     }
+            // }
         };
 
         document.addEventListener('mousedown', handleClickOutside);
@@ -217,7 +217,7 @@ export default function Header() {
                             onChange={(event) => handleOnChange(event)}
                             ref={inputRef}
                         />
-                        {pathname === '/search' && (
+                        {(pathname === '/search') && (
                             <StyledIconButton onClick={handleCloseButton}>
                                 <Close />
                             </StyledIconButton>
@@ -237,7 +237,7 @@ export default function Header() {
                             </StyledIconButton>
                         )
                     }
-                    <div className={styles.settingsAnchor}>
+                    {/* <div className={styles.settingsAnchor}>
                         <StyledIconButton
                             ref={settingsButtonRef}
                             onClick={() => setIsSettingsMenuOpen(prev => !prev)}>
@@ -259,7 +259,7 @@ export default function Header() {
                                 </div>
                             </nav>
                         )}
-                    </div>
+                    </div> */}
                     <div className={styles.accountAnchor}>
                         <StyledIconButton ref={accountButtonRef} onClick={() => setIsAccountMenuOpen(prev => !prev)}>
                             {isAccountMenuOpen ? <Circle /> : <CircleOutlined />}

@@ -6,8 +6,10 @@ import { useAuthContext } from "../providers/AuthProvider";
 import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos';
 import AccountModal from '../components/AccountModal';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation'
 
 export default function Account() {
+    const router = useRouter();
     const { user, userDisplayName, userEmail, 
         // getUserDisplayNameFromCookie, getUserEmailFromCookie
      } = useAuthContext();
@@ -46,6 +48,7 @@ export default function Account() {
     }
 
     if (!user) {
+        router.push('/');
         return null;
     }
 

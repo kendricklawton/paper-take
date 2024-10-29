@@ -10,11 +10,12 @@ export default function Search() {
         filtered
     } = useAppContext();
 
+    const activeFiltered = filtered.filter(idea => !idea.isTrash);
     return (
             <div className={styles.page}>
                 {
-                    filtered.length > 0 && (
-                        filtered.map((idea, index) => (
+                    activeFiltered.length > 0 && (
+                        activeFiltered.map((idea, index) => (
                             <React.Fragment key={index}>
                                 <div className={styles.spacer} />
                                 <GUI

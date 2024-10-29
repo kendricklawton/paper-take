@@ -29,7 +29,7 @@ export default function Trash() {
                 </React.Fragment>
             }
             <React.Fragment>
-                <p>Notes in trash will be delete after 7 days.</p>
+                {/* <p>Notes in trash will be delete after 7 days.</p> */}
             </React.Fragment>
             {trashIdeas.length > 0 && (
                 trashIdeas.map((idea, index) => (
