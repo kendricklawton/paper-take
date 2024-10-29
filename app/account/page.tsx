@@ -11,18 +11,11 @@ import { useRouter } from 'next/navigation'
 export default function Account() {
     const router = useRouter();
     const { user, userDisplayName, userEmail, 
-        // getUserDisplayNameFromCookie, getUserEmailFromCookie
      } = useAuthContext();
     const [method, setMethod] = useState('');
     const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
-    // const userDisplayNameCookie = getUserDisplayNameFromCookie();
-    // const userEmailCookie = getUserEmailFromCookie();
 
     const pushToDeleteAccount = () => {
-        // if (user?.emailVerified === false) {
-        //     alert("You must verify your current email before making account changes.");
-        //     return;
-        // }
         setMethod('delete');
         setIsAccountModalOpen(true);
     }

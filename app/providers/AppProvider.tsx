@@ -16,10 +16,6 @@ interface AppContextType {
     notes: Note[];
     projects: Project[];
     searchTerm: string;
-    addOfflineIdeasToFirebase: (
-        offlineIdeas: (Note | Project)[],
-        offlineIdeasId: string[]
-    ) => Promise<void>;
     clearAppError: () => void;
     createNote: (note: Note) => Promise<void>;
     createProject: (project: Project) => Promise<void>;
@@ -104,6 +100,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
             const firestoreNotes: Note[] = snapshot.docs.map(doc => ({
                 ...doc.data(),
             }) as Note);
+
             setNotes(firestoreNotes);
         } catch (error) {
             if (error instanceof FirestoreError) {
@@ -263,38 +260,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         }
     }, [user]);
 
-    const addOfflineIdeasToFirebase = useCallback(async (offlineIdeas: (Note | Project)[], offlineIdeasIds: string[]) => {
-        if (!user) {
-            console.log("No user is logged in, adding offline notes to Firestore");
-            return;
-        }
-        console.log("Adding offline notes to Firestore");
-        console.log(offlineIdeas);
-        console.log(offlineIdeasIds);
-
-
-        console.log("Adding offline notes to Firestore");
-        // offlineNotes.forEach(async (idea) => {
-        //     try {
-        //         if(idea.type === "note") {
-        //             await firestoreService("notes", "create", idea, offlineIdeas);
-        //         } else if(idea.type === "project") {
-        //             await firestoreService("projects", "create", idea, offlineIdeas);
-        //         } else {
-        //             console.error("Invalid idea type");
-        //         }
-
-        //     } catch(error) {
-        //         console.error('Error creating note: ', error);
-        //     }
-
-        // });
-    }, [user]);
 
     useEffect(() => {
         if (user) {
             fetchData();
-
         } else {
             setNotes([]);
             setProjects([]);
@@ -429,10 +398,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
     const contextValue = useMemo(() => ({
         appError, filtered, ideas, info, isLoadingApp, notes, projects, searchTerm,isModalOpen,
-        addOfflineIdeasToFirebase, clearAppError, fetchData, handleUpdateIdeas, handleSearch, handleCloseSearch, setIsModalOpen, setInfo, setNotes, setProjects, updateNote, updateProject, createNote, createProject, deleteNote, deleteProject
+        clearAppError, fetchData, handleUpdateIdeas, handleSearch, handleCloseSearch, setIsModalOpen, setInfo, setNotes, setProjects, updateNote, updateProject, createNote, createProject, deleteNote, deleteProject
     }), [
         appError, filtered, ideas, info, isLoadingApp, notes, projects, searchTerm, isModalOpen,
-        addOfflineIdeasToFirebase, clearAppError, fetchData, handleUpdateIdeas, handleSearch, handleCloseSearch, updateNote, updateProject, createNote, createProject, deleteNote, deleteProject
+        clearAppError, fetchData, handleUpdateIdeas, handleSearch, handleCloseSearch, updateNote, updateProject, createNote, createProject, deleteNote, deleteProject
     ]);
 
     return (

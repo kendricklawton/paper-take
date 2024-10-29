@@ -10,7 +10,7 @@ import { useAuthContext } from './providers/AuthProvider';
 import Link from 'next/link';
 
 const IdeasList: React.FC = () => {
-    const { authChecked, user } = useAuthContext();
+    const { user } = useAuthContext();
     const { ideas, notes, projects, handleUpdateIdeas } = useAppContext();
 
     const [activeIdeas, setActiveIdeas] = useState<(Note | Project)[]>([]);
@@ -49,6 +49,7 @@ const IdeasList: React.FC = () => {
             setActiveIdeas(prevActiveIdeas);
             return;
         }
+
     };
 
     const newNote = new Note(
@@ -91,10 +92,11 @@ const IdeasList: React.FC = () => {
     return (
         <React.Fragment>
             {
-                (!user && authChecked) && (
+                !user && (
                     <p className={styles.notesText}><Link href={"/login"}>Login</Link> to save notes</p>
                 )
             }
+       
             <GUI operation={'create'} idea={newNote} />
             {
                 activeIdeas.map((idea, index) => (
