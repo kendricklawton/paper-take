@@ -222,6 +222,7 @@ export const StyledNoteButtonTwo = styled(Button)({
     '@media (prefers-color-scheme: dark)': {
         color: 'lightgray',
         backgroundColor: 'transparent',
+        border: '1px solid gray',
     },
 });
 

@@ -39,8 +39,7 @@ const GUI: React.FC<GUIProps> = ({
     const [isReminderMenuOpen, setIsReminderMenu] = useState(false);
     const [isOptionsMenuOpen, setIsOptionsMenu] = useState(false);
     const [isHovering, setIsHovering] = useState<boolean>(false);
-    const [focus, setFocus] = useState<'title' | 'body'>('body');
-
+    const [focus, setFocus] = useState<'title' | 'content' | ''>('');
 
     const isArchived = idea.isArchived;
     const isPinned = idea.isPinned;
@@ -81,7 +80,7 @@ const GUI: React.FC<GUIProps> = ({
     };
 
     const handleTitleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        if (isTrash) return;
+        if (isTrash || !isEditMode) return;
         const newValue = event.target.value;
         if (newValue.length <= 1000) {
             setInfo(newValue.length > 900 ? `${1000 - newValue.length} characters remaining.` : '');
@@ -90,7 +89,7 @@ const GUI: React.FC<GUIProps> = ({
     };
 
     const handleContentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        if (isTrash) return;
+        if (isTrash || !isEditMode) return;
         const newValue = event.target.value;
         if (newValue.length <= 5000) {
             setInfo(newValue.length > 4500 ? `${5000 - newValue.length} characters remaining.` : '');
@@ -119,8 +118,6 @@ const GUI: React.FC<GUIProps> = ({
             setBackgroundColorDark('#121212');
             setReminder(undefined);
         }
-
-       
 
         setIsModalMode(false);
         setContentArray([content]);
@@ -395,18 +392,18 @@ const GUI: React.FC<GUIProps> = ({
         setIsReminderMenu(false);
     }
 
-    const toggleModeTrue = () => {
-        handleClearSelection();
+    // const toggleModeTrue = () => {
+    //     handleClearSelection();
         
-        if (isTrash) {
-            setInfo('Cannot edit note in trash');
-            return;
-        }
-        if (initialOperation === 'read') {
-            setIsModalMode(true);
-        }
-        setIsEditMode(true);
-    };
+    //     if (isTrash) {
+    //         setInfo('Cannot edit note in trash');
+    //         return;
+    //     }
+    //     if (initialOperation === 'read') {
+    //         setIsModalMode(true);
+    //     }
+    //     setIsEditMode(true);
+    // };
 
     useEffect(() => {
         const previousOverflow = document.body.style.overflow;
@@ -460,7 +457,9 @@ const GUI: React.FC<GUIProps> = ({
                         title={title}
                         handleTitleChange={handleTitleChange}
                         setFocus={setFocus}
-                        toggleModeTrue={toggleModeTrue}
+                        setIsEditMode={setIsEditMode}
+                        setIsModalMode={setIsModalMode}
+                        // toggleModeTrue={toggleModeTrue}
                     />
                     <GUIBody
                         focus={focus}
@@ -472,7 +471,8 @@ const GUI: React.FC<GUIProps> = ({
                         handleContentChange={handleContentChange}
                         setFocus={setFocus}
                         setIsEditMode={setIsEditMode}
-                        toggleModeTrue={toggleModeTrue}
+                        setIsModalMode={setIsModalMode}
+                        // toggleModeTrue={toggleModeTrue}
                     />
                 </div>
                 {
@@ -527,7 +527,9 @@ const GUI: React.FC<GUIProps> = ({
                     toggleReminder={toggleReminder}
                     toggleArchive={toggleArchive}
                     toggleDelete={toggleDelete}
-                    toggleModeTrue={toggleModeTrue}
+                    setIsEditMode={setIsEditMode}
+                    setIsModalMode={setIsModalMode}
+                    // toggleModeTrue={toggleModeTrue}
                 />
             </Box>
         </div>

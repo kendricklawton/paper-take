@@ -88,6 +88,10 @@
 .read:hover,
 .noteEdit:hover {
     box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
+        -ms-user-select: none;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            user-select: none;
 }
 
 .footerWrapper {

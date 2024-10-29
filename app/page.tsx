@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from "./page.module.css";
 import { useAppContext } from "./providers/AppProvider";
 import GUI from "./components/GUI";
@@ -18,17 +18,18 @@ const IdeasList: React.FC = () => {
 
     const handleDragStart = (event: React.DragEvent<HTMLDivElement>, index: number) => {
         event.dataTransfer.setData('text/plain', index.toString());
+        // event.dataTransfer.dropEffect = 'move';
         setDraggedIndex(index);
 
-        const dragImage = event.currentTarget.cloneNode(true) as HTMLElement;
-        document.body.appendChild(dragImage);
-        event.dataTransfer.setDragImage(dragImage, 0, 0);
-        setTimeout(() => {
-            document.body.removeChild(dragImage);
-        }, 0);
+        // const dragImage = event.currentTarget.cloneNode(true) as HTMLElement;
+        // document.body.appendChild(dragImage);
+        // event.dataTransfer.setDragImage(dragImage, 10, -10);
+        // setTimeout(() => {
+        //     document.body.removeChild(dragImage);
+        // }, 0);
     };
 
-    const handleDrop = async(event: React.DragEvent<HTMLDivElement>, index: number) => {
+    const handleDrop = async (event: React.DragEvent<HTMLDivElement>, index: number) => {
         event.preventDefault();
 
         const prevActiveIdeas = [...activeIdeas];
@@ -80,7 +81,7 @@ const IdeasList: React.FC = () => {
         ).filter((idea): idea is Note | Project => idea !== undefined);
 
         setActiveIdeas(orderedActiveIdeas);
-        
+
         console.log('notes', notes);
         console.log('projects', projects);
         console.log('ideas', ideas);
@@ -95,6 +96,7 @@ const IdeasList: React.FC = () => {
                     <p className={styles.notesText}><Link href={"/login"}>Login</Link> to save notes</p>
                 )
             }
+       
             <GUI operation={'create'} idea={newNote} />
             {
                 activeIdeas.map((idea, index) => (

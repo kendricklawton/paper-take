@@ -80,7 +80,8 @@ interface GUIFooterProps {
     toggleArchive: () => void;
     toggleDelete: () => void;
     toggleReminder: (reminder: Timestamp | undefined) => void;
-    toggleModeTrue: () => void;
+    setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>,
+    setIsModalMode: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
 export default function GUIFooter({
@@ -118,10 +119,11 @@ export default function GUIFooter({
     // setIsFontMenu,
     setIsOptionsMenu,
     setIsReminderMenu,
+    setIsEditMode,
+    setIsModalMode,
     toggleArchive,
     toggleBackgroundColor,
     toggleDelete,
-    toggleModeTrue,
     toggleReminder,
 }: GUIFooterProps) {
     const showFooter = isEditMode || initialOperation === 'read';
@@ -129,6 +131,11 @@ export default function GUIFooter({
     const showCloseButton = initialOperation === 'create' || isEditMode;
     const showMakeACopyButton = initialOperation === 'create' && (content.length > 0 || title.length > 0) || initialOperation === 'read';
 
+    const handleIdeaIconButton = () => {    
+        setIsModalMode(true);
+        setIsEditMode(true);
+    }
+    
     const sixHours = Timestamp.fromDate(new Date(
         new Date().setHours(new Date().getHours() + 6)
     ));
@@ -187,7 +194,7 @@ export default function GUIFooter({
                         </div>
                         <StyledTooltip title={type === 'note' ? 'Note' : 'Project'} >
                             <span>
-                                <StyledIconButton onClick={toggleModeTrue}>
+                                <StyledIconButton onClick={handleIdeaIconButton}>
                                     {type === 'note' ? <NoteOutlined /> : <AccountTreeOutlined />}
                                 </StyledIconButton>
                             </span>
@@ -316,7 +323,7 @@ export default function GUIFooter({
                                     <div>
                                         <StyledTooltip title={type === 'note' ? 'Note' : 'Project'} >
                                             <span>
-                                                <StyledIconButton onClick={toggleModeTrue}>
+                                                <StyledIconButton onClick={handleIdeaIconButton}>
                                                     {type === 'note' ? <NoteOutlined /> : <AccountTreeOutlined />}
                                                 </StyledIconButton>
                                             </span>

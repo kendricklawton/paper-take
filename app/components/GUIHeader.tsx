@@ -1,27 +1,30 @@
 'use client';
 
+import React from 'react';
 import { NoteHeaderTextField } from './Styled';
 
 export interface GUIHeaderProps {
-    focus: 'title' | 'body',
-    setFocus: React.Dispatch<React.SetStateAction<'title' | 'body'>>,
+    focus: 'title' | 'content' | '',
     title: string,
     initialOperation: 'read' | 'create';
     isEditMode: boolean,
     isModalMode: boolean,
     handleTitleChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void,
-    toggleModeTrue: () => void,
+    setFocus: React.Dispatch<React.SetStateAction<'title' | 'content' | ''>>,
+    setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>,
+    setIsModalMode: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
 export default function GUIHeader({
     focus,
-    setFocus,
     initialOperation,
     isEditMode,
     isModalMode,
     title,
     handleTitleChange,
-    toggleModeTrue
+    setFocus,
+    setIsEditMode,
+    setIsModalMode,
 }: GUIHeaderProps) {
     const readOnlyMode = initialOperation === 'read' && !isModalMode;
     const placeholderText = 'Title...';
@@ -31,14 +34,18 @@ export default function GUIHeader({
         setFocus('title');
     };
 
-    const handleClick = () => {
-        if (readOnlyMode) {
-            toggleModeTrue();
+    const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+        event.preventDefault();
+  
+        if (initialOperation === 'read') {
+            setIsEditMode(true);
+            setIsModalMode(true);
         }
+        setFocus('title');
     };
 
     return (
-        <>
+        <React.Fragment>
             {(isEditMode || title.length > 0) && (
                 <NoteHeaderTextField
                     autoComplete='off'
@@ -67,6 +74,6 @@ export default function GUIHeader({
                     }}
                 />
             )}
-        </>
+        </React.Fragment>
     );
 }

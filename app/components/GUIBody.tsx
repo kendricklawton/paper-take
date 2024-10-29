@@ -6,51 +6,58 @@ import React from "react";
 import { useRouter } from "next/navigation";
 
 interface GUIBodyProps {
-    focus: 'title' | 'body',
-    setFocus: React.Dispatch<React.SetStateAction<'title' | 'body'>>,
+    focus: 'title' | 'content' | '',
     title: string;
     content: string;
     initialOperation: 'read' | 'create';
     isEditMode: boolean;
     isModalMode: boolean;
     handleContentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    setFocus: React.Dispatch<React.SetStateAction<'title' | 'content' | ''>>,
     setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
-    toggleModeTrue: () => void;
+    setIsModalMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function GUIBody({
     focus,
-    setFocus,
+
     title,
     content,
     initialOperation,
     isEditMode,
     isModalMode,
     handleContentChange,
+    setFocus,
     setIsEditMode,
-    toggleModeTrue
+    setIsModalMode, 
 }: GUIBodyProps) {
-    const readOnlyMode = initialOperation === 'read' && !isModalMode;
+    const readOnlyMode = !isEditMode && !isModalMode;
     const placeholderText = (initialOperation === 'create' || isEditMode) ? 'Create an idea...' : 'Empty note...';
     const router = useRouter();
     const dontShow = content.length === 0 && !isEditMode && title.length > 0;
 
     const handleFocus = (event: React.FocusEvent<HTMLTextAreaElement>) => {
         event.preventDefault();
-        setFocus('body');
+        setFocus('content');
     };
 
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
         event.preventDefault();
-        if (readOnlyMode || initialOperation === 'create') {
-            toggleModeTrue();
+  
+        if (initialOperation === 'create') {
+            setIsEditMode(true);
         }
-        setFocus('body');
+        if (initialOperation === 'read') {
+            setIsEditMode(true);
+            setIsModalMode(true);
+        }
+        setFocus('content');
     };
 
     const handleNoteButton = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-        toggleModeTrue();
+        setIsEditMode(true);
+        setIsModalMode(true);
     }
 
     const handleProjectButton = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -73,6 +80,7 @@ export default function GUIBody({
             </InputAdornment>
         </React.Fragment>
     ) : null;
+
 
     return (
         <React.Fragment>
@@ -104,9 +112,9 @@ export default function GUIBody({
                         }}
                         value={content}
 
-                        inputRef={inputBody => {
-                            if (inputBody && isEditMode && focus === 'body') {
-                                inputBody.focus();
+                        inputRef={input => {
+                            if (input && isEditMode && focus === 'content') {
+                                input.focus();
                             }
                         }}
                     />
