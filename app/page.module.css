@@ -42,7 +42,8 @@
 }
 
 .wrapperAccount,
-.wrapperLogin {
+.wrapperLogin,
+.wrapperPopUp {
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -66,6 +67,21 @@
   max-width: 600px;
 }
 
+.wrapperPopUp {
+  max-width: 400px;
+  background-color: white;
+  padding: 1rem;
+  box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
+}
+
+.wrapperPopUp div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+}
+
 
 .container {
   display: flex;
@@ -75,14 +91,15 @@
   box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
 }
 
-.modal {
+.modal,
+.popUpModal {
   position: absolute;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 10%;
-  /* padding-top: 10rem; */
-  /* padding-bottom: 5rem; */
+  /* padding-top: 5rem;
+  padding-bottom: 5rem; */
+  /* padding-top: max(10%, 5rem); */
   padding-left: 1rem;
   padding-right: 1rem;
   z-index: 5;
@@ -90,7 +107,16 @@
   bottom: 0;
   left: 0;
   right: 0;
+}
+
+.modal {
+  padding-top: max(10%, 5rem);
   background-color: white;
+}
+
+.popUpModal {
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
 }
 
 .containerItem {

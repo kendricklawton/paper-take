@@ -7,11 +7,12 @@
 
 .containerModal {
     position: fixed;
+    /* padding-top: max(10%, 5rem); */
     padding-top: 5rem;
     padding-bottom: 5rem;
     padding-left: 1rem;
     padding-right: 1rem;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 999;
     transition: all 0.25s;
     overflow: none;

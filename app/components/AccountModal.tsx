@@ -1,16 +1,19 @@
 'use client'
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
 import styles from "../page.module.css";
+
 import { useAuthContext } from '../providers/AuthProvider';
 import { useAppContext } from '../providers/AppProvider';
 import {
     InputAdornment
 } from '@mui/material';
+
 import {
     VisibilityOffOutlined, VisibilityOutlined
 } from '@mui/icons-material';
+
 import { StyledButton, FormTextField } from './Styled';
 
 interface AccountModalProps {

@@ -12,6 +12,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { StyledIconButton } from './Styled';
 import { AlarmAddOutlined, CloseOutlined } from '@mui/icons-material';
 import { Timestamp } from 'firebase/firestore';
+import PopUpModal from './PopUpModal';
+import React from 'react';
 
 interface GUIProps {
     draggableProps?: {
@@ -33,6 +35,7 @@ const GUI: React.FC<GUIProps> = ({
     const initialOperation = operation;
 
     const [isModalMode, setIsModalMode] = useState(false);
+    const [isPopUpModalOpen, setIsPopUpModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [isBackgroundMenuOpen, setIsBackgroundMenu] = useState(false);
     const [isFontMenuOpen, setIsFontMenu] = useState(false);
@@ -83,8 +86,10 @@ const GUI: React.FC<GUIProps> = ({
         if (isTrash || !isEditMode) return;
         const newValue = event.target.value;
         if (newValue.length <= 1000) {
-            setInfo(newValue.length > 900 ? `${1000 - newValue.length} characters remaining.` : '');
             setTitle(newValue);
+        }
+        if (newValue.length > 900){
+            setInfo(`${1000 - newValue.length} characters remaining.`);
         }
     };
 
@@ -92,13 +97,14 @@ const GUI: React.FC<GUIProps> = ({
         if (isTrash || !isEditMode) return;
         const newValue = event.target.value;
         if (newValue.length <= 5000) {
-            setInfo(newValue.length > 4500 ? `${5000 - newValue.length} characters remaining.` : '');
             setContent(newValue);
             index.current += 1;
             setContentArray([...contentArray.slice(0, index.current), newValue]);
         }
+        if (newValue.length > 4500) {
+            setInfo(`${5000 - newValue.length} characters remaining.`);
+        }
     };
-    
 
     const handleReminderMenu = () => {
         if (isTrash) {
@@ -106,7 +112,7 @@ const GUI: React.FC<GUIProps> = ({
         } else {
             setIsReminderMenu(prev => !prev);
         }
-     
+
     }
     const handleResetNote = useCallback(() => {
         handleClearSelection();
@@ -150,13 +156,22 @@ const GUI: React.FC<GUIProps> = ({
     };
 
     const handleDeleteNote = async () => {
-        try {
-            if (isTrash) {
-                await deleteNote(idea as Note);
-                setInfo('Note deleted');
+        setIsPopUpModalOpen(true);
+    };
+
+    const handleModalClose = async (confirmed: boolean) => {
+        setIsPopUpModalOpen(false);
+
+        if (confirmed) {
+            try {
+                if (isTrash) {
+                    setIsPopUpModalOpen(true);
+                    await deleteNote(idea as Note);
+                    setInfo('Note deleted');
+                }
+            } catch (error) {
+                console.log(error);
             }
-        } catch (error) {
-            console.log(error);
         }
     };
 
@@ -233,7 +248,6 @@ const GUI: React.FC<GUIProps> = ({
         setIsOptionsMenu(false);
     };
 
-    // To be implemented
     const handleSend = async () => {
         if (isTrash) return;
         console.log('Sending needs to be implemented');
@@ -296,7 +310,7 @@ const GUI: React.FC<GUIProps> = ({
                 content,
                 !isArchived,
                 isPinned,
-                    isTrash,
+                isTrash,
                 idea.images,
                 idea.reminder,
             );
@@ -322,7 +336,7 @@ const GUI: React.FC<GUIProps> = ({
                     isArchived,
                     isPinned,
                     isTrash,
-                            idea.images,
+                    idea.images,
                     idea.reminder,
                 );
                 console.log('Updated note:', updatedNote);
@@ -330,7 +344,7 @@ const GUI: React.FC<GUIProps> = ({
             }
         }
     };
-    
+
     const toggleDelete = async () => {
 
         if (initialOperation === 'create') {
@@ -354,7 +368,7 @@ const GUI: React.FC<GUIProps> = ({
                 title,
                 content,
                 isArchived,
-                    isPinned,
+                isPinned,
                 !isTrash,
                 idea.images,
                 idea.reminder,
@@ -370,12 +384,12 @@ const GUI: React.FC<GUIProps> = ({
             return;
         }
 
-        if(reminder === undefined) {
+        if (reminder === undefined) {
             setReminder(null);
         } else {
             setReminder(reminder);
         }
- 
+
         if (initialOperation === 'read') {
             if (idea.type == 'note') {
                 const updatedNote = new Note(
@@ -396,20 +410,7 @@ const GUI: React.FC<GUIProps> = ({
             }
         }
         setIsReminderMenu(false);
-    }
-
-    // const toggleModeTrue = () => {
-    //     handleClearSelection();
-        
-    //     if (isTrash) {
-    //         setInfo('Cannot edit note in trash');
-    //         return;
-    //     }
-    //     if (initialOperation === 'read') {
-    //         setIsModalMode(true);
-    //     }
-    //     setIsEditMode(true);
-    // };
+    };
 
     useEffect(() => {
         const previousOverflow = document.body.style.overflow;
@@ -430,117 +431,123 @@ const GUI: React.FC<GUIProps> = ({
     }, [handleClickOutside]);
 
     return (
-        <div
-            draggable={initialOperation === 'read' && !isTrash && !isModalMode}
-            {...draggableProps}
-            onDragOver={
-                (event) => {
-                    event.preventDefault();
-                    setIsHovering(false);
-                }
-            }
-            className={(isModalMode ? styles.containerModal : styles.container)}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-        >
-            <Box
-                component={'form'}
-                className={!isModalMode ? (initialOperation === 'create' ? styles.create : styles.read) : styles.noteEdit}
-                onSubmit={handleSubmit}
-                ref={initialOperation === 'create' ? noteCreateRef : noteEditRef}
-                sx={{
-                    backgroundColor: backgroundColor,
-                    '@media (prefers-color-scheme: dark)': {
-                        backgroundColor: backgroundColorDark,
+        <React.Fragment>
+
+            <div
+                draggable={initialOperation === 'read' && !isTrash && !isModalMode}
+                {...draggableProps}
+                onDragOver={
+                    (event) => {
+                        event.preventDefault();
+                        setIsHovering(false);
                     }
-                }}>
-                <div ref={infoRef} className={(initialOperation === 'read' && !isModalMode) ? styles.infoContainerRead : styles.infoContainer}>
-                    <GUIHeader
-                        focus={focus}
-                        initialOperation={initialOperation}
-                        isEditMode={isEditMode}
-                        isModalMode={isModalMode}
-                        isTrashMode={isTrash}
-                        title={title}
-                        handleTitleChange={handleTitleChange}
-                        setFocus={setFocus}
-                        setIsEditMode={setIsEditMode}
-                        setIsModalMode={setIsModalMode}
-                        // toggleModeTrue={toggleModeTrue}
-                    />
-                    <GUIBody
-                        focus={focus}
-                        title={title}
-                        content={content}
-                        initialOperation={initialOperation}
-                        isEditMode={isEditMode}
-                        isModalMode={isModalMode}
-                        isTrashMode={isTrash}
-                        handleContentChange={handleContentChange}
-                        setFocus={setFocus}
-                        setIsEditMode={setIsEditMode}
-                        setIsModalMode={setIsModalMode}
-                        // toggleModeTrue={toggleModeTrue}
-                    />
-                </div>
-                {
-                    (reminder) && (
-                        <div className={styles.reminderContainer}>
-                            <div className={styles.reminder}>
-                                <StyledIconButton onClick={handleReminderMenu}>
-                                    <AlarmAddOutlined />
-                                </StyledIconButton>
-                                <p>{formattedDate}</p>
-                                <StyledIconButton onClick={() => toggleReminder(undefined)}>
-                                    <CloseOutlined />
-                                </StyledIconButton>
-                            </div>
-                        </div>
-                    )
                 }
-                <GUIFooter
-                    content={content}
-                    title={title}
-                    type={idea.type}
-                    backgroundColor={backgroundColor}
-                    contentArray={contentArray}
-                    initialOperation={initialOperation}
-                    isArchived={isArchived}
-                    isEditMode={isEditMode}
-                    isHovering={isHovering}
-                    isBackgroundMenuOpen={isBackgroundMenuOpen}
-                    isFontMenuOpen={isFontMenuOpen}
-                    isReminderMenuOpen={isReminderMenuOpen}
-                    isOptionsMenuOpen={isOptionsMenuOpen}
-                    isTrash={isTrash}
-                    backgroundMenuRef={backgroundMenuRef}
-                    backgroundMenuRefButton={backgroundMenuRefButton}
-                    fontMenuRef={fontMenuRef}
-                    fontMenuRefButton={fontMenuRefButton}
-                    reminderMenuRef={reminderMenuRef}
-                    reminderMenuRefButton={reminderMenuRefButton}
-                    optionsMenuRef={optionsMenuRef}
-                    optionsMenuRefButton={optionsMenuRefButton}
-                    index={index}
-                    toggleBackgroundColor={toggleBackgroundColor}
-                    handleDeleteNote={handleDeleteNote}
-                    handleMakeACopy={handleMakeACopy}
-                    handleSend={handleSend}
-                    handleRedo={handleRedo}
-                    handleUndo={handleUndo}
-                    setIsBackgroundMenu={setIsBackgroundMenu}
-                    setIsFontMenu={setIsFontMenu}
-                    setIsOptionsMenu={setIsOptionsMenu}
-                    setIsReminderMenu={setIsReminderMenu}
-                    toggleReminder={toggleReminder}
-                    toggleArchive={toggleArchive}
-                    toggleDelete={toggleDelete}
-                    setIsEditMode={setIsEditMode}
-                    setIsModalMode={setIsModalMode}
-                    // toggleModeTrue={toggleModeTrue}
-                />
-            </Box>
-        </div>
+                className={(isModalMode ? styles.containerModal : styles.container)}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+            >
+                <Box
+                    component={'form'}
+                    className={!isModalMode ? (initialOperation === 'create' ? styles.create : styles.read) : styles.noteEdit}
+                    onSubmit={handleSubmit}
+                    ref={initialOperation === 'create' ? noteCreateRef : noteEditRef}
+                    sx={{
+                        backgroundColor: backgroundColor,
+                        '@media (prefers-color-scheme: dark)': {
+                            backgroundColor: backgroundColorDark,
+                        }
+                    }}>
+                    <div ref={infoRef} className={(initialOperation === 'read' && !isModalMode) ? styles.infoContainerRead : styles.infoContainer}>
+                        <GUIHeader
+                            focus={focus}
+                            initialOperation={initialOperation}
+                            isEditMode={isEditMode}
+                            isModalMode={isModalMode}
+                            isTrashMode={isTrash}
+                            title={title}
+                            handleTitleChange={handleTitleChange}
+                            setFocus={setFocus}
+                            setIsEditMode={setIsEditMode}
+                            setIsModalMode={setIsModalMode}
+                        />
+                        <GUIBody
+                            focus={focus}
+                            title={title}
+                            content={content}
+                            initialOperation={initialOperation}
+                            isEditMode={isEditMode}
+                            isModalMode={isModalMode}
+                            isTrashMode={isTrash}
+                            handleContentChange={handleContentChange}
+                            setFocus={setFocus}
+                            setIsEditMode={setIsEditMode}
+                            setIsModalMode={setIsModalMode}
+                        />
+                    </div>
+                    {
+                        (reminder) && (
+                            <div className={styles.reminderContainer}>
+                                <div className={styles.reminder}>
+                                    <StyledIconButton onClick={handleReminderMenu}>
+                                        <AlarmAddOutlined />
+                                    </StyledIconButton>
+                                    <p>{formattedDate}</p>
+                                    <StyledIconButton onClick={() => toggleReminder(undefined)}>
+                                        <CloseOutlined />
+                                    </StyledIconButton>
+                                </div>
+                            </div>
+                        )
+                    }
+                    <GUIFooter
+                        content={content}
+                        title={title}
+                        type={idea.type}
+                        backgroundColor={backgroundColor}
+                        contentArray={contentArray}
+                        initialOperation={initialOperation}
+                        isArchived={isArchived}
+                        isEditMode={isEditMode}
+                        isHovering={isHovering}
+                        isBackgroundMenuOpen={isBackgroundMenuOpen}
+                        isFontMenuOpen={isFontMenuOpen}
+                        isReminderMenuOpen={isReminderMenuOpen}
+                        isOptionsMenuOpen={isOptionsMenuOpen}
+                        isTrash={isTrash}
+                        backgroundMenuRef={backgroundMenuRef}
+                        backgroundMenuRefButton={backgroundMenuRefButton}
+                        fontMenuRef={fontMenuRef}
+                        fontMenuRefButton={fontMenuRefButton}
+                        reminderMenuRef={reminderMenuRef}
+                        reminderMenuRefButton={reminderMenuRefButton}
+                        optionsMenuRef={optionsMenuRef}
+                        optionsMenuRefButton={optionsMenuRefButton}
+                        index={index}
+                        toggleBackgroundColor={toggleBackgroundColor}
+                        handleDeleteNote={handleDeleteNote}
+                        handleMakeACopy={handleMakeACopy}
+                        handleSend={handleSend}
+                        handleRedo={handleRedo}
+                        handleUndo={handleUndo}
+                        setIsBackgroundMenu={setIsBackgroundMenu}
+                        setIsFontMenu={setIsFontMenu}
+                        setIsOptionsMenu={setIsOptionsMenu}
+                        setIsReminderMenu={setIsReminderMenu}
+                        toggleReminder={toggleReminder}
+                        toggleArchive={toggleArchive}
+                        toggleDelete={toggleDelete}
+                        setIsEditMode={setIsEditMode}
+                        setIsModalMode={setIsModalMode}
+                    />
+                </Box>
+            </div>
+            <PopUpModal
+                isOpen={isPopUpModalOpen}
+                confirmButtonText="Delete"
+                message={idea.type === 'note' ? 'Are you sure you want to delete this note?' : 'Are you sure you want to delete this project?'}
+                onClose={handleModalClose}
+            />
+        </React.Fragment>
     );
 };
 
