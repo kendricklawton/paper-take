@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation'
 import styles from "../page.module.css";
 import { useAuthContext } from '../providers/AuthProvider';
+import { useAppContext } from '../providers/AppProvider'; 
 import {
     InputAdornment
  } from '@mui/material';
@@ -22,6 +23,8 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
 
     const { authError, user, userDisplayName, userEmail, clearAuthError, sendPasswordReset, updateUserDisplayName, updateUserEmail,
         deleteUserAccount } = useAuthContext();
+    
+    const { setInfo } = useAppContext();
 
     const [deleteAccount, setDeleteAccount] = useState('');
     const [newDisplayName, setNewDisplayName] = useState('');
@@ -66,20 +69,19 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                     return;
                 }
                 await updateUserEmail(email, password);
-
                 clearValues();
-                alert('Please verify your new email address');
+                setInfo('Please verify your new email address');
             } else if (method === "password") {
                 if (user?.email) {
                     await sendPasswordReset(user?.email);
                     clearValues();
-                    alert('Password reset link sent to your email');
+                    setInfo('Password reset link sent to your email');
                 }
             } else if (method === "delete") {
                 await deleteUserAccount(password);
                 clearValues();
                 Router.push('/');
-                alert('Account deleted successfully');
+                setInfo('Account deleted successfully');
             } else if (method === "displayName") {
                 if (newDisplayName === user?.displayName) {
                     setErrors({ ...errors, displayName: 'Display name is the same as current display name' });
@@ -89,8 +91,9 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                 clearValues();
             }
         } catch (error) {
-            clearValues();
-            alert('An error occurred: ' + error);
+            // clearValues();
+            console.log(error);
+            // setInfo('An error occurred: ' + error);
         }
     };
 
@@ -191,7 +194,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 variant="standard"
-                                label="Email"
+                                label="New email"
                                 autoComplete='off'
                             />
                         )}

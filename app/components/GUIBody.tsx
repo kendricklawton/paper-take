@@ -20,7 +20,6 @@ interface GUIBodyProps {
 
 export default function GUIBody({
     focus,
-
     title,
     content,
     initialOperation,
@@ -80,7 +79,6 @@ export default function GUIBody({
             </InputAdornment>
         </React.Fragment>
     ) : null;
-
 
     return (
         <React.Fragment>
