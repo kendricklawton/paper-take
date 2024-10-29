@@ -154,7 +154,8 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                 return (
                     <React.Fragment>
                         <h1>Email verification</h1>
-                        <p>Email verification link will be sent to the following email &apos;{userEmail}&apos;. To verify, type your email below.</p>
+                        <p>Email verification link will be sent to the following email &apos;{userEmail}&apos;.</p>
+                        <p>To verify, type your email below.</p>
                     </React.Fragment>
                 );
             default:
@@ -172,9 +173,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                     </IconButton>
                 </div> */}
                 <div className={styles.wrapperAccount}>
-                    {
-                        FormHeader(method)
-                    }
+                    {FormHeader(method)}
                     <form className={styles.form} onSubmit={handleSubmit}>
                         {method === "verification" && (
                             <FormTextField
@@ -216,7 +215,6 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                                 value={deleteAccount}
                                 onChange={(event) => setDeleteAccount(event.target.value)}
                                 label="delete-my-account"
-                         
                                 autoComplete='off'
                                 variant="standard"
                             />
