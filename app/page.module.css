@@ -99,7 +99,7 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  border-top: 0.5px solid lightgray;
+  box-shadow: 0 -1px 1px rgba(0.1, 0.1, 0.1, 0.1);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
@@ -231,6 +231,7 @@
   }
 
 
+  .containerItem,
   .information {
     border: 0.5px solid gray;
   }
