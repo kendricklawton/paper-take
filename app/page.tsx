@@ -49,7 +49,6 @@ const IdeasList: React.FC = () => {
             setActiveIdeas(prevActiveIdeas);
             return;
         }
-
     };
 
     const newNote = new Note(
@@ -96,7 +95,6 @@ const IdeasList: React.FC = () => {
                     <p className={styles.notesText}><Link href={"/login"}>Login</Link> to save notes</p>
                 )
             }
-       
             <GUI operation={'create'} idea={newNote} />
             {
                 activeIdeas.map((idea, index) => (

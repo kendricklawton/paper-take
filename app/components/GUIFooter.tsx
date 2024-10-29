@@ -26,6 +26,7 @@ import {
 } from './Styled';
 import { MenuItem } from '@mui/material';
 import { Timestamp } from 'firebase/firestore';
+import { useAppContext } from '../providers/AppProvider';
 
 const MenuItemStyles = {
     fontFamily: 'monospace',
@@ -126,12 +127,17 @@ export default function GUIFooter({
     toggleDelete,
     toggleReminder,
 }: GUIFooterProps) {
+    const { setInfo } = useAppContext();
     const showFooter = isEditMode || initialOperation === 'read';
     const showFooterIcons = isEditMode || (isHovering && initialOperation === 'read') || isBackgroundMenuOpen || isOptionsMenuOpen || isReminderMenuOpen;
     const showCloseButton = initialOperation === 'create' || isEditMode;
     const showMakeACopyButton = initialOperation === 'create' && (content.length > 0 || title.length > 0) || initialOperation === 'read';
 
     const handleIdeaIconButton = () => {    
+        if (isTrash) {
+            setInfo('Cannot edit a trashed note');
+            return;
+        }
         setIsModalMode(true);
         setIsEditMode(true);
     }

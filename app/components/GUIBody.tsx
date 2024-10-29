@@ -3,6 +3,7 @@
 import { InputAdornment } from "@mui/material";
 import { NoteBodyTextField, StyledNoteButtonTwo } from "./Styled";
 import React from "react";
+import { useAppContext } from "../providers/AppProvider";
 // import { useRouter } from "next/navigation";
 
 interface GUIBodyProps {
@@ -12,6 +13,7 @@ interface GUIBodyProps {
     initialOperation: 'read' | 'create';
     isEditMode: boolean;
     isModalMode: boolean;
+    isTrashMode: boolean;
     handleContentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
     setFocus: React.Dispatch<React.SetStateAction<'title' | 'content' | ''>>,
     setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,11 +27,14 @@ export default function GUIBody({
     initialOperation,
     isEditMode,
     isModalMode,
+    isTrashMode,
     handleContentChange,
     setFocus,
     setIsEditMode,
     setIsModalMode, 
 }: GUIBodyProps) {
+    const { setInfo } = useAppContext();
+
     const readOnlyMode = !isEditMode && !isModalMode;
     const placeholderText = (initialOperation === 'create' || isEditMode) ? 'Create an idea...' : 'Empty note...';
     // const router = useRouter();
@@ -43,6 +48,11 @@ export default function GUIBody({
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
         event.preventDefault();
   
+        if (isTrashMode) {
+            setInfo('Cannot edit a trashed note');
+            return;
+        }
+
         if (initialOperation === 'create') {
             setIsEditMode(true);
         }

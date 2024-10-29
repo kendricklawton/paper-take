@@ -333,6 +333,12 @@ const GUI: React.FC<GUIProps> = ({
     
     const toggleDelete = async () => {
 
+        if (initialOperation === 'create') {
+            setInfo('Note discarded');
+            handleResetNote();
+            return;
+        }
+
         if (isTrash) {
             setInfo('Note restored');
         } else {
@@ -454,6 +460,7 @@ const GUI: React.FC<GUIProps> = ({
                         initialOperation={initialOperation}
                         isEditMode={isEditMode}
                         isModalMode={isModalMode}
+                        isTrashMode={isTrash}
                         title={title}
                         handleTitleChange={handleTitleChange}
                         setFocus={setFocus}
@@ -468,6 +475,7 @@ const GUI: React.FC<GUIProps> = ({
                         initialOperation={initialOperation}
                         isEditMode={isEditMode}
                         isModalMode={isModalMode}
+                        isTrashMode={isTrash}
                         handleContentChange={handleContentChange}
                         setFocus={setFocus}
                         setIsEditMode={setIsEditMode}

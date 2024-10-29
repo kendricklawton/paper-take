@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { NoteHeaderTextField } from './Styled';
+import { useAppContext } from "../providers/AppProvider";
 
 export interface GUIHeaderProps {
     focus: 'title' | 'content' | '',
@@ -9,6 +10,7 @@ export interface GUIHeaderProps {
     initialOperation: 'read' | 'create';
     isEditMode: boolean,
     isModalMode: boolean,
+    isTrashMode: boolean,
     handleTitleChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void,
     setFocus: React.Dispatch<React.SetStateAction<'title' | 'content' | ''>>,
     setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>,
@@ -20,15 +22,17 @@ export default function GUIHeader({
     initialOperation,
     isEditMode,
     isModalMode,
+    isTrashMode,
     title,
     handleTitleChange,
     setFocus,
     setIsEditMode,
     setIsModalMode,
 }: GUIHeaderProps) {
+    const { setInfo } = useAppContext();
+
     const readOnlyMode = initialOperation === 'read' && !isModalMode;
     const placeholderText = 'Title...';
-
     const handleFocus = (event: React.FocusEvent<HTMLTextAreaElement>) => {
         event.preventDefault();
         setFocus('title');
@@ -36,7 +40,11 @@ export default function GUIHeader({
 
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
         event.preventDefault();
-  
+        
+        if (isTrashMode) {
+            setInfo('Cannot edit a trashed note');
+            return;
+        }
         if (initialOperation === 'read') {
             setIsEditMode(true);
             setIsModalMode(true);
