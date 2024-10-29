@@ -38,11 +38,6 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
         setShowPassword(prev => !prev);
     };
 
-    // const handleCloseButton = (event: React.FormEvent<HTMLButtonElement>) => {
-    //     event.preventDefault();
-    //     clearValues();
-    // };
-
     const clearValues = () => {
         clearAuthError();
         setDeleteAccount('');
@@ -146,7 +141,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                                 <p>{userEmail}</p>
                             )
                         }
-                        <p>To continue, type your new email and password below</p>
+                        <p>To continue, type your new email and your password below</p>
                     </React.Fragment>
                 );
             case "password":
@@ -155,7 +150,6 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                         <h1>Reset password</h1>
                         <p>Password reset link will be sent to {userEmail}</p>
                         <p>To continue, type your email below</p>
-                        {/* <p>Password reset link will be sent to the following email &apos;{userEmail}&apos;. To verify, type your email below.</p> */}
                     </React.Fragment>
                 );
             case "delete":
@@ -163,7 +157,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                     <React.Fragment>
                         <h1>Delete account</h1>
                         <p>We will delete your account and all data associated with the email &apos;{userEmail}&apos;</p>
-                        <p>To continue, type &apos;delete-my-account&apos; and password below</p>
+                        <p>To continue, type &apos;delete-my-account&apos; and your password below</p>
                     </React.Fragment>
                 );
             case "displayName":
@@ -191,11 +185,6 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
     return (
         isOpen && (
             <div className={styles.modal}>
-                {/* <div className={styles.closeButtonContainer}>
-                    <IconButton onClick={handleCloseButton} sx={{ color: 'gray' }}>
-                        <Close />
-                    </IconButton>
-                </div> */}
                 <div className={styles.wrapperAccount}>
                     {FormHeader(method)}
                     <form className={styles.form} onSubmit={handleSubmit}>
@@ -251,7 +240,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                                 onChange={(event) => setNewDisplayName(event.target.value)}
                                 autoComplete='off'
                                 variant="standard"
-                                label="Display name"
+                                label="New display name"
                             />
                         )}
                         {method !== "displayName" && method !== "verification" && method !== "password" && (
