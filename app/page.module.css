@@ -37,10 +37,6 @@
   padding: 1rem;
 }
 
-.notesText {
-  padding-bottom: 1rem;
-}
-
 .wrapperAccount,
 .wrapperLogin,
 .wrapperPopUp {
@@ -251,6 +247,15 @@
   align-items: center;
 }
 
+.pinnedTextContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 600px;
+  /* padding-left: 1rem;
+  padding-right: 1rem; */
+}
+
 @media (prefers-color-scheme: dark) {
   .modal {
     background-color: #121212;
@@ -268,6 +273,10 @@
     display: none;
   }
 
+  .pinnedTextContainer {
+    width: 100%;
+    max-width: 600px;
+  }
   .dividerMobile {
     display: flex;
     flex-direction: column;

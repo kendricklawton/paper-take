@@ -1,7 +1,9 @@
 'use client';
 
-import { InputAdornment } from "@mui/material";
-import { NoteBodyTextField, StyledNoteButtonTwo } from "./Styled";
+// import { InputAdornment } from "@mui/material";
+import { NoteBodyTextField, 
+    // StyledNoteButtonTwo
+ } from "./Styled";
 import React from "react";
 import { useAppContext } from "../providers/AppProvider";
 // import { useRouter } from "next/navigation";
@@ -63,11 +65,10 @@ export default function GUIBody({
         setFocus('content');
     };
 
-    const handleNoteButton = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-        setIsEditMode(true);
-        setIsModalMode(true);
-    }
+    // const handleNoteButton = (event: React.MouseEvent<HTMLButtonElement>) => {
+    //     event.preventDefault();
+    //     setIsEditMode(true);
+    // }
 
     // const handleProjectButton = (event: React.MouseEvent<HTMLButtonElement>) => {
     //     event.preventDefault();
@@ -75,20 +76,20 @@ export default function GUIBody({
     //     router.push('/projects/create');
     // }
 
-    const endAdornment = initialOperation === "create" && !isEditMode ? (
-        <React.Fragment>
-            <InputAdornment position="end">
-                <StyledNoteButtonTwo variant="contained" onClick={handleNoteButton}>
-                    Note
-                </StyledNoteButtonTwo>
-            </InputAdornment>
-            {/* <InputAdornment position="end">
-                <StyledNoteButtonTwo variant="contained" onClick={handleProjectButton}>
-                    Project
-                </StyledNoteButtonTwo>
-            </InputAdornment> */}
-        </React.Fragment>
-    ) : null;
+    // const endAdornment = initialOperation === "create" && !isEditMode ? (
+    //     <React.Fragment>
+    //         <InputAdornment position="end">
+    //             <StyledNoteButtonTwo variant="contained" onClick={handleNoteButton}>
+    //                 Note
+    //             </StyledNoteButtonTwo>
+    //         </InputAdornment>
+    //         {/* <InputAdornment position="end">
+    //             <StyledNoteButtonTwo variant="contained" onClick={handleProjectButton}>
+    //                 Project
+    //             </StyledNoteButtonTwo>
+    //         </InputAdornment> */}
+    //     </React.Fragment>
+    // ) : null;
 
     return (
         <React.Fragment>
@@ -113,11 +114,11 @@ export default function GUIBody({
                                 cursor: isEditMode ? 'text' : 'default',
                             },
                         }}
-                        slotProps={{
-                            input: {
-                                endAdornment: endAdornment,
-                            },
-                        }}
+                        // slotProps={{
+                        //     input: {
+                        //         endAdornment: endAdornment,
+                        //     },
+                        // }}
                         value={content}
 
                         inputRef={input => {

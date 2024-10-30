@@ -21,13 +21,11 @@ interface GUIProps {
         onDrop?: (event: React.DragEvent<HTMLDivElement>) => void;
         onDragOver?: (event: React.DragEvent<HTMLDivElement>) => void;
     };
-    noteIndex?: number;
     operation: 'read' | 'create';
     idea: Note | Project;
 }
 
 const GUI: React.FC<GUIProps> = ({
-    draggableProps,
     operation,
     idea: idea,
 }) => {
@@ -295,6 +293,14 @@ const GUI: React.FC<GUIProps> = ({
     };
 
     const toggleArchive = async () => {
+       
+        if (initialOperation === 'create' && (content.length > 0 || title.length > 0)) {
+            handleNote();
+        } else if (initialOperation === 'create') {
+            setInfo('Empty note discarded');
+            return;
+        }
+
         if (isArchived) {
             setInfo('Note unarchived');
         } else {
@@ -346,7 +352,6 @@ const GUI: React.FC<GUIProps> = ({
     };
 
     const toggleDelete = async () => {
-
         if (initialOperation === 'create') {
             setInfo('Note discarded');
             handleResetNote();
@@ -373,6 +378,36 @@ const GUI: React.FC<GUIProps> = ({
                 idea.images,
                 idea.reminder,
             );
+            await updateNote(updatedNote);
+        }
+        setIsOptionsMenu(false);
+    };
+
+    const togglePinned = async () => {
+        
+        if (initialOperation === 'create' && (content.length > 0 || title.length > 0)) {
+            handleNote();
+        } else if (initialOperation === 'create') {
+            setInfo('Empty note discarded');
+            return;
+        }
+
+
+        if (idea.type == 'note') {
+            const updatedNote = new Note(
+                idea.createdAt,
+                backgroundColor,
+                backgroundColorDark,
+                idea.id,
+                title,
+                content,
+                isArchived,
+                !isPinned,
+                isTrash,
+                idea.images,
+                idea.reminder,
+            );
+            console.log('Updated note:', updatedNote);
             await updateNote(updatedNote);
         }
         setIsOptionsMenu(false);
@@ -434,14 +469,14 @@ const GUI: React.FC<GUIProps> = ({
         <React.Fragment>
 
             <div
-                draggable={initialOperation === 'read' && !isTrash && !isModalMode}
-                {...draggableProps}
-                onDragOver={
-                    (event) => {
-                        event.preventDefault();
-                        setIsHovering(false);
-                    }
-                }
+                // draggable={initialOperation === 'read' && !isTrash && !isModalMode}
+                // {...draggableProps}
+                // onDragOver={
+                //     (event) => {
+                //         event.preventDefault();
+                //         setIsHovering(false);
+                //     }
+                // }
                 className={(isModalMode ? styles.containerModal : styles.container)}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
@@ -514,6 +549,7 @@ const GUI: React.FC<GUIProps> = ({
                         isReminderMenuOpen={isReminderMenuOpen}
                         isOptionsMenuOpen={isOptionsMenuOpen}
                         isTrash={isTrash}
+                        isPinned={isPinned}
                         backgroundMenuRef={backgroundMenuRef}
                         backgroundMenuRefButton={backgroundMenuRefButton}
                         fontMenuRef={fontMenuRef}
@@ -536,6 +572,7 @@ const GUI: React.FC<GUIProps> = ({
                         toggleReminder={toggleReminder}
                         toggleArchive={toggleArchive}
                         toggleDelete={toggleDelete}
+                        togglePinned={togglePinned}
                         setIsEditMode={setIsEditMode}
                         setIsModalMode={setIsModalMode}
                     />

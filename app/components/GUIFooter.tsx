@@ -12,7 +12,8 @@ import {
     NoteOutlined,
     AlarmAddOutlined,
     PushPinOutlined,
-    AccountTreeOutlined
+    AccountTreeOutlined,
+    PushPin
 } from '@mui/icons-material';
 import styles from "./GUI.module.css"
 import React from 'react';
@@ -27,6 +28,8 @@ import {
 import { MenuItem } from '@mui/material';
 import { Timestamp } from 'firebase/firestore';
 import { useAppContext } from '../providers/AppProvider';
+import { useAuthContext } from '../providers/AuthProvider';
+import Link from 'next/link';
 
 const MenuItemStyles = {
     fontFamily: 'monospace',
@@ -53,6 +56,7 @@ interface GUIFooterProps {
     isReminderMenuOpen: boolean;
     isOptionsMenuOpen: boolean;
     isTrash: boolean;
+    isPinned: boolean;
     // isHidden: boolean;
     backgroundMenuRef: React.RefObject<HTMLDivElement>;
     backgroundMenuRefButton: React.RefObject<HTMLButtonElement>;
@@ -80,6 +84,7 @@ interface GUIFooterProps {
     setIsOptionsMenu: React.Dispatch<React.SetStateAction<boolean>>;
     toggleArchive: () => void;
     toggleDelete: () => void;
+    togglePinned: () => void;
     toggleReminder: (reminder: Timestamp | undefined) => void;
     setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>,
     setIsModalMode: React.Dispatch<React.SetStateAction<boolean>>,
@@ -96,6 +101,7 @@ export default function GUIFooter({
     isEditMode,
     isBackgroundMenuOpen,
     isHovering,
+    isPinned,
     // isHidden,
     // isFontMenuOpen,
     isReminderMenuOpen,
@@ -125,15 +131,17 @@ export default function GUIFooter({
     toggleArchive,
     toggleBackgroundColor,
     toggleDelete,
+    togglePinned,
     toggleReminder,
 }: GUIFooterProps) {
+    const { user } = useAuthContext();
     const { setInfo } = useAppContext();
     const showFooter = isEditMode || initialOperation === 'read';
     const showFooterIcons = isEditMode || (isHovering && initialOperation === 'read') || isBackgroundMenuOpen || isOptionsMenuOpen || isReminderMenuOpen;
-    const showCloseButton = initialOperation === 'create' || isEditMode;
+    const showFooterTrailingButtons = initialOperation === 'create' || isEditMode;
     const showMakeACopyButton = initialOperation === 'create' && (content.length > 0 || title.length > 0) || initialOperation === 'read';
 
-    const handleIdeaIconButton = () => {    
+    const handleIdeaIconButton = () => {
         if (isTrash) {
             setInfo('Cannot edit a trashed note');
             return;
@@ -141,7 +149,7 @@ export default function GUIFooter({
         setIsModalMode(true);
         setIsEditMode(true);
     }
-    
+
     const sixHours = Timestamp.fromDate(new Date(
         new Date().setHours(new Date().getHours() + 6)
     ));
@@ -216,11 +224,14 @@ export default function GUIFooter({
                                     <div className={styles.footerLeading}>
                                         <StyledTooltip title={'Pin note'}>
                                             <StyledIconButton className={styles.menuButton}
-                                            // onClick={() => setIsBackgroundMenu(prev => !prev)}
+                                            onClick={togglePinned}
                                             >
-                                                <PushPinOutlined />
+                                                {
+                                                    isPinned ? <PushPin/> : <PushPinOutlined/>
+                                                }
                                             </StyledIconButton>
                                         </StyledTooltip>
+
                                         <div className={styles.anchor}>
                                             {/* <StyledTooltip  title={'Reminder'}> */}
                                             <StyledIconButton ref={reminderMenuRefButton} className={styles.menuButton}
@@ -268,13 +279,13 @@ export default function GUIFooter({
                                             )}
                                         </div>
 
-                                        {initialOperation !== 'create' && (
-                                            <StyledTooltip title={'Archive note'} >
-                                                <StyledIconButton aria-label="Archive" onClick={() => toggleArchive()}>
-                                                    {isArchived ? <Archive /> : <ArchiveOutlined />}
-                                                </StyledIconButton>
-                                            </StyledTooltip>
-                                        )}
+
+                                        <StyledTooltip title={'Archive note'} >
+                                            <StyledIconButton aria-label="Archive" onClick={() => toggleArchive()}>
+                                                {isArchived ? <Archive /> : <ArchiveOutlined />}
+                                            </StyledIconButton>
+                                        </StyledTooltip>
+
                                         {isEditMode && (
                                             <React.Fragment>
                                                 <StyledTooltip title={'Undo'} >
@@ -319,11 +330,18 @@ export default function GUIFooter({
                                             </TransparentIconButton>
                                         </div>)
                             }
-                            <React.Fragment>
-                                {showCloseButton && (
-                                    <StyledTextButton type="submit">Close</StyledTextButton>
+                            {
+                                showFooterTrailingButtons && (
+                                    <div className={styles.footerTrailing}>
+                                        {
+                                            !user && (
+                                                <p className={styles.notesText}><Link href={"/login"}>Login</Link> to save note</p>
+                                            )
+                                        }
+                                        <StyledTextButton type="submit">Close</StyledTextButton>
+
+                                    </div>
                                 )}
-                            </React.Fragment>
                             {
                                 (initialOperation === 'read' && !isEditMode) && (
                                     <div>

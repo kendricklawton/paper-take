@@ -46,6 +46,10 @@
     max-width: 600px;
 }
 
+.notesText {
+   font-size: small;
+}
+
 .noteEdit {
     max-width: 600px;
 }
@@ -114,6 +118,16 @@
 .footerLeading {
     display: flex;
     flex-direction: row;
+    align-items: center;
+}
+
+.footerTrailing {
+    padding-left: 0.5rem;
+    gap: 0.5rem;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    text-align: center;
 }
 
 .anchor {
