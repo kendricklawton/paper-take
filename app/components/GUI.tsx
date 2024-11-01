@@ -86,7 +86,7 @@ const GUI: React.FC<GUIProps> = ({
         if (newValue.length <= 1000) {
             setTitle(newValue);
         }
-        if (newValue.length > 900){
+        if (newValue.length > 900) {
             setInfo(`${1000 - newValue.length} characters remaining.`);
         }
     };
@@ -293,7 +293,7 @@ const GUI: React.FC<GUIProps> = ({
     };
 
     const toggleArchive = async () => {
-       
+
         if (initialOperation === 'create' && (content.length > 0 || title.length > 0)) {
             handleNote();
         } else if (initialOperation === 'create') {
@@ -301,11 +301,20 @@ const GUI: React.FC<GUIProps> = ({
             return;
         }
 
+        let updatedIsPinned = isPinned;
+
+        if (updatedIsPinned) {
+            updatedIsPinned = false;
+        }
+
         if (isArchived) {
             setInfo('Note unarchived');
+        } else if(!isArchived && isPinned) {
+            setInfo('Note archived and unpinned');
         } else {
             setInfo('Note archived');
         }
+
         if (idea.type == 'note') {
             const updatedNote = new Note(
                 idea.createdAt,
@@ -315,7 +324,7 @@ const GUI: React.FC<GUIProps> = ({
                 title,
                 content,
                 !isArchived,
-                isPinned,
+                updatedIsPinned,
                 isTrash,
                 idea.images,
                 idea.reminder,
@@ -384,7 +393,7 @@ const GUI: React.FC<GUIProps> = ({
     };
 
     const togglePinned = async () => {
-        
+
         if (initialOperation === 'create' && (content.length > 0 || title.length > 0)) {
             handleNote();
         } else if (initialOperation === 'create') {
@@ -392,6 +401,19 @@ const GUI: React.FC<GUIProps> = ({
             return;
         }
 
+        let updatedIsArchived = isArchived;
+
+        if (updatedIsArchived) {
+            updatedIsArchived = false;
+        }
+
+        if (isPinned) {
+            setInfo('Note unpinned');
+        } else if (!isPinned && isArchived) {
+            setInfo('Note pinned and unarchived');
+        } else {
+            setInfo('Note pinned');
+        }
 
         if (idea.type == 'note') {
             const updatedNote = new Note(
@@ -401,7 +423,7 @@ const GUI: React.FC<GUIProps> = ({
                 idea.id,
                 title,
                 content,
-                isArchived,
+                updatedIsArchived,
                 !isPinned,
                 isTrash,
                 idea.images,

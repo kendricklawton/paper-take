@@ -4,6 +4,7 @@ import Header from "./components/Header";
 // import Information from "./components/Information";
 import ProviderWrapper from "./providers/ProviderWrapper";
 import Information from "./components/Information";
+import GoogleAdsense from "./components/GoogleAdsense";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.papertake.io"),
@@ -42,6 +43,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <GoogleAdsense/>
         <ProviderWrapper>
           <Header />
           {children}
