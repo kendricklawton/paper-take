@@ -34,7 +34,7 @@ export default function Header() {
         searchTerm,
         handleSearch, 
         handleCloseSearch, 
-        isLoadingApp,
+        isAppLoading,
         fetchData,
     } = useAppContext();
 
@@ -227,7 +227,7 @@ export default function Header() {
                 {/* Nav Trailing */}
                 <div className={styles.headerTrailing}>
                     {
-                        (isLoadingApp || isAuthLoading) ? (
+                        (isAppLoading || isAuthLoading) ? (
                             <StyledIconButton>
                                 <CircularProgress size={20} />
                             </StyledIconButton>

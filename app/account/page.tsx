@@ -6,10 +6,8 @@ import { useAuthContext } from "../providers/AuthProvider";
 import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos';
 import AccountModal from '../components/AccountModal';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation'
 
 export default function Account() {
-    const router = useRouter();
     const { user, userDisplayName, userEmail,
     } = useAuthContext();
     const [method, setMethod] = useState('');
@@ -38,11 +36,6 @@ export default function Account() {
     const pushToSendVerification = () => {
         setMethod('verification');
         setIsAccountModalOpen(true);
-    }
-
-    if (!user) {
-        router.push('/');
-        return null;
     }
 
     return (

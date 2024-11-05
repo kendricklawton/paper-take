@@ -52,7 +52,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [isAuthLoading, setIsAuthLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        setIsAuthLoading(true);
+        if (!auth) {
+            console.error('Firebase auth not initialized');
+            return;
+        }
+        setIsAuthLoading(false);
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setUser(user);
             if (user) {
@@ -104,6 +108,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const createUserAccount = useCallback(async (email: string, password: string): Promise<void> => {
         clearAuthError();
+        if (auth === null) {
+            return;
+        }
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             await sendEmailVerification(userCredential.user);
@@ -131,6 +138,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const logIn = useCallback(async (email: string, password: string): Promise<void> => {
         clearAuthError();
+        if (auth === null) {
+            return;
+        }
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             setUser(userCredential.user);
@@ -142,6 +152,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const logOut = useCallback(async (): Promise<void> => {
         clearAuthError();
+        if (auth === null) {
+            return;
+        }
         try {
             await auth.signOut();
             setUser(null);
@@ -153,6 +166,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const sendPasswordReset = useCallback(async (email: string): Promise<void> => {
         clearAuthError();
+        if (auth === null) {
+            return;
+        }
         try {
             await sendPasswordResetEmail(auth, email);
         } catch (error) {
@@ -208,7 +224,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const contextValue = useMemo(() => ({
         authError,
-
         isAuthLoading,
         user,
         userDisplayName,
@@ -224,7 +239,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         updateUserEmail,
     }), [
         authError,
-
         isAuthLoading,
         user,
         userDisplayName,

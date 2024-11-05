@@ -11,7 +11,7 @@ interface AppContextType {
     filtered: (Note | Project)[];
     ideas: string[];
     info: string;
-    isLoadingApp: boolean;
+    isAppLoading: boolean;
     isModalOpen: boolean;
     notes: Note[];
     projects: Project[];
@@ -49,49 +49,55 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     const [filtered, setFiltered] = useState<(Note | Project)[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [info, setInfo] = useState<string>('');
-    const [isLoadingApp, setIsLoadingApp] = useState<boolean>(false);
+    const [isAppLoading, setIsAppLoading] = useState<boolean>(false);
 
     const clearAppError = useCallback(() => setAppError(''), []);
 
     const fetchIdeas = useCallback(async () => {
-        if (!user) {
+        if (user === null) {
             console.log("No user is logged in, fetching notes from local storage");
             return;
         }
 
+        if (firestore === null) {
+            console.error("Firestore is not initialized for fetching ideas");
+            return;
+        }
         try {
             console.log('Fetching ideas from Firestore');
             const ref = collection(firestore, "users", user.uid, "ideas");
             const queryIdsList = (ref);
             const snapshot = await getDocs(queryIdsList);
-
             if (snapshot.empty) {
                 console.log("No ideas found");
                 return;
             }
-
             setIdeas(snapshot.docs[0].data().ideas);
         } catch (error) {
             if (error instanceof FirestoreError) {
                 console.error('Firestore error while fetching notes: ', error.message);
             } else {
-                console.error('Error fetching notes: ', error);
+                console.error('Error fetching ideas: ', error);
             }
         }
     }, [user]);
 
     const fetchNotes = useCallback(async () => {
-        if (!user) {
+        if (user === null) {
             console.log("No user is logged in, fetching notes from local storage");
             return;
         }
 
+        if (firestore === null) {
+            console.error("Firestore is not initialized for fetching notes");
+            return;
+        }
+        
         try {
             console.log('Fetching notes from Firestore');
             const ref = collection(firestore, "users", user.uid, "notes");
             const queryNotes = (ref);
             const snapshot = await getDocs(queryNotes);
-
             if (snapshot.empty) {
                 console.log("No notes found");
                 return;
@@ -112,8 +118,13 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }, [user]);
 
     const fetchProjects = useCallback(async () => {
-        if (!user) {
-            console.log("No user is logged in, fetching projects from local storage");
+        if (user === null) {
+            console.log("No user is logged in, fetching notes from local storage");
+            return;
+        }
+
+        if (firestore === null) {
+            console.error("Firestore is not initialized for fetching projects");
             return;
         }
 
@@ -122,7 +133,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
             const ref = collection(firestore, "users", user.uid, "projects");
             const queryProjects = firestoreQuery(ref, orderBy('createdAt', 'desc'));
             const snapshot = await getDocs(queryProjects);
-
+            
             if (snapshot.empty) {
                 console.log("No projects found");
                 return;
@@ -148,23 +159,27 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
             console.log("No user is logged in, fetching data from local storage");
             return;
         }
+        if (firestore === null) {
+            console.error("Firestore is not initialized");
+            return;
+        }
         try {
-            setIsLoadingApp(true);
-
             await fetchNotes();
             await fetchProjects();
             await fetchIdeas();
-
         } catch (error) {
             console.error('Unexpected error: ', error);
         } finally {
-            setIsLoadingApp(false);
+            setIsAppLoading(false);
         }
     }, [fetchIdeas, fetchNotes, fetchProjects, user]);
 
     const firestoreService = useCallback(async (collectionName: string, operation: string, idea: Note | Project, ideas?: string[]) => {
+        if (firestore === null) {
+            console.error("Firestore is not initialized");
+            return;
+        }
         try {
-            setIsLoadingApp(true);
             if (!user) {
                 console.log(`No user is logged in, updating ${collectionName} list in local storage`);
                 return;
@@ -223,13 +238,17 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         } catch (error) {
             console.error(`Error updating ${collectionName}: `, error);
         } finally {
-            setIsLoadingApp(false);
+            setIsAppLoading(false);
         }
     }, [user]);
 
     const firestoreServiceIds = useCallback(async (ideas: string[]) => {
+        if (firestore === null) {
+            console.error("Firestore is not initialized");
+            return;
+        }
         try {
-            setIsLoadingApp(true);
+            setIsAppLoading(true);
             if (!user) {
                 console.log(`No user is logged in, updating ideas in local storage`);
                 return;
@@ -256,7 +275,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         } catch (error) {
             console.error(`Error updating ideas: `, error);
         } finally {
-            setIsLoadingApp(false);
+            setIsAppLoading(false);
         }
     }, [user]);
 
@@ -373,8 +392,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         }
     }, [projects, ideas, firestoreService]);
 
-
-
     const handleSearch = useCallback((term: string) => {
         setSearchTerm(term);
         if (term.trim() === '') {
@@ -397,10 +414,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
 
     const contextValue = useMemo(() => ({
-        appError, filtered, ideas, info, isLoadingApp, notes, projects, searchTerm,isModalOpen,
+        appError, filtered, ideas, info, isAppLoading, notes, projects, searchTerm,isModalOpen,
         clearAppError, fetchData, handleUpdateIdeas, handleSearch, handleCloseSearch, setIsModalOpen, setInfo, setNotes, setProjects, updateNote, updateProject, createNote, createProject, deleteNote, deleteProject
     }), [
-        appError, filtered, ideas, info, isLoadingApp, notes, projects, searchTerm, isModalOpen,
+        appError, filtered, ideas, info, isAppLoading, notes, projects, searchTerm, isModalOpen,
         clearAppError, fetchData, handleUpdateIdeas, handleSearch, handleCloseSearch, updateNote, updateProject, createNote, createProject, deleteNote, deleteProject
     ]);
 
