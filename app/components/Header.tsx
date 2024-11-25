@@ -134,7 +134,6 @@ export default function Header() {
             window.removeEventListener('scroll', handleScroll);
         };
     }, []);
-    
 
     const getTitle = () => {
         switch (pathname) {
@@ -155,7 +154,6 @@ export default function Header() {
         }
     };
 
-
     useEffect(() => {
         const url = new URL(window.location.href);
         if (searchTerm) {
@@ -164,9 +162,7 @@ export default function Header() {
             url.searchParams.delete('term');
         }
         window.history.replaceState({}, '', url);
-        // console.log('URL updated with search term: ', searchTerm);
     }, [searchTerm]);
-
 
     if (pathname === '/login') {
         return null;
@@ -277,7 +273,7 @@ export default function Header() {
                                         <LogoutOutlined /> Log Out
                                     </Link>
                                 ) : (
-                                    <Link className={styles.navLink} href='/login' onClick={() => setIsAccountMenuOpen(false)}>
+                                    <Link className={styles.navLink} href='https://login.machinename.dev?redirect=https://idea.machinename.dev' onClick={() => setIsAccountMenuOpen(false)}>
                                         <LoginOutlined /> Login
                                     </Link>
                                 )}
