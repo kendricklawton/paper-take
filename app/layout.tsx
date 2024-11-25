@@ -3,22 +3,22 @@ import "./globals.css";
 import Header from "./components/Header";
 // import Information from "./components/Information";
 import ProviderWrapper from "./providers/ProviderWrapper";
-import Information from "./components/Information";
+import Info from "./components/Info";
 // import GoogleAdsense from "./components/GoogleAdsense";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.papertake.io"),
-  title: 'Paper Take',
-  description: 'Welcome to Paper Take, your online tool for effortless idea creation. Designed with a minimalist approach, our web app allows you to focus on your ideas without the clutter. Easily jot down thoughts, organize tasks, and manage projects in a clean, intuitive interface. Start using Paper Take today and transform ideas into reality.',
+  metadataBase: new URL("https://idea.machinename.dev"),
+  title: 'Machine Name — Idea',
+  description: 'Welcome to Machine Name — Idea, your online tool for effortless idea creation. Designed with a minimalist approach, our web app allows you to focus on your ideas without the clutter. Easily jot down thoughts, organize tasks, and manage projects in a clean, intuitive interface. Start using Paper Take today and transform ideas into reality.',
   keywords: "innovation, showcase, open source, projects, technology, creative solutions, paper take",
   authors: [
     { name: "Machine Name" }
   ],
   openGraph: { 
-    title: 'Paper Take - Idea Creation',
-    description: 'Welcome to Paper Take, your online tool for effortless idea creation. Designed with a minimalist approach, our web app allows you to focus on your ideas without the clutter. Easily jot down thoughts, organize tasks, and manage projects in a clean, intuitive interface. Start using Paper Take today and transform ideas into reality.',
-    url: 'https://www.papertake.io',
-    siteName: 'Paper Take',
+    title: 'Machine Name — Idea',
+    description: 'Welcome to Machine Name — Idea, your online tool for effortless idea creation. Designed with a minimalist approach, our web app allows you to focus on your ideas without the clutter. Easily jot down thoughts, organize tasks, and manage projects in a clean, intuitive interface. Start using Paper Take today and transform ideas into reality.',
+    url: "https://idea.machinename.dev",
+    siteName: 'Machine Name — Idea',
     locale: 'en_US',
     type: 'website',
   },
@@ -47,7 +47,7 @@ export default function RootLayout({
         <ProviderWrapper>
           <Header />
           {children}
-          <Information />
+          <Info />
         </ProviderWrapper>
         {/* <footer>
           <p>&copy; {new Date().getFullYear()} Machine Name. All rights reserved.</p>
