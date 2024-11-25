@@ -64,9 +64,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 const displayName = user.displayName || '';
                 setUserDisplayName(displayName);
                 setUserEmail(email);
+                console.log('User is logged in');
             } else {
                 setUserDisplayName('');
                 setUserEmail('');
+                console.log('User is not logged in');
             }
             setIsAuthLoading(false)
         });
