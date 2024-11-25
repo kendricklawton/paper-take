@@ -25,7 +25,7 @@ interface AccountModalProps {
 const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) => {
     const Router = useRouter();
 
-    const { authError, user, userDisplayName, userEmail, clearAuthError, sendPasswordReset, updateUserDisplayName, updateUserEmail,
+    const { authError, user, clearAuthError, sendPasswordReset, updateUserDisplayName, updateUserEmail,
         deleteUserAccount, sendUserVerification } = useAuthContext();
 
     const { setInfo } = useAppContext();
@@ -140,8 +140,8 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                     <React.Fragment>
                         <h1>Update email</h1>
                         {
-                            userEmail && (
-                                <p>{userEmail}</p>
+                            user?.email && (
+                                <p>{user.email}</p>
                             )
                         }
                         <p>To continue, type your new email and your password below</p>
@@ -151,7 +151,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                 return (
                     <React.Fragment>
                         <h1>Reset password</h1>
-                        <p>Password reset link will be sent to {userEmail}</p>
+                        <p>Password reset link will be sent to {user?.email}</p>
                         <p>To continue, type your email below</p>
                     </React.Fragment>
                 );
@@ -159,7 +159,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                 return (
                     <React.Fragment>
                         <h1>Delete account</h1>
-                        <p>We will delete your account and all data associated with the email &apos;{userEmail}&apos;</p>
+                        <p>We will delete your account and all data associated with the email &apos;{user?.email}&apos;</p>
                         <p>To continue, type &apos;delete-my-account&apos; and your password below</p>
                     </React.Fragment>
                 );
@@ -167,7 +167,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                 return (
                     <React.Fragment>
                         <h1>Update display name</h1>
-                        {userDisplayName && (<p>{userDisplayName}</p>)}
+                        {user?.displayName && (<p>{user.displayName}</p>)}
                         <p>To continue, type your new display name below</p>
                     </React.Fragment>
                 );
@@ -175,7 +175,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                 return (
                     <React.Fragment>
                         <h1>Email verification</h1>
-                        <p>Email verification link will be sent to &apos;{userEmail}&apos;</p>
+                        <p>Email verification link will be sent to &apos;{user?.email}&apos;</p>
                         <p>To continue, type your email below</p>
                     </React.Fragment>
                 );
