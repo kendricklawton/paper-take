@@ -8,8 +8,7 @@ import AccountModal from '../components/AccountModal';
 import Link from 'next/link';
 
 export default function Account() {
-    const { user, userDisplayName, userEmail,
-    } = useAuthContext();
+    const { user } = useAuthContext();
     const [method, setMethod] = useState('');
     const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
 
@@ -62,7 +61,7 @@ export default function Account() {
                     <div className={styles.containerItem} onClick={pushToEmail} >
                         <div className={styles.containerItemLeading}>
                             <p>Email</p>
-                            <p>{userEmail}</p>
+                            <p>{user?.email}</p>
                         </div>
                         <div className={styles.containerItemTrailing}>
                             <ArrowForwardIos />
@@ -71,7 +70,7 @@ export default function Account() {
                     <div className={styles.containerItem} onClick={pushToDisplayName} >
                         <div className={styles.containerItemLeading}>
                             <p>Display name</p>
-                            <p>{userDisplayName}</p>
+                            <p>{user?.displayName}</p>
                         </div>
                         <div className={styles.containerItemTrailing}>
                             <ArrowForwardIos />
