@@ -1,9 +1,11 @@
 'use client';
 
 import React, { Suspense, useEffect, useRef, useState } from 'react';
-import { usePathname, 
+import {
+    usePathname,
     // useSearchParams, 
-    useRouter } from 'next/navigation';
+    useRouter
+} from 'next/navigation';
 
 import Link from 'next/link';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -32,12 +34,11 @@ export default function Header() {
     const { isAuthLoading, logOut, user } = useAuthContext();
     const {
         searchTerm,
-        handleSearch, 
-        handleCloseSearch, 
+        handleSearch,
+        handleCloseSearch,
         isAppLoading,
         fetchData,
     } = useAppContext();
-
 
     // State Variables
     const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
@@ -67,7 +68,6 @@ export default function Header() {
         event.preventDefault();
         router.push('/search');
         handleSearch(event.target.value);
-
     }
 
     const handleOnFocus = () => {
@@ -144,13 +144,13 @@ export default function Header() {
             case '/help':
                 return 'Help';
             case '/':
-                return 'Paper Take';
+                return 'Idea';
             case '/search':
-                return 'Paper Take';
+                return 'Idea';
             case '/trash':
                 return 'Trash';
             default:
-                return 'Paper Take';
+                return 'Idea';
         }
     };
 
@@ -273,7 +273,7 @@ export default function Header() {
                                         <LogoutOutlined /> Log Out
                                     </Link>
                                 ) : (
-                                    <Link className={styles.navLink} href='https://login.machinename.dev?redirectUrl=https://idea.machinename.dev' onClick={() => setIsAccountMenuOpen(false)}>
+                                    <Link className={styles.navLink} href='/login' onClick={() => setIsAccountMenuOpen(false)}>
                                         <LoginOutlined /> Login
                                     </Link>
                                 )}
