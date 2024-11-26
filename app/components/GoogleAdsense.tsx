@@ -1,3 +1,4 @@
+import React from "react";
 import Script from "next/script";
 
 const Id = process.env.GOOGLE_AD_SENSE_ID as string;

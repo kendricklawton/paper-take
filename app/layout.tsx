@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import "./globals.css";
-import Header from "./components/Header";
-// import Information from "./components/Information";
+import Header from "./components/Header"
 import ProviderWrapper from "./providers/ProviderWrapper";
 import Info from "./components/Info";
-// import GoogleAdsense from "./components/GoogleAdsense";
+import GoogleAdsense from "./components/GoogleAdsense";
+import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://idea.machinename.dev"),
@@ -43,7 +42,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {/* <GoogleAdsense/> */}
+        <GoogleAdsense/>
         <ProviderWrapper>
           <Header />
           {children}
