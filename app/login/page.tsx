@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import {
     InputAdornment,
     Divider,
@@ -13,7 +13,7 @@ import {
     VisibilityOffOutlined,
     VisibilityOutlined,
 } from '@mui/icons-material';
-import styles from './page.module.css';
+import styles from '../page.module.css';
 import { StyledButton, FormTextField, StyledTextButton } from '../components/Styled';
 import React from 'react';
 import { auth } from '../firebase';
@@ -29,13 +29,11 @@ export default function Login() {
             sendPasswordReset,
         } = useAuthContext();
 
-    const searchParams = useSearchParams();
     const router = useRouter();
 
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
-    const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [isLoginHelp, setIsLoginHelp] = useState<boolean>(false);
     const [isLogin, setIsLogin] = useState<boolean>(true);
@@ -45,19 +43,6 @@ export default function Login() {
         password: '',
         confirmPassword: '',
     });
-
-    const allowedDomains = [
-        'https://machinename.dev',
-        'https://idea.machinename.dev'
-    ];
-
-    useEffect(() => {
-        const redirectUrl = searchParams.get('redirectUrl');
-        console.log('Redirect:', redirectUrl);
-        if (redirectUrl) {
-            setRedirectUrl(redirectUrl);
-        }
-    }, [searchParams]);
 
     const handleClickShowPassword = () => {
         setShowPassword(prev => !prev);
@@ -80,24 +65,11 @@ export default function Login() {
         setPassword('');
     };
 
-    const handleAppRedirect = () => {
-        if (redirectUrl) {
-            if (allowedDomains.includes(redirectUrl)) {
-                console.log('Redirecting to:', redirectUrl);
-                router.push(redirectUrl);
-            } else {
-                throw new Error('Invalid redirect URL');
-            }
-        } else {
-            router.push('https://machinename.dev');
-        }
-    };
-
     const handleContinueWithGoogle = async (event: React.FormEvent<HTMLButtonElement>) => {
         event.preventDefault();
         try {
             await logInWithGoogle();
-            handleAppRedirect();
+            router.push('/');
         } catch (error) {
             console.log(error);
         } finally {
@@ -126,7 +98,7 @@ export default function Login() {
                 }
 
                 await logIn(email, password);
-                handleAppRedirect();
+                router.push('/');
             } else if (!isLogin && !isLoginHelp) {
                 if (!email.trim()) {
                     setErrors({ ...errors, email: 'Email is required' });
@@ -146,12 +118,7 @@ export default function Login() {
                 }
 
                 await createUserAccount(email, password);
-
-                if (redirectUrl) {
-                    router.push(redirectUrl);
-                } else {
-                    throw new Error('No redirect URL');
-                }
+                router.push('/');
             }
 
         } catch (error) {
