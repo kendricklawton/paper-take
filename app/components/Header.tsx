@@ -144,13 +144,13 @@ export default function Header() {
             case '/help':
                 return 'Help';
             case '/':
-                return 'Idea';
+                return 'Ideas';
             case '/search':
-                return 'Idea';
+                return 'Ideas';
             case '/trash':
                 return 'Trash';
             default:
-                return 'Idea';
+                return 'Ideas';
         }
     };
 
