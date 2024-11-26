@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Header from "./components/Header"
 import ProviderWrapper from "./providers/ProviderWrapper";
 import Info from "./components/Info";
-import GoogleAdsense from "./components/GoogleAdsense";
 import "./globals.css";
+import Head from "next/head";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://idea.machinename.dev"),
@@ -34,15 +34,25 @@ export const metadata: Metadata = {
   },
 };
 
+const Id = process.env.GOOGLE_AD_SENSE_ID as string;
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   return (
     <html lang="en">
       <body>
-        <GoogleAdsense/>
+        <Head>
+          {/* Add the Google AdSense script here */}
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${Id}`}
+            crossOrigin="anonymous"
+          ></script>
+        </Head>
         <ProviderWrapper>
           <Header />
           {children}
