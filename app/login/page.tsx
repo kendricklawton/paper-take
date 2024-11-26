@@ -139,8 +139,8 @@ export default function Login() {
     };
 
     return (
-        <div className={styles.page}>
-            <div className={styles.wrapper}>
+        <div className={styles.pageLogin}>
+            <div className={styles.wrapperLogin}>
                 <h2>User - {auth.currentUser?.email}</h2>
                 {
                     auth.currentUser && <Button onClick={
