@@ -17,31 +17,32 @@ import {
     reauthenticateWithCredential,
     sendEmailVerification,
     sendPasswordResetEmail,
+    signInWithEmailAndPassword,
+    signInWithPopup,
+    GoogleAuthProvider,
     updateProfile,
     verifyBeforeUpdateEmail,
     EmailAuthProvider,
     User,
-    signInWithCustomToken,
+    createUserWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from '../firebase';
-import cookie from 'js-cookie';
 
 interface AuthContextType {
     authError: string;
     isAuthLoading: boolean;
     user: User | null;
     clearAuthError: () => void;
+    createUserAccount: (email: string, password: string) => Promise<void>;
     deleteUserAccount: (password: string) => Promise<void>;
+    logIn: (email: string, password: string) => Promise<void>;
+    logInWithGoogle: () => Promise<void>;
     logOut: () => Promise<void>;
     sendPasswordReset: (email: string) => Promise<void>;
     sendUserVerification: () => Promise<void>;
     updateUserDisplayName: (newDisplayName: string) => Promise<void>;
     updateUserEmail: (newEmail: string, password: string) => Promise<void>;
 }
-
-const getCookie = (name: string): string | null => {
-    return cookie.get(name) || null;
-};
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -51,26 +52,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [isAuthLoading, setIsAuthLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        const token = getCookie('auth_token');
-        if (token) {
-            console.log("Signing in with custom token");
-            signInWithCustomToken(auth, token)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    setUser(user);
-                })
-                .catch((error) => {
-                    console.error("Error signing in with custom token", error);
-                    setUser(null);
-                })
-                .finally(() => setIsAuthLoading(false));
-        } else {
-            console.log("No token found");
-            setUser(null);
-            setIsAuthLoading(false);
-        }
-
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setIsAuthLoading(true);
             if (currentUser) {
                 setUser(currentUser);
             } else {
@@ -80,9 +63,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         });
 
         return () => unsubscribe();
-    }, []); 
+    }, []);
 
-    const handleAuthError = useCallback((error: unknown) => {
+
+    const handleError = useCallback((error: unknown) => {
         if (error instanceof FirebaseError) {
             switch (error.code) {
                 case 'auth/invalid-credential':
@@ -104,17 +88,29 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                     setAuthError('Access temporarily disabled due to many failed attempts');
                     break;
                 default:
-                    setAuthError('An unknown error occurred.');
+                    setAuthError('Unknown FirebaseError, error.code: ' + error.code);
             }
         } else {
-            setAuthError('An error occurred. Please try again later.');
+            setAuthError('' + error);
         }
     }, []);
+
 
     const clearAuthError = useCallback(() => {
         setAuthError('');
     }, []);
 
+    const createUserAccount = useCallback(async (email: string, password: string): Promise<void> => {
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            await sendEmailVerification(userCredential.user);
+            setUser(userCredential.user);
+        } catch (error) {
+            handleError(error);
+        } finally {
+            setIsAuthLoading(false);
+        }
+    }, [handleError]);
 
     const deleteUserAccount = useCallback(async (password: string): Promise<void> => {
         clearAuthError();
@@ -126,10 +122,33 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 setUser(null);
             }
         } catch (error) {
-            handleAuthError(error);
+            handleError(error);
             throw error;
         }
-    }, [clearAuthError, handleAuthError, user]);
+    }, [clearAuthError, handleError, user]);
+
+    const logIn = useCallback(async (email: string, password: string): Promise<void> => {
+        setIsAuthLoading(true);
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            setUser(userCredential.user);
+        } catch (error) {
+            handleError(error);
+        } finally {
+            setIsAuthLoading(false);
+        }
+    }, [handleError]);
+
+    const logInWithGoogle = useCallback(async (): Promise<void> => {
+        try {
+            const provider = new GoogleAuthProvider();
+            const result = await signInWithPopup(auth, provider);
+            setUser(result.user);
+
+        } catch (error) {
+            handleError(error);
+        }
+    }, [handleError]);
 
     const logOut = useCallback(async (): Promise<void> => {
         clearAuthError();
@@ -141,10 +160,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             await auth.signOut();
             setUser(null);
         } catch (error) {
-            handleAuthError(error);
+            handleError(error);
             throw error;
         }
-    }, [clearAuthError, handleAuthError]);
+    }, [clearAuthError, handleError]);
 
     const sendPasswordReset = useCallback(async (email: string): Promise<void> => {
         clearAuthError();
@@ -154,10 +173,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         try {
             await sendPasswordResetEmail(auth, email);
         } catch (error) {
-            handleAuthError(error);
+            handleError(error);
             throw error;
         }
-    }, [clearAuthError, handleAuthError]);
+    }, [clearAuthError, handleError]);
 
     const sendUserVerification = useCallback(async (): Promise<void> => {
         clearAuthError();
@@ -168,10 +187,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 throw new Error('User not found.');
             }
         } catch (error) {
-            handleAuthError(error);
+            handleError(error);
             throw error;
         }
-    }, [clearAuthError, handleAuthError, user]);
+    }, [clearAuthError, handleError, user]);
 
     const updateUserDisplayName = useCallback(async (newDisplayName: string): Promise<void> => {
         clearAuthError();
@@ -183,10 +202,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 throw new Error('User not found.');
             }
         } catch (error) {
-            handleAuthError(error);
+            handleError(error);
             throw error;
         }
-    }, [clearAuthError, handleAuthError, user]);
+    }, [clearAuthError, handleError, user]);
 
     const updateUserEmail = useCallback(async (newEmail: string, password: string): Promise<void> => {
         clearAuthError();
@@ -199,17 +218,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 throw new Error('User not found.');
             }
         } catch (error) {
-            handleAuthError(error);
+            handleError(error);
             throw error;
         }
-    }, [clearAuthError, handleAuthError, user]);
+    }, [clearAuthError, handleError, user]);
 
     const contextValue = useMemo(() => ({
         authError,
         isAuthLoading,
         user,
         clearAuthError,
+        createUserAccount,
         deleteUserAccount,
+        logIn,
+        logInWithGoogle,
         logOut,
         sendPasswordReset,
         sendUserVerification,
@@ -220,7 +242,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         isAuthLoading,
         user,
         clearAuthError,
+        createUserAccount,
         deleteUserAccount,
+        logIn,
+        logInWithGoogle,
         logOut,
         sendPasswordReset,
         sendUserVerification,
