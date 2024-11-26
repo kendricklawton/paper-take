@@ -9,6 +9,7 @@ import React, {
     useEffect,
     ReactNode,
 } from 'react';
+
 import { FirebaseError } from 'firebase/app';
 import {
     deleteUser,
@@ -23,6 +24,7 @@ import {
     signInWithCustomToken,
 } from "firebase/auth";
 import { auth } from '../firebase';
+import cookie from 'js-cookie';
 
 interface AuthContextType {
     authError: string;
@@ -37,6 +39,10 @@ interface AuthContextType {
     updateUserEmail: (newEmail: string, password: string) => Promise<void>;
 }
 
+const getCookie = (name: string): string | null => {
+    return cookie.get(name) || null;
+};
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -44,19 +50,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [user, setUser] = useState<User | null>(null);
     const [isAuthLoading, setIsAuthLoading] = useState<boolean>(false);
 
-    const getCookie = (name: string): string | null => {
-        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-        return match ? match[2] : null;
-    };
-
     useEffect(() => {
-        if (!auth) {
-            console.error('Firebase auth not initialized');
-            return;
-        }
-
-        // Check for token in cookies
-        const token = getCookie('firebaseToken');
+        const token = getCookie('auth_token');
         if (token) {
             console.log("Signing in with custom token");
             signInWithCustomToken(auth, token)
@@ -75,14 +70,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             setIsAuthLoading(false);
         }
 
-        // Firebase auth state listener
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setUser(user);
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            if (currentUser) {
+                setUser(currentUser);
+            } else {
+                setUser(null);
+            }
             setIsAuthLoading(false);
         });
 
         return () => unsubscribe();
-    }, []);
+    }, []); 
 
     const handleAuthError = useCallback((error: unknown) => {
         if (error instanceof FirebaseError) {
@@ -133,20 +131,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     }, [clearAuthError, handleAuthError, user]);
 
-    // const logIn = useCallback(async (email: string, password: string): Promise<void> => {
-    //     clearAuthError();
-    //     if (auth === null) {
-    //         return;
-    //     }
-    //     try {
-    //         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    //         setUser(userCredential.user);
-    //     } catch (error) {
-    //         handleAuthError(error);
-    //         throw error;
-    //     }
-    // }, [clearAuthError, handleAuthError]);
-
     const logOut = useCallback(async (): Promise<void> => {
         clearAuthError();
         if (auth === null) {
@@ -194,7 +178,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         try {
             if (user) {
                 await updateProfile(user, { displayName: newDisplayName });
-     
+
             } else {
                 throw new Error('User not found.');
             }
@@ -224,11 +208,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         authError,
         isAuthLoading,
         user,
-
         clearAuthError,
-
         deleteUserAccount,
-        
         logOut,
         sendPasswordReset,
         sendUserVerification,
