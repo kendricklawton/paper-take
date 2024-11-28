@@ -24,7 +24,7 @@ interface AccountModalProps {
 const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) => {
     const Router = useRouter();
 
-    const { authError, user, clearAuthError, sendPasswordReset, updateUserDisplayName, updateUserEmail,
+    const { authError, user, sendPasswordReset, updateUserDisplayName, updateUserEmail,
         deleteUserAccount, sendUserVerification } = useAuthContext();
 
     const { setInfo } = useAppContext();
@@ -41,7 +41,6 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
     };
 
     const clearValues = () => {
-        clearAuthError();
         setDeleteAccount('');
         setEmail('');
         setErrors({ displayName: '', email: '', password: '' });
