@@ -25,6 +25,7 @@ import {
     EmailAuthProvider,
     User,
     createUserWithEmailAndPassword,
+    signInWithCustomToken,
 } from "firebase/auth";
 import { auth } from '../firebase';
 
@@ -59,12 +60,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const token = document.cookie.split(';').find((cookie) => cookie.trim().startsWith('USER_TOKEN='));
 
         if (token) {
-            console.log("User is authenticated with token:", token);
+            const userToken = token.split('=')[1];
+
+            signInWithCustomToken(auth, userToken)
+                .then((userCredential) => {
+                    setUser(userCredential.user);
+                })
+                .catch((error) => {
+                    console.error('Error authenticating with token:', error);
+                    setUser(null);
+                });
         } else {
-            console.log("User is not authenticated.");
+            console.log('No USER_TOKEN found in cookies.');
         }
 
+
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            
             setIsAuthLoading(true);
             if (currentUser) {
                 setUser(currentUser);
