@@ -27,12 +27,12 @@ import {
     createUserWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from '../firebase';
+import Cookies from 'js-cookie';
 
 interface AuthContextType {
     authError: string;
     isAuthLoading: boolean;
     user: User | null;
-    clearAuthError: () => void;
     createUserAccount: (email: string, password: string) => Promise<void>;
     deleteUserAccount: (password: string) => Promise<void>;
     logIn: (email: string, password: string) => Promise<void>;
@@ -51,6 +51,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [user, setUser] = useState<User | null>(null);
     const [isAuthLoading, setIsAuthLoading] = useState<boolean>(false);
 
+    const token = Cookies.get('auth_token');
+
+    if (token) {
+        console.log("User is authenticated with token:", token);
+    } else {
+        console.log("User is not authenticated.");
+    }
+    
     useEffect(() => {
         if (!auth) {
             console.error('Firebase auth is not initialized');
@@ -70,6 +78,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return () => unsubscribe();
     }, []);
 
+    const handleUserToken = (token: string) => {
+        Cookies.set('auth_token', token, {
+            path: '/',
+            domain: '.machinename.dev',
+            secure: true,
+            httpOnly: true,
+            maxAge: 3600,
+        });
+    };
 
     const handleError = useCallback((error: unknown) => {
         if (error instanceof FirebaseError) {
@@ -100,15 +117,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     }, []);
 
-
-    const clearAuthError = useCallback(() => {
-        setAuthError('');
-    }, []);
-
     const createUserAccount = useCallback(async (email: string, password: string): Promise<void> => {
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             await sendEmailVerification(userCredential.user);
+            const token = await userCredential.user.getIdToken();
+            handleUserToken(token);
             setUser(userCredential.user);
         } catch (error) {
             handleError(error);
@@ -118,7 +132,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }, [handleError]);
 
     const deleteUserAccount = useCallback(async (password: string): Promise<void> => {
-        clearAuthError();
         try {
             if (user) {
                 const credential = EmailAuthProvider.credential(user.email!, password);
@@ -130,12 +143,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             handleError(error);
             throw error;
         }
-    }, [clearAuthError, handleError, user]);
+    }, [ handleError, user]);
 
     const logIn = useCallback(async (email: string, password: string): Promise<void> => {
         setIsAuthLoading(true);
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const token = await userCredential.user.getIdToken();
+            handleUserToken(token);
             setUser(userCredential.user);
         } catch (error) {
             handleError(error);
@@ -148,43 +163,34 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         try {
             const provider = new GoogleAuthProvider();
             const result = await signInWithPopup(auth, provider);
+            const token = await result.user.getIdToken();
+            handleUserToken(token);
             setUser(result.user);
-
         } catch (error) {
             handleError(error);
         }
     }, [handleError]);
 
     const logOut = useCallback(async (): Promise<void> => {
-        clearAuthError();
-        if (auth === null) {
-            return;
-        }
         try {
-            document.cookie = "firebaseToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             await auth.signOut();
             setUser(null);
         } catch (error) {
             handleError(error);
             throw error;
         }
-    }, [clearAuthError, handleError]);
+    }, [ handleError]);
 
     const sendPasswordReset = useCallback(async (email: string): Promise<void> => {
-        clearAuthError();
-        if (auth === null) {
-            return;
-        }
         try {
             await sendPasswordResetEmail(auth, email);
         } catch (error) {
             handleError(error);
             throw error;
         }
-    }, [clearAuthError, handleError]);
+    }, [ handleError]);
 
     const sendUserVerification = useCallback(async (): Promise<void> => {
-        clearAuthError();
         try {
             if (user) {
                 await sendEmailVerification(user);
@@ -195,14 +201,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             handleError(error);
             throw error;
         }
-    }, [clearAuthError, handleError, user]);
+    }, [ handleError, user]);
 
     const updateUserDisplayName = useCallback(async (newDisplayName: string): Promise<void> => {
-        clearAuthError();
         try {
             if (user) {
                 await updateProfile(user, { displayName: newDisplayName });
-
             } else {
                 throw new Error('User not found.');
             }
@@ -210,10 +214,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             handleError(error);
             throw error;
         }
-    }, [clearAuthError, handleError, user]);
+    }, [ handleError, user]);
 
     const updateUserEmail = useCallback(async (newEmail: string, password: string): Promise<void> => {
-        clearAuthError();
         try {
             if (user) {
                 const credential = EmailAuthProvider.credential(user.email!, password);
@@ -226,13 +229,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             handleError(error);
             throw error;
         }
-    }, [clearAuthError, handleError, user]);
+    }, [ handleError, user]);
 
     const contextValue = useMemo(() => ({
         authError,
         isAuthLoading,
         user,
-        clearAuthError,
         createUserAccount,
         deleteUserAccount,
         logIn,
@@ -246,7 +248,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         authError,
         isAuthLoading,
         user,
-        clearAuthError,
         createUserAccount,
         deleteUserAccount,
         logIn,
