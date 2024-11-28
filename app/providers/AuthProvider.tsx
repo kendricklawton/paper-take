@@ -56,8 +56,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             return;
         }
         
-
-        const token = document.cookie.split(';').find((cookie) => cookie.trim().startsWith('TOKEN='));
+        const token = document.cookie.split(';').find((cookie) => cookie.trim().startsWith('USER_TOKEN='));
 
         if (token) {
             console.log("User is authenticated with token:", token);
@@ -77,8 +76,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
         return () => unsubscribe();
     }, []);
-
-
 
     const handleError = useCallback((error: unknown) => {
         if (error instanceof FirebaseError) {
