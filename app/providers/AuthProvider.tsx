@@ -53,18 +53,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const token = Cookies.get('auth_token');
 
-    if (token) {
-        console.log("User is authenticated with token:", token);
-    } else {
-        console.log("User is not authenticated.");
-    }
-    
+
+
     useEffect(() => {
         if (!auth) {
             console.error('Firebase auth is not initialized');
             return;
         }
         
+        if (token) {
+            console.log("User is authenticated with token:", token);
+        } else {
+            console.log("User is not authenticated.");
+        }
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setIsAuthLoading(true);
             if (currentUser) {
