@@ -23,26 +23,18 @@ export default function Trash() {
         <div className={styles.page}>
             {
                 trashIdeas.length === 0 &&
-                <React.Fragment>
-                    <h2>Trash is empty</h2>
-                    <div className={styles.spacer} />
-                </React.Fragment>
+                <h2>Trash is empty</h2>
             }
-            <React.Fragment>
-                {/* <p>Notes in trash will be delete after 7 days.</p> */}
-            </React.Fragment>
             {trashIdeas.length > 0 && (
                 trashIdeas.map((idea, index) => (
                     <React.Fragment key={index}>
-                        <div className={styles.spacer} />
                         <GUI
                             key={idea.id}
                             operation={'read'}
                             idea={idea}
                         />
                     </React.Fragment>
-                )
-                )
+                ))
             )}
         </div >
     );

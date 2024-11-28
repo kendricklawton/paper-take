@@ -30,7 +30,6 @@ import styles from "./Header.module.css";
 import { StyledIconButton } from './Styled';
 
 export default function Header() {
-    // Contexts
     const { isAuthLoading, logOut, user } = useAuthContext();
     const {
         searchTerm,
@@ -40,7 +39,6 @@ export default function Header() {
         fetchData,
     } = useAppContext();
 
-    // State Variables
     const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
     const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
     // const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);

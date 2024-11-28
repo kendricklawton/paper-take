@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import styles from './AccountModal.module.css'
+import styles from '../page.module.css';
 import { useAuthContext } from '../providers/AuthProvider';
 import { useAppContext } from '../providers/AppProvider';
 import {

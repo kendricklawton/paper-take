@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Header from "./components/Header"
-import ProviderWrapper from "./providers/ProviderWrapper";
-import Info from "./components/Info";
-import "./globals.css";
 import Head from "next/head";
+import Header from "./components/Header"
+import Info from "./components/Info";
+import ProviderWrapper from "./providers/ProviderWrapper";
+import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://idea.machinename.dev"),
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   authors: [
     { name: "Machine Name" }
   ],
-  openGraph: { 
+  openGraph: {
     title: 'Machine Name — Idea',
     description: 'Welcome to Machine Name — Idea, your online tool for effortless idea creation. Designed with a minimalist approach, our web app allows you to focus on your ideas without the clutter. Easily jot down thoughts, organize tasks, and manage projects in a clean, intuitive interface. Start using Paper Take today and transform ideas into reality.',
     url: "https://idea.machinename.dev",
@@ -34,33 +34,30 @@ export const metadata: Metadata = {
   },
 };
 
-const Id = process.env.GOOGLE_AD_SENSE_ID as string;
+const id = process.env.GOOGLE_AD_SENSE_ID as string;
+const url = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${id}`;
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
+
   return (
     <html lang="en">
       <body>
         <Head>
-          {/* Add the Google AdSense script here */}
           <script
             async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${Id}`}
+            src={url}
             crossOrigin="anonymous"
-          ></script>
+          />
         </Head>
         <ProviderWrapper>
           <Header />
           {children}
           <Info />
         </ProviderWrapper>
-        {/* <footer>
-          <p>&copy; {new Date().getFullYear()} Machine Name. All rights reserved.</p>
-        </footer> */}
       </body>
     </html>
   );

@@ -1,47 +1,40 @@
-/* Base Styles */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
 html,
 body {
-  margin: 0;
+  max-width: 100vw;
+  overflow-x: hidden;
   padding: 0;
-  -ms-user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
+  margin: 0;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
   font-family: monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Typography */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p {
-  padding: 0;
-  margin: 0;
-  font-weight: lighter;
-  color:#121212;
+a {
+  color: inherit;
+  text-decoration: none;
 }
-
-/* footer {
-  position: fixed;
-  bottom: 0;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-} */
 
 #icon {
   color: gray;
 }
 
-/* Scrollbar Styles */
 ::-webkit-scrollbar {
   width: 10px;
   background-color: lightgrey;
@@ -51,35 +44,22 @@ p {
   background: #888;
 }
 
-/* Hide scrollbar */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
-  /* For Chrome, Safari, and Opera */
 }
 
-/* Dark Mode Styles */
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
 
   body {
-    background-color: #121212;
+    background-color: #0a0a0a;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  p {
+  a {
     color: lightgray;
   }
-
-  /* #icon {
-        color: #ffffff;
-      } */
 
   ::-webkit-scrollbar-thumb {
     background: #555;

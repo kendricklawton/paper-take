@@ -52,6 +52,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [isAuthLoading, setIsAuthLoading] = useState<boolean>(false);
 
     useEffect(() => {
+        if (!auth) {
+            console.error('Firebase auth is not initialized');
+            return;
+        }
+        
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setIsAuthLoading(true);
             if (currentUser) {
