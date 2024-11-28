@@ -27,7 +27,6 @@ import {
     createUserWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from '../firebase';
-import Cookies from 'js-cookie';
 
 interface AuthContextType {
     authError: string;
@@ -51,21 +50,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [user, setUser] = useState<User | null>(null);
     const [isAuthLoading, setIsAuthLoading] = useState<boolean>(false);
 
-    const token = Cookies.get('auth_token');
-
-
-
     useEffect(() => {
         if (!auth) {
             console.error('Firebase auth is not initialized');
             return;
         }
         
+
+        const token = document.cookie.split(';').find((cookie) => cookie.trim().startsWith('TOKEN='));
+
         if (token) {
             console.log("User is authenticated with token:", token);
         } else {
             console.log("User is not authenticated.");
         }
+
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setIsAuthLoading(true);
             if (currentUser) {
@@ -79,15 +78,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return () => unsubscribe();
     }, []);
 
-    const handleUserToken = (token: string) => {
-        Cookies.set('auth_token', token, {
-            path: '/',
-            domain: '.machinename.dev',
-            secure: true,
-            httpOnly: true,
-            maxAge: 3600,
-        });
-    };
+
 
     const handleError = useCallback((error: unknown) => {
         if (error instanceof FirebaseError) {
@@ -122,8 +113,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             await sendEmailVerification(userCredential.user);
-            const token = await userCredential.user.getIdToken();
-            handleUserToken(token);
             setUser(userCredential.user);
         } catch (error) {
             handleError(error);
@@ -150,8 +139,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setIsAuthLoading(true);
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            const token = await userCredential.user.getIdToken();
-            handleUserToken(token);
             setUser(userCredential.user);
         } catch (error) {
             handleError(error);
@@ -164,8 +151,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         try {
             const provider = new GoogleAuthProvider();
             const result = await signInWithPopup(auth, provider);
-            const token = await result.user.getIdToken();
-            handleUserToken(token);
             setUser(result.user);
         } catch (error) {
             handleError(error);
