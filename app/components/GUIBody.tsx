@@ -20,6 +20,7 @@ interface GUIBodyProps {
     setFocus: React.Dispatch<React.SetStateAction<'title' | 'content' | ''>>,
     setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
     setIsModalMode: React.Dispatch<React.SetStateAction<boolean>>;
+    setScrollPosition: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export default function GUIBody({
@@ -34,6 +35,7 @@ export default function GUIBody({
     setFocus,
     setIsEditMode,
     setIsModalMode, 
+    setScrollPosition,
 }: GUIBodyProps) {
     const { setInfo } = useAppContext();
 
@@ -61,6 +63,7 @@ export default function GUIBody({
         if (initialOperation === 'read') {
             setIsEditMode(true);
             setIsModalMode(true);
+            setScrollPosition(window.scrollY);
         }
         setFocus('content');
     };

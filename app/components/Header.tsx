@@ -118,16 +118,13 @@ export default function Header() {
         const handleScroll = () => {
             if (window.scrollY > 0) {
                 setIsScrolled(true);
-                // document.body.classList.remove('hide-scrollbar');
             } else {
                 setIsScrolled(false);
-                // document.body.classList.add('hide-scrollbar');
             }
         };
 
-        handleScroll();
-
         window.addEventListener('scroll', handleScroll);
+
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
@@ -142,13 +139,13 @@ export default function Header() {
             case '/help':
                 return 'Help';
             case '/':
-                return 'Ideas';
+                return 'Paper Take';
             case '/search':
-                return 'Ideas';
+                return 'Paper Take';
             case '/trash':
                 return 'Trash';
             default:
-                return 'Ideas';
+                return 'Paper Take';
         }
     };
 
@@ -231,29 +228,6 @@ export default function Header() {
                             </StyledIconButton>
                         )
                     }
-                    {/* <div className={styles.settingsAnchor}>
-                        <StyledIconButton
-                            ref={settingsButtonRef}
-                            onClick={() => setIsSettingsMenuOpen(prev => !prev)}>
-                            {isSettingsMenuOpen ? <Settings /> : <SettingsOutlined />}
-                        </StyledIconButton>
-                        {isSettingsMenuOpen && (
-                            <nav className={styles.menu} ref={settingsMenuRef}>
-                                <div className={styles.navLink}>
-                                    Todo - Settings Menu
-                                </div>
-                                <div className={styles.navLink}>
-                                    Todo - Project
-                                </div>
-                                <div className={styles.navLink}>
-                                    Todo - Drag Drop Grid
-                                </div>
-                                <div className={styles.navLink}>
-                                    Todo - Too Much
-                                </div>
-                            </nav>
-                        )}
-                    </div> */}
                     <div className={styles.accountAnchor}>
                         <StyledIconButton ref={accountButtonRef} onClick={() => setIsAccountMenuOpen(prev => !prev)}>
                             {isAccountMenuOpen ? <Circle /> : <CircleOutlined />}

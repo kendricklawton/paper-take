@@ -51,6 +51,7 @@ const GUI: React.FC<GUIProps> = ({
     const [reminder, setReminder] = useState(idea.reminder);
     const [backgroundColor, setBackgroundColor] = useState(idea.type === 'note' ? idea.backgroundColor : '#ffffff');
     const [backgroundColorDark, setBackgroundColorDark] = useState(idea.type === 'note' ? idea.backgroundColorDark : '#121212');
+    const [scrollPosition, setScrollPosition] = useState(0);
 
     const index = useRef(0);
     const infoRef = useRef<HTMLDivElement | null>(null);
@@ -110,8 +111,8 @@ const GUI: React.FC<GUIProps> = ({
         } else {
             setIsReminderMenu(prev => !prev);
         }
+    };
 
-    }
     const handleResetNote = useCallback(() => {
         handleClearSelection();
 
@@ -293,7 +294,6 @@ const GUI: React.FC<GUIProps> = ({
     };
 
     const toggleArchive = async () => {
-
         if (initialOperation === 'create' && (content.length > 0 || title.length > 0)) {
             handleNote();
         } else if (initialOperation === 'create') {
@@ -309,7 +309,7 @@ const GUI: React.FC<GUIProps> = ({
 
         if (isArchived) {
             setInfo('Note unarchived');
-        } else if(!isArchived && isPinned) {
+        } else if (!isArchived && isPinned) {
             setInfo('Note archived and unpinned');
         } else {
             setInfo('Note archived');
@@ -393,7 +393,6 @@ const GUI: React.FC<GUIProps> = ({
     };
 
     const togglePinned = async () => {
-
         if (initialOperation === 'create' && (content.length > 0 || title.length > 0)) {
             handleNote();
         } else if (initialOperation === 'create') {
@@ -470,14 +469,19 @@ const GUI: React.FC<GUIProps> = ({
     };
 
     useEffect(() => {
-        const previousOverflow = document.body.style.overflow;
-        document.body.style.overflow = isModalMode ? 'hidden' : 'auto';
-        return () => {
-            document.body.style.overflow = previousOverflow;
-        };
-    }, [isModalMode]);
+        if (isModalMode) {
+            console.log('isModalMode:', isModalMode);
+            document.body.style.overflow = 'hidden';
+        } 
 
+        return () => {
+            document.body.style.overflow = '';
+            window.scrollTo(0, scrollPosition);
+        };
+    }, [isModalMode, scrollPosition]);
+    
     useEffect(() => {
+        
         const handleEvent = (event: MouseEvent) => {
             handleClickOutside(event);
         };
@@ -526,6 +530,7 @@ const GUI: React.FC<GUIProps> = ({
                             setFocus={setFocus}
                             setIsEditMode={setIsEditMode}
                             setIsModalMode={setIsModalMode}
+                            setScrollPosition={setScrollPosition}
                         />
                         <GUIBody
                             focus={focus}
@@ -539,6 +544,7 @@ const GUI: React.FC<GUIProps> = ({
                             setFocus={setFocus}
                             setIsEditMode={setIsEditMode}
                             setIsModalMode={setIsModalMode}
+                            setScrollPosition={setScrollPosition}
                         />
                     </div>
                     {

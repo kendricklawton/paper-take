@@ -1,12 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation'
 import {
     InputAdornment,
     Divider,
-    Button
 } from '@mui/material';
 import {
     Google,
@@ -14,9 +12,8 @@ import {
     VisibilityOutlined,
 } from '@mui/icons-material';
 import styles from '../page.module.css';
-import { StyledButton, FormTextField, StyledTextButton } from '../components/Styled';
+import { StyledButton, FormTextField } from '../components/Styled';
 import React from 'react';
-import { auth } from '../firebase';
 import { useAuthContext } from '../providers/AuthProvider';
 
 export default function Login() {
@@ -25,7 +22,6 @@ export default function Login() {
             createUserAccount,
             logIn,
             logInWithGoogle,
-            logOut,
             sendPasswordReset,
         } = useAuthContext();
 
@@ -141,15 +137,11 @@ export default function Login() {
     return (
         <div className={styles.pageLogin}>
             <div className={styles.wrapperLogin}>
-                <h2>User - {auth.currentUser?.email}</h2>
-                {
-                    auth.currentUser && <Button onClick={
-                        async () => {
-                            await logOut();
-                        }
-                    }>Logout</Button>
-                }
-                <h2>{isLoginHelp ? 'Log in help' : (isLogin ? 'Log into Machine Name' : 'Create an account')}</h2>
+
+                <div className={styles.pageHeaderContainer}>
+                    <h2>{isLoginHelp ? 'Log in help' : (isLogin ? 'Log into Machine Name' : 'Create an account')}</h2>
+                </div>
+
                 <div className={isLoginHelp ? styles.loginHelp : styles.login}>
                     <form className={styles.form} onSubmit={handleSubmit}>
                         <FormTextField
@@ -229,39 +221,22 @@ export default function Login() {
                         </React.Fragment>
                     )}
                 </div>
-                {(!isLogin && !isLoginHelp) && (
-                    <p>
-                        By creating an account, you agree to our
-                        <Link href={'/machinename.dev/termsofservice.pdf'} className={styles.textTerms} target="_blank" rel="noopener noreferrer">Terms of Service</Link>
-                        &
-                        <Link href={'/machinename.dev/privacy.pdf'} className={styles.textTerms} target="_blank" rel="noopener noreferrer">Privacy Policy</Link>
-                    </p>
-                )}
-                {isLoginHelp && (
-                    <React.Fragment>
-                        <p className={styles.textTerms}>
-                            Enter your email to receive a password reset link
+                {
+                    <div className={styles.pageFooterContainer}>
+                        {!isLoginHelp
+                            && (
+                                <>
+                                    <p onClick={handleSwitch}>
+                                        {isLogin ? 'Create account' : 'Log in'}
+                                    </p>
+                                    <div className={styles.spacer}></div>
+                                </>
+                            )}
+                        <p onClick={toggleLoginHelp}>
+                            {isLoginHelp ? 'Back' : 'Can\'t log in?'}
                         </p>
-                        <p className={styles.textTerms}>
-                            For any other issues, please contact <Link href="mailto:support@machinename.dev?subject=Support%20Request&body=Please%20describe%20your%20issue%20here." className={styles.textTerms}>support</Link>
-                        </p>
-                    </React.Fragment>
-                )}
-                <div className={styles.textButtonContainer}>
-                    {!isLoginHelp
-                        && (
-                            <StyledTextButton type="button"
-                                disableTouchRipple={true}
-                                onClick={handleSwitch}>
-                                {isLogin ? 'Create an account' : 'Already have an account?'}
-                            </StyledTextButton>
-                        )}
-                    <StyledTextButton type="button"
-                        disableTouchRipple={true}
-                        onClick={toggleLoginHelp}>
-                        {isLoginHelp ? 'Back' : 'Log in Help'}
-                    </StyledTextButton>
-                </div>
+                    </div>
+                }
             </div>
         </div>
     );

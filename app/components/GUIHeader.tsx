@@ -15,6 +15,7 @@ export interface GUIHeaderProps {
     setFocus: React.Dispatch<React.SetStateAction<'title' | 'content' | ''>>,
     setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>,
     setIsModalMode: React.Dispatch<React.SetStateAction<boolean>>,
+    setScrollPosition: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export default function GUIHeader({
@@ -28,6 +29,7 @@ export default function GUIHeader({
     setFocus,
     setIsEditMode,
     setIsModalMode,
+    setScrollPosition,
 }: GUIHeaderProps) {
     const { setInfo } = useAppContext();
 
@@ -48,6 +50,7 @@ export default function GUIHeader({
         if (initialOperation === 'read') {
             setIsEditMode(true);
             setIsModalMode(true);
+            setScrollPosition(window.scrollY);
         }
         setFocus('title');
     };

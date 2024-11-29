@@ -88,7 +88,6 @@ const IdeasList: React.FC = () => {
         setActivePinnedIdeas(updatedActivePinnedIdeas);
         setActiveIdeas(updatedActiveIdeas);
 
-
         console.log('notes', notes);
         console.log('projects', projects);
         console.log('ideas', ideas);
