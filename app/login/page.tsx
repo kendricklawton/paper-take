@@ -139,7 +139,7 @@ export default function Login() {
             <div className={styles.wrapperLogin}>
 
                 <div className={styles.pageHeaderContainer}>
-                    <h2>{isLoginHelp ? 'Log in help' : (isLogin ? 'Log into Machine Name' : 'Create an account')}</h2>
+                    <h2>{isLoginHelp ? 'Log in help' : (isLogin ? 'Log into Paper Take' : 'Create an account')}</h2>
                 </div>
 
                 <div className={isLoginHelp ? styles.loginHelp : styles.login}>
