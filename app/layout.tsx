@@ -6,18 +6,18 @@ import ProviderWrapper from "./providers/ProviderWrapper";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://idea.machinename.dev"),
-  title: 'Machine Name — Idea',
-  description: 'Welcome to Machine Name — Idea, your online tool for effortless idea creation. Designed with a minimalist approach, our web app allows you to focus on your ideas without the clutter. Easily jot down thoughts, organize tasks, and manage projects in a clean, intuitive interface. Start using Paper Take today and transform ideas into reality.',
+  metadataBase: new URL("https://www.papertake.io"),
+  title: 'Paper Take',
+  description: 'Welcome to Paper Take, your online tool for effortless idea creation. Designed with a minimalist approach, our web app allows you to focus on your ideas without the clutter. Easily jot down thoughts, organize tasks, and manage projects in a clean, intuitive interface. Start using Paper Take today and transform ideas into reality.',
   keywords: "innovation, showcase, open source, projects, technology, creative solutions, paper take",
   authors: [
     { name: "Machine Name" }
   ],
   openGraph: {
-    title: 'Machine Name — Idea',
-    description: 'Welcome to Machine Name — Idea, your online tool for effortless idea creation. Designed with a minimalist approach, our web app allows you to focus on your ideas without the clutter. Easily jot down thoughts, organize tasks, and manage projects in a clean, intuitive interface. Start using Paper Take today and transform ideas into reality.',
-    url: "https://idea.machinename.dev",
-    siteName: 'Machine Name — Idea',
+    title: 'Paper Take',
+    description: 'Welcome to Paper Take, your online tool for effortless idea creation. Designed with a minimalist approach, our web app allows you to focus on your ideas without the clutter. Easily jot down thoughts, organize tasks, and manage projects in a clean, intuitive interface. Start using Paper Take today and transform ideas into reality.',
+    url: "https://www.papertake.io",
+    siteName: 'Paper Take',
     locale: 'en_US',
     type: 'website',
   },
