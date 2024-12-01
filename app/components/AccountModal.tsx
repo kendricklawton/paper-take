@@ -18,10 +18,10 @@ import { StyledButton, FormTextField } from './Styled';
 interface AccountModalProps {
     isOpen: boolean;
     onClose: () => void;
-    method: string;
+    screen: string;
 }
 
-const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) => {
+const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, screen }) => {
     const Router = useRouter();
 
     const { authError, user, sendPasswordReset, updateUserDisplayName, updateUserEmail,
@@ -60,8 +60,8 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
         setErrors({ displayName: '', email: '', password: '' });
 
         try {
-            console.log(method);
-            switch (method) {
+            console.log(screen);
+            switch (screen) {
                 case "email":
                     if (email === user?.email) {
                         setErrors({ ...errors, email: 'Email is the same as current email' });
@@ -80,7 +80,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                     }
                     break;
 
-                case "delete":
+                case "deleteAccount":
                     await deleteUserAccount(password);
                     clearValues();
                     Router.push('/');
@@ -108,7 +108,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                     break;
 
                 default:
-                    console.error('Unknown method:', method);
+                    console.error('Unknown screen:', screen);
             }
         } catch (error) {
             console.log(error);
@@ -117,22 +117,22 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
     };
 
     const isButtonEnabled = () => {
-        if (method === "email") {
+        if (screen === "email") {
             return email.trim() !== '' && password.trim() !== '';
-        } else if (method === "password") {
+        } else if (screen === "password") {
             return user?.email === email;
-        } else if (method === "delete") {
+        } else if (screen === "delete") {
             return deleteAccount === "delete-my-account" && password.trim() !== '';
-        } else if (method === "displayName") {
+        } else if (screen === "displayName") {
             return newDisplayName.trim() !== '' && newDisplayName.length > 1;
-        } else if (method === "verification") {
+        } else if (screen === "verification") {
             return email.trim() !== ''
         }
         return false;
     };
 
-    const FormHeader: React.FC = (method) => {
-        switch (method) {
+    const FormHeader: React.FC = (screen) => {
+        switch (screen) {
             case "email":
                 return (
                     <React.Fragment>
@@ -182,14 +182,14 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
         }
     };
 
-    console.log(method);
+    console.log(screen);
     return (
         isOpen && (
             <div className={styles.modal}>
                 <div className={styles.wrapperAccount}>
-                    {FormHeader(method)}
+                    {FormHeader(screen)}
                     <form className={styles.form} onSubmit={handleSubmit}>
-                        {method === "verification" && (
+                        {screen === "verification" && (
                             <FormTextField
                                 type="email"
                                 id="verification"
@@ -200,10 +200,10 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                                 autoComplete='off'
                             />
                         )}
-                        {method === "email" && (
+                        {screen === "email" && (
                             <FormTextField
                                 type="email"
-                                id={method}
+                                id={screen}
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 variant="standard"
@@ -211,10 +211,10 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                                 autoComplete='off'
                             />
                         )}
-                        {method === "password" && (
+                        {screen === "password" && (
                             <FormTextField
                                 type='email'
-                                id={method}
+                                id={screen}
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 variant="standard"
@@ -222,10 +222,10 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                                 autoComplete='off'
                             />
                         )}
-                        {method === "delete" && (
+                        {screen === "delete" && (
                             <FormTextField
                                 type="text"
-                                id={method}
+                                id={screen}
                                 value={deleteAccount}
                                 onChange={(event) => setDeleteAccount(event.target.value)}
                                 label="delete-my-account"
@@ -233,10 +233,10 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                                 variant="standard"
                             />
                         )}
-                        {method === "displayName" && (
+                        {screen === "displayName" && (
                             <FormTextField
                                 type="text"
-                                id={method}
+                                id={screen}
                                 value={newDisplayName}
                                 onChange={(event) => setNewDisplayName(event.target.value)}
                                 autoComplete='off'
@@ -244,7 +244,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                                 label="New display name"
                             />
                         )}
-                        {method !== "displayName" && method !== "verification" && method !== "password" && (
+                        {screen !== "displayName" && screen !== "verification" && screen !== "password" && (
                             <FormTextField
                                 type={showPassword ? 'text' : 'password'}
                                 id="formPassword"
@@ -269,17 +269,17 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, method }) 
                             {errors.password && (<p className={styles.textError} aria-live="polite">{errors.password}</p>)}
                             {authError && (<p className={styles.textError} aria-live="polite">{authError}</p>)}
                             {
-                                method === "password" ?
+                                screen === "password" ?
                                     <StyledButton className={styles.button} disabled={!isButtonEnabled()} type="submit">
                                         Send
                                     </StyledButton>
                                     :
                                     <StyledButton className={styles.button} disabled={!isButtonEnabled()} type="submit">
-                                        {method === "verification" ? "Resend" : "Submit"}
+                                        {screen === "verification" ? "Resend" : "Submit"}
                                     </StyledButton>
                             }
                             {
-                                (method === "displayName" && user?.displayName) && (
+                                (screen === "displayName" && user?.displayName) && (
                                     <StyledButton className={styles.button} type="button" onClick={handleRemoveDisplayName}>
                                         Remove Display Name
                                     </StyledButton>

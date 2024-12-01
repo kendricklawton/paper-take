@@ -9,33 +9,13 @@ import Link from 'next/link';
 
 export default function Account() {
     const { user } = useAuthContext();
-    const [method, setMethod] = useState('');
+    const [screen, setScreen] = useState('');
     const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
 
-    const pushToDeleteAccount = () => {
-        setMethod('delete');
+    const pushTo = (screen: string) => {
+        setScreen(screen);
         setIsAccountModalOpen(true);
-    }
-
-    const pushToDisplayName = () => {
-        setMethod('displayName');
-        setIsAccountModalOpen(true);
-    }
-
-    const pushToEmail = () => {
-        setMethod('email');
-        setIsAccountModalOpen(true);
-    }
-
-    const pushToPassword = () => {
-        setMethod('password');
-        setIsAccountModalOpen(true);
-    }
-
-    const pushToSendVerification = () => {
-        setMethod('verification');
-        setIsAccountModalOpen(true);
-    }
+    };
 
     return (
         <div className={styles.page}>
@@ -46,7 +26,7 @@ export default function Account() {
                     </div>
                     {
                         user?.emailVerified === false && (
-                            <div className={styles.containerItem} onClick={pushToSendVerification}>
+                            <div className={styles.containerItem} onClick={() => pushTo('verification')}>
                                 <div className={styles.containerItemLeading}>
                                     <p className={styles.textError}>Verify Account!</p>
                                 </div>
@@ -58,7 +38,7 @@ export default function Account() {
                             </div>
                         )
                     }
-                    <div className={styles.containerItem} onClick={pushToEmail} >
+                    <div className={styles.containerItem} onClick={() => pushTo('email')} >
                         <div className={styles.containerItemLeading}>
                             <p>Email</p>
                             <p>{user?.email}</p>
@@ -67,7 +47,7 @@ export default function Account() {
                             <ArrowForwardIos />
                         </div>
                     </div>
-                    <div className={styles.containerItem} onClick={pushToDisplayName} >
+                    <div className={styles.containerItem} onClick={() => pushTo('displayName')} >
                         <div className={styles.containerItemLeading}>
                             <p>Display name</p>
                             <p>{user?.displayName}</p>
@@ -81,7 +61,7 @@ export default function Account() {
                     <div className={styles.containerItemHeader}>
                         <h1>Data & Security</h1>
                     </div>
-                    <div className={styles.containerItem} onClick={pushToPassword}>
+                    <div className={styles.containerItem} onClick={() => pushTo('password')}>
                         <div className={styles.containerItemLeading}>
                             <p>Password</p>
                         </div>
@@ -89,7 +69,7 @@ export default function Account() {
                             <ArrowForwardIos />
                         </div>
                     </div>
-                    <div className={styles.containerItem} onClick={pushToDeleteAccount}>
+                    <div className={styles.containerItem} onClick={() => pushTo('deleteAccount')}>
                         <div className={styles.containerItemLeading}>
                             <p>Delete Account</p>
                         </div>
@@ -102,7 +82,7 @@ export default function Account() {
                     Need help with something else, please contact <Link href="mailto:support@machinename.dev?subject=Support%20Request&body=Please%20describe%20your%20issue%20here." className={styles.textTerms}>support</Link>
                 </p>
             </div>
-            <AccountModal isOpen={isAccountModalOpen} onClose={() => setIsAccountModalOpen(false)} method={method} />
+            <AccountModal isOpen={isAccountModalOpen} onClose={() => setIsAccountModalOpen(false)} screen={screen} />
         </div>
     );
 }

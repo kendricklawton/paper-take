@@ -3,7 +3,6 @@
 import React, { Suspense, useEffect, useRef, useState } from 'react';
 import {
     usePathname,
-    // useSearchParams, 
     useRouter
 } from 'next/navigation';
 
@@ -12,12 +11,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 import {
     AccountBoxOutlined, ArchiveOutlined, CircleOutlined, Close, DeleteOutlined, LoginOutlined,
     LogoutOutlined, MenuOpen, Refresh, Search,
-    // SettingsOutlined, 
     Archive, Delete,
     HelpCenter,
     HelpCenterOutlined,
     Circle,
-    // Settings,
     Lightbulb,
     LightbulbOutlined,
     // Settings,
