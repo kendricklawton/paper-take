@@ -11,18 +11,19 @@ export default function Page({ params }: { params: { slug: string } }) {
 
     const title = 'Project Title';
     const description = 'Project Description';
-    const [currentPage, setCurrentPage] = useState<'taskboard' | 'backlog' | 'capacity' | 'analytics' | 'goal'>('taskboard');
+    // const [currentPage, setCurrentPage] = useState<'taskboard' | 'backlog' | 'capacity' | 'analytics' | 'goal'>('taskboard');
+    const [currentPage, setCurrentPage] = useState<'taskboard'>('taskboard');
 
     const handlePageChange = (
         event: React.MouseEvent<HTMLElement>,
-        newAlignment: 'taskboard' | 'backlog' | 'capacity' | 'analytics' | 'goal',
+        // newAlignment: 'taskboard' | 'backlog' | 'capacity' | 'analytics' | 'goal',
+        newAlignment: 'taskboard',
     ) => {
         setCurrentPage(newAlignment);
     };
 
 
     return (
-
             <div className={styles.page}>
                 <h1>Under Construction</h1>
                 <ProjectHeader

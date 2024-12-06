@@ -15,10 +15,12 @@ const toggleButtonStyles = {
 };
 
 interface ProjectHeaderProps {
-    currentPage: "taskboard" | "backlog" | "capacity" | "analytics" | "goal";
+    // currentPage: "taskboard" | "backlog" | "capacity" | "analytics" | "goal";
+    currentPage: 'taskboard';
     description: string;
     title: string;
-    handlePageChange: (event: React.MouseEvent<HTMLElement>, newAlignment: "taskboard" | "backlog" | "capacity" | "analytics" | "goal") => void;
+    // handlePageChange: (event: React.MouseEvent<HTMLElement>, newAlignment: "taskboard" | "backlog" | "capacity" | "analytics" | "goal") => void;
+    handlePageChange: (event: React.MouseEvent<HTMLElement>, newAlignment: 'taskboard') => void;
 }
 
 const ProjectHeader: React.FC<ProjectHeaderProps> = (
