@@ -226,7 +226,7 @@ export default function Header() {
                             <nav className={styles.menu} ref={accountMenuRef}>
                                 {user && (
                                     <Link className={styles.navLink}
-                                        href='https://login.machinename.dev/?redirect=/www.machinename.dev'
+                                        href='https://www.machinename.dev/account'
                                         target="_blank"
                                         rel="noreferrer"
                                         onClick={() => setIsAccountMenuOpen(false)}>
@@ -239,7 +239,7 @@ export default function Header() {
                                     </Link>
                                 ) : (
                                     <Link className={styles.navLink}
-                                        href='https://login.machinename.dev/?redirect=/www.machinename.dev'
+                                        href='https://login.machinename.dev/?redirect=/idea.machinename.dev'
                                         onClick={() => setIsAccountMenuOpen(false)}>
                                         <LoginOutlined /> Log In
                                     </Link>
