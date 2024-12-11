@@ -119,7 +119,6 @@ export default function Header() {
                 setIsScrolled(false);
             }
         };
-
         window.addEventListener('scroll', handleScroll);
         return () => {
             window.removeEventListener('scroll', handleScroll);
@@ -156,7 +155,6 @@ export default function Header() {
     return (
         <Suspense>
             <header className={isScrolled ? styles.headerScrolled : styles.header}>
-                {/* Nav Leading */}
                 <div className={styles.headerLeading}>
                     <div className={styles.navAnchor}>
                         <StyledIconButton ref={navButtonRef} onClick={() => setIsNavMenuOpen(prev => !prev)}>
@@ -182,7 +180,6 @@ export default function Header() {
                     <div className={styles.headerTitle}>
                         <p>{getTitle()}</p>
                     </div>
-                    {/* Nav Input */}
                     <div className={styles.searchInputContainer}>
                         <StyledIconButton onClick={handleSearchButton}>
                             <Search />
@@ -205,7 +202,6 @@ export default function Header() {
                         )}
                     </div>
                 </div>
-                {/* Nav Trailing */}
                 <div className={styles.headerTrailing}>
                     {
                         (isAppLoading || isAuthLoading) ? (
