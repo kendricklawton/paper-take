@@ -2,7 +2,7 @@
 
 import React from 'react';
 import styles from '../page.module.css';
-import { StyledButton } from './Styled';
+import { StyledButton } from '../Styled';
 
 interface PopUpModalProps {
     isOpen: boolean;

@@ -12,36 +12,18 @@ import React, {
 
 import { FirebaseError } from 'firebase/app';
 import {
-    deleteUser,
     onAuthStateChanged,
-    reauthenticateWithCredential,
-    sendEmailVerification,
-    sendPasswordResetEmail,
-    signInWithEmailAndPassword,
-    signInWithPopup,
-    GoogleAuthProvider,
-    updateProfile,
-    verifyBeforeUpdateEmail,
-    EmailAuthProvider,
     User,
-    createUserWithEmailAndPassword,
     signInWithCustomToken,
 } from "firebase/auth";
 import { auth } from '../firebase';
+import Cookies from 'js-cookie';
 
 interface AuthContextType {
     authError: string;
     isAuthLoading: boolean;
     user: User | null;
-    createUserAccount: (email: string, password: string) => Promise<void>;
-    deleteUserAccount: (password: string) => Promise<void>;
-    logIn: (email: string, password: string) => Promise<void>;
-    logInWithGoogle: () => Promise<void>;
     logOut: () => Promise<void>;
-    sendPasswordReset: (email: string) => Promise<void>;
-    sendUserVerification: () => Promise<void>;
-    updateUserDisplayName: (newDisplayName: string) => Promise<void>;
-    updateUserEmail: (newEmail: string, password: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -56,36 +38,27 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             console.error('Firebase auth is not initialized');
             return;
         }
-        
-        const token = document.cookie.split(';').find((cookie) => cookie.trim().startsWith('USER_TOKEN='));
-
-        if (token) {
-            const userToken = token.split('=')[1];
-
-            signInWithCustomToken(auth, userToken)
-                .then((userCredential) => {
-                    setUser(userCredential.user);
-                })
-                .catch((error) => {
-                    console.error('Error authenticating with token:', error);
-                    setUser(null);
-                });
-        } else {
-            console.log('No USER_TOKEN found in cookies.');
-        }
-
-
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            
+        const fetchUser = async () => {
             setIsAuthLoading(true);
-            if (currentUser) {
-                setUser(currentUser);
-            } else {
-                setUser(null);
+            try {
+                const token = Cookies.get('MNFBCT');
+                if (token) {
+                    const userCredential = await signInWithCustomToken(auth, token);
+                    setUser(userCredential.user);
+                }
+            } catch (err) {
+                console.error('Error fetching user:', err);
+                setAuthError('Session expired or invalid.');
+            } finally {
+                setIsAuthLoading(false);
             }
+        };
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setIsAuthLoading(true);
+            setUser(currentUser || null);
             setIsAuthLoading(false);
         });
-
+        fetchUser();
         return () => unsubscribe();
     }, []);
 
@@ -118,140 +91,27 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     }, []);
 
-    const createUserAccount = useCallback(async (email: string, password: string): Promise<void> => {
-        try {
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            await sendEmailVerification(userCredential.user);
-            setUser(userCredential.user);
-        } catch (error) {
-            handleError(error);
-        } finally {
-            setIsAuthLoading(false);
-        }
-    }, [handleError]);
-
-    const deleteUserAccount = useCallback(async (password: string): Promise<void> => {
-        try {
-            if (user) {
-                const credential = EmailAuthProvider.credential(user.email!, password);
-                await reauthenticateWithCredential(user, credential);
-                await deleteUser(user);
-                setUser(null);
-            }
-        } catch (error) {
-            handleError(error);
-            throw error;
-        }
-    }, [ handleError, user]);
-
-    const logIn = useCallback(async (email: string, password: string): Promise<void> => {
-        setIsAuthLoading(true);
-        try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            setUser(userCredential.user);
-        } catch (error) {
-            handleError(error);
-        } finally {
-            setIsAuthLoading(false);
-        }
-    }, [handleError]);
-
-    const logInWithGoogle = useCallback(async (): Promise<void> => {
-        try {
-            const provider = new GoogleAuthProvider();
-            const result = await signInWithPopup(auth, provider);
-            setUser(result.user);
-        } catch (error) {
-            handleError(error);
-        }
-    }, [handleError]);
-
     const logOut = useCallback(async (): Promise<void> => {
         try {
             await auth.signOut();
+            Cookies.remove('SNMNCT', { domain: '.machinename.dev', path: '/' });
             setUser(null);
         } catch (error) {
             handleError(error);
             throw error;
         }
-    }, [ handleError]);
-
-    const sendPasswordReset = useCallback(async (email: string): Promise<void> => {
-        try {
-            await sendPasswordResetEmail(auth, email);
-        } catch (error) {
-            handleError(error);
-            throw error;
-        }
-    }, [ handleError]);
-
-    const sendUserVerification = useCallback(async (): Promise<void> => {
-        try {
-            if (user) {
-                await sendEmailVerification(user);
-            } else {
-                throw new Error('User not found.');
-            }
-        } catch (error) {
-            handleError(error);
-            throw error;
-        }
-    }, [ handleError, user]);
-
-    const updateUserDisplayName = useCallback(async (newDisplayName: string): Promise<void> => {
-        try {
-            if (user) {
-                await updateProfile(user, { displayName: newDisplayName });
-            } else {
-                throw new Error('User not found.');
-            }
-        } catch (error) {
-            handleError(error);
-            throw error;
-        }
-    }, [ handleError, user]);
-
-    const updateUserEmail = useCallback(async (newEmail: string, password: string): Promise<void> => {
-        try {
-            if (user) {
-                const credential = EmailAuthProvider.credential(user.email!, password);
-                await reauthenticateWithCredential(user, credential);
-                await verifyBeforeUpdateEmail(user, newEmail);
-            } else {
-                throw new Error('User not found.');
-            }
-        } catch (error) {
-            handleError(error);
-            throw error;
-        }
-    }, [ handleError, user]);
+    }, [handleError]);
 
     const contextValue = useMemo(() => ({
         authError,
         isAuthLoading,
         user,
-        createUserAccount,
-        deleteUserAccount,
-        logIn,
-        logInWithGoogle,
         logOut,
-        sendPasswordReset,
-        sendUserVerification,
-        updateUserDisplayName,
-        updateUserEmail,
     }), [
         authError,
         isAuthLoading,
         user,
-        createUserAccount,
-        deleteUserAccount,
-        logIn,
-        logInWithGoogle,
         logOut,
-        sendPasswordReset,
-        sendUserVerification,
-        updateUserDisplayName,
-        updateUserEmail,
     ]);
 
     return (
@@ -268,4 +128,3 @@ export const useAuthContext = (): AuthContextType => {
     }
     return context;
 };
-

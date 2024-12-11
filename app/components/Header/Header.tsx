@@ -21,10 +21,10 @@ import {
     // SettingsOutlined
 } from '@mui/icons-material';
 
-import { useAppContext } from '../providers/AppProvider';
-import { useAuthContext } from '../providers/AuthProvider';
+import { useAppContext } from '../../providers/AppProvider';
+import { useAuthContext } from '../../providers/AuthProvider';
 import styles from "./Header.module.css";
-import { StyledIconButton } from './Styled';
+import { StyledIconButton } from '../Styled';
 
 export default function Header() {
     const { isAuthLoading, logOut, user } = useAuthContext();
@@ -128,20 +128,18 @@ export default function Header() {
 
     const getTitle = () => {
         switch (pathname) {
-            case '/account':
-                return 'Account';
             case '/archive':
                 return 'Archive';
             case '/help':
                 return 'Help';
             case '/':
-                return 'Paper Take';
+                return 'Ideas';
             case '/search':
-                return 'Paper Take';
+                return 'Ideas';
             case '/trash':
                 return 'Trash';
             default:
-                return 'Paper Take';
+                return 'Ideas';
         }
     };
 
@@ -155,9 +153,9 @@ export default function Header() {
         window.history.replaceState({}, '', url);
     }, [searchTerm]);
 
-    if (pathname === '/login') {
-        return null;
-    }
+    // if (pathname === '/login') {
+    //     return null;
+    // }
 
     return (
         <Suspense>

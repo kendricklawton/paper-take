@@ -3,9 +3,9 @@
 // import { InputAdornment } from "@mui/material";
 import { NoteBodyTextField, 
     // StyledNoteButtonTwo
- } from "./Styled";
+ } from "../Styled";
 import React from "react";
-import { useAppContext } from "../providers/AppProvider";
+import { useAppContext } from "../../providers/AppProvider";
 // import { useRouter } from "next/navigation";
 
 interface GUIBodyProps {

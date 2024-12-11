@@ -1,23 +1,23 @@
 import type { Metadata } from "next";
 // import Head from "next/head";
-import Header from "./components/Header"
-import Info from "./components/Info";
+import Header from "./components/Header/Header"
+import Info from "./components/Info/Info";
 import ProviderWrapper from "./providers/ProviderWrapper";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.papertake.io"),
-  title: 'Paper Take',
-  description: 'Welcome to Paper Take, your online tool for effortless idea creation. Designed with a minimalist approach, our web app allows you to focus on your ideas without the clutter. Easily jot down thoughts, organize tasks, and manage projects in a clean, intuitive interface. Start using Paper Take today and transform ideas into reality.',
-  keywords: "innovation, showcase, open source, projects, technology, creative solutions, paper take",
+  metadataBase: new URL("https://idea.machinename.dev"),
+  title: 'Machine Name — Idea',
+  description: 'Welcome to Idea by Machine Name, your online tool for effortless idea creation. Designed with a minimalist approach, our web app allows you to focus on your ideas without the clutter. Easily jot down thoughts, organize tasks, and manage projects in a clean, intuitive interface. Start today and transform ideas into reality.',
+  keywords: "innovation, showcase, open source, projects, technology, creative solutions, machinename, machine name, idea, machine, name, machinename.dev, idea.machinename.dev",
   authors: [
     { name: "Machine Name" }
   ],
   openGraph: {
-    title: 'Paper Take',
-    description: 'Welcome to Paper Take, your online tool for effortless idea creation. Designed with a minimalist approach, our web app allows you to focus on your ideas without the clutter. Easily jot down thoughts, organize tasks, and manage projects in a clean, intuitive interface. Start using Paper Take today and transform ideas into reality.',
-    url: "https://www.papertake.io",
-    siteName: 'Paper Take',
+    title: 'Machine Name — Idea',
+    description: 'Welcome to Idea by Machine Name, your online tool for effortless idea creation. Designed with a minimalist approach, our web app allows you to focus on your ideas without the clutter. Easily jot down thoughts, organize tasks, and manage projects in a clean, intuitive interface. Start today and transform ideas into reality.',
+    url: "https://idea.machienname.dev",
+    siteName: 'Machine Name — Idea',
     locale: 'en_US',
     type: 'website',
   },

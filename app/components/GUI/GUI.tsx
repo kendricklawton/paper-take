@@ -1,18 +1,18 @@
 'use client';
 
 import { useCallback, useEffect, useState, useRef } from 'react';
-import { useAppContext } from '../providers/AppProvider';
+import { useAppContext } from '../../providers/AppProvider';
 import GUIBody from './GUIBody';
 import GUIHeader from './GUIHeader';
 import GUIFooter from './GUIFooter';
 import styles from "./GUI.module.css"
-import { Note, Project } from '../models';
+import { Note, Project } from '../../models';
 import { Box } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
-import { StyledIconButton } from './Styled';
+import { StyledIconButton } from '../Styled';
 import { AlarmAddOutlined, CloseOutlined } from '@mui/icons-material';
 import { Timestamp } from 'firebase/firestore';
-import PopUpModal from './PopUpModal';
+import PopUpModal from '../PopUpModal/PopUpModal';
 import React from 'react';
 
 interface GUIProps {
