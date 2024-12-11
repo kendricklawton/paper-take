@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { NoteHeaderTextField } from './Styled';
-import { useAppContext } from "../providers/AppProvider";
+import { NoteHeaderTextField } from '../Styled';
+import { useAppContext } from "../../providers/AppProvider";
 
 export interface GUIHeaderProps {
     focus: 'title' | 'content' | '',

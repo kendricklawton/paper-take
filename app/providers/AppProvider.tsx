@@ -64,7 +64,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
             return;
         }
         try {
-            console.log('Fetching ideas from Firestore');
             const ref = collection(firestore, "users", user.uid, "ideas");
             const queryIdsList = (ref);
             const snapshot = await getDocs(queryIdsList);
@@ -84,7 +83,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
     const fetchNotes = useCallback(async () => {
         if (user === null) {
-            console.log("No user is logged in, fetching notes from local storage");
             return;
         }
 
@@ -94,7 +92,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         }
         
         try {
-            console.log('Fetching notes from Firestore');
             const ref = collection(firestore, "users", user.uid, "notes");
             const queryNotes = (ref);
             const snapshot = await getDocs(queryNotes);
@@ -181,7 +178,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         }
         try {
             if (!user) {
-                console.log(`No user is logged in, updating ${collectionName} list in local storage`);
                 return;
             }
 
@@ -190,9 +186,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
             const ideasRef = collection(firestore, "users", user.uid, "ideas");
             const ideasDocRef = doc(ideasRef, 'ideas');
-
-            console.log(`Attempting to ${operation} ${collectionName} in Firestore - `, idea);
-            console.log(`Attempting to update ideas in Firestore - `, ideas);
 
             await runTransaction(firestore, async (transaction) => {
                 const snapshot = await transaction.get(docRef);

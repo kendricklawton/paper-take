@@ -24,11 +24,11 @@ import {
     BackgroundCircleMintyGreen,
     BackgroundCircleTeal,
     BackgroundCircleChalk
-} from './Styled';
+} from '../Styled';
 import { MenuItem } from '@mui/material';
 import { Timestamp } from 'firebase/firestore';
-import { useAppContext } from '../providers/AppProvider';
-import { useAuthContext } from '../providers/AuthProvider';
+import { useAppContext } from '../../providers/AppProvider';
+import { useAuthContext } from '../../providers/AuthProvider';
 import Link from 'next/link';
 
 const MenuItemStyles = {

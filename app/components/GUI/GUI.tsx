@@ -8,7 +8,6 @@ import GUIFooter from './GUIFooter';
 import styles from "./GUI.module.css"
 import { Note, Project } from '../../models';
 import { Box } from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
 import { StyledIconButton } from '../Styled';
 import { AlarmAddOutlined, CloseOutlined } from '@mui/icons-material';
 import { Timestamp } from 'firebase/firestore';
@@ -227,13 +226,13 @@ const GUI: React.FC<GUIProps> = ({
     };
 
     const handleMakeACopy = async () => {
+        const localId = new Date().toISOString();
         if (isTrash) return;
-
         const newNote = new Note(
             null,
             backgroundColor,
             backgroundColorDark,
-            uuidv4(),
+            localId,
             title,
             content,
             false,

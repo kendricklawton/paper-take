@@ -5,7 +5,6 @@ import styles from "./page.module.css";
 import { useAppContext } from "./providers/AppProvider";
 import GUI from "./components/GUI/GUI";
 import { Note, Project } from "./models";
-import { v4 as uuidv4 } from 'uuid';
 
 const IdeasList: React.FC = () => {
     const { ideas, notes, projects,
@@ -52,11 +51,12 @@ const IdeasList: React.FC = () => {
 
     // };
 
+    const localId = new Date().toISOString();
     const newNote = new Note(
         null,
         '#ffffff',
         '#121212',
-        uuidv4(),
+        localId,
         '',
         '',
         false,
