@@ -153,10 +153,6 @@ export default function Header() {
         window.history.replaceState({}, '', url);
     }, [searchTerm]);
 
-    // if (pathname === '/login') {
-    //     return null;
-    // }
-
     return (
         <Suspense>
             <header className={isScrolled ? styles.headerScrolled : styles.header}>
@@ -230,7 +226,10 @@ export default function Header() {
                             <nav className={styles.menu} ref={accountMenuRef}>
                                 {user && (
                                     <Link className={styles.navLink}
-                                        onClick={() => setIsAccountMenuOpen(false)} href='/account'>
+                                        href='https://login.machinename.dev/?redirect=/www.machinename.dev'
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        onClick={() => setIsAccountMenuOpen(false)}>
                                         <AccountBoxOutlined /> Account
                                     </Link>
                                 )}
@@ -239,8 +238,10 @@ export default function Header() {
                                         <LogoutOutlined /> Log Out
                                     </Link>
                                 ) : (
-                                    <Link className={styles.navLink} href='/login' onClick={() => setIsAccountMenuOpen(false)}>
-                                        <LoginOutlined /> Login
+                                    <Link className={styles.navLink}
+                                        href='https://login.machinename.dev/?redirect=/www.machinename.dev'
+                                        onClick={() => setIsAccountMenuOpen(false)}>
+                                        <LoginOutlined /> Log In
                                     </Link>
                                 )}
                             </nav>
