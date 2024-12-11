@@ -1,7 +1,7 @@
 'use client'
 
 import React from "react";
-import GUI from "../components/GUI";
+import GUI from "../components/GUI/GUI";
 import styles from "../page.module.css";
 import { useAppContext } from "../providers/AppProvider";
 
