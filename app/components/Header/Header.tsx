@@ -203,7 +203,7 @@ export default function Header() {
                             ref={inputRef}
                         />
                         {(pathname === '/search') && (
-                            <StyledIconButton 
+                            <StyledIconButton
                                 disableTouchRipple={true}
                                 onClick={handleCloseButton}>
                                 <Close />
@@ -221,17 +221,19 @@ export default function Header() {
                     }
                     {
                         (isAppLoading || isAuthLoading) ? (
-                            <StyledIconButton>
+                            <StyledIconButton disableTouchRipple={true}>
                                 <CircularProgress size={20} />
                             </StyledIconButton>
                         ) : (
-                            <StyledIconButton onClick={fetchData}>
+                            <StyledIconButton
+                                disableTouchRipple={true}
+                                onClick={fetchData}>
                                 <Refresh />
                             </StyledIconButton>
                         )
                     }
                     <div className={styles.accountAnchor}>
-                        <StyledIconButton ref={accountButtonRef} 
+                        <StyledIconButton ref={accountButtonRef}
                             disableTouchRipple={true}
                             onClick={() => setIsAccountMenuOpen(prev => !prev)}>
                             {isAccountMenuOpen ? <AccountCircle /> : <AccountCircle />}
