@@ -5,8 +5,10 @@ import styles from "./page.module.css";
 import { useAppContext } from "./providers/AppProvider";
 import GUI from "./components/GUI/GUI";
 import { Note, Project } from "./models";
+import { useAuthContext } from './providers/AuthProvider';
 
 const IdeasList: React.FC = () => {
+    const { user } = useAuthContext();
     const { ideas, notes, projects,
         // handleUpdateIdeas 
     } = useAppContext();
@@ -97,6 +99,12 @@ const IdeasList: React.FC = () => {
 
     return (
         <React.Fragment>
+            {!user &&
+                <React.Fragment>
+                    <h2>Notes will not save in Guest Mode</h2>
+                    <div className={styles.spacer} />
+                </React.Fragment>
+            }
             <GUI operation={'create'} idea={newNote} />
             {
                 activePinnedIdeas.length > 0 &&

@@ -184,7 +184,7 @@ export default function Header() {
                             </nav>
                         )}
                     </div>
-                    <div className={styles.headerTitle}>
+                    <div className={styles.headerTitleLeading}>
                         <p>{getTitle()}</p>
                     </div>
                     <div className={styles.searchInputContainer}>
@@ -210,6 +210,13 @@ export default function Header() {
                     </div>
                 </div>
                 <div className={styles.headerTrailing}>
+                    {
+                        !user && (
+                            <div className={styles.headerTitleTrailing}>
+                                <p>Guest Mode</p>
+                            </div>
+                        )
+                    }
                     {
                         (isAppLoading || isAuthLoading) ? (
                             <StyledIconButton>

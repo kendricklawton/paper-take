@@ -6,6 +6,9 @@
   padding-left: 1rem;
   padding-right: 1rem;
 }
+.page h2 {
+  cursor: default;
+}
 
 .page {
   padding-top: 5rem;
@@ -16,28 +19,6 @@
   align-items: center;
   height: 100vh;
   justify-content: center;
-  text-align: center;
-}
-
-.pageFooterContainer p,
-.pageHeaderContainer h2 {
-  padding: 0;
-  margin: 0;
-}
-
-.pageFooterContainer p {
-  cursor: pointer;
-  font-size: large;
-}
-
-.pageHeaderContainer {
-  padding-bottom: 1rem;
-  text-align: center;
-  display: flex;
-}
-
-.pageFooterContainer {
-  padding-top: 1rem;
   text-align: center;
 }
 

@@ -37,11 +37,18 @@
     justify-content: flex-end;
 }
 
-.headerTitle {
+.headerTitleLeading {
     width: 200px;
 }
 
-.headerTitle p {
+.headerTitleTrailing {
+    width: max-content;
+    padding-right: 0.5rem;
+    cursor: default;
+}
+
+.headerTitleLeading p,
+.headerTitleTrailing p {
     color: gray;
     font-size: x-large;
     font-weight: lighter;
