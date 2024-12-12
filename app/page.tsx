@@ -89,19 +89,13 @@ const IdeasList: React.FC = () => {
 
         setActivePinnedIdeas(updatedActivePinnedIdeas);
         setActiveIdeas(updatedActiveIdeas);
-
-        console.log('notes', notes);
-        console.log('projects', projects);
-        console.log('ideas', ideas);
-        // console.log('orderedActiveIdeas', orderedActiveIdeas);
-
     }, [ideas, notes, projects]);
 
     return (
         <React.Fragment>
             {!user &&
                 <React.Fragment>
-                    <h2>Notes will not save in Guest Mode</h2>
+                    <h2>Ideas will not save in Guest Mode</h2>
                     <div className={styles.spacer} />
                 </React.Fragment>
             }

@@ -55,7 +55,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
     const fetchIdeas = useCallback(async () => {
         if (user === null) {
-            console.log("No user is logged in, fetching notes from local storage");
             return;
         }
 
@@ -68,7 +67,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
             const queryIdsList = (ref);
             const snapshot = await getDocs(queryIdsList);
             if (snapshot.empty) {
-                console.log("No ideas found");
                 return;
             }
             setIdeas(snapshot.docs[0].data().ideas);
@@ -116,7 +114,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
     const fetchProjects = useCallback(async () => {
         if (user === null) {
-            console.log("No user is logged in, fetching notes from local storage");
             return;
         }
 
@@ -126,7 +123,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         }
 
         try {
-            console.log('Fetching projects from Firestore');
             const ref = collection(firestore, "users", user.uid, "projects");
             const queryProjects = firestoreQuery(ref, orderBy('createdAt', 'desc'));
             const snapshot = await getDocs(queryProjects);
@@ -153,7 +149,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
     const fetchData = useCallback(async () => {
         if (!user) {
-            console.log("No user is logged in, fetching data from local storage");
             return;
         }
         if (firestore === null) {
@@ -193,41 +188,32 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
                 if (ideas) {
                     ideasSnapshot = await transaction.get(ideasDocRef);
                 }
-
                 if ((operation === "update" || operation === "delete") && !snapshot.exists()) {
                     console.error(`${collectionName.charAt(0).toUpperCase() + collectionName.slice(1)} not found`);
                     throw new Error(`${collectionName.charAt(0).toUpperCase() + collectionName.slice(1)} not found`);
                 }
-
                 if (ideas) {
                     if (!ideasSnapshot?.exists()) {
                         transaction.set(ideasDocRef, { ideas });
-                        console.log(`ideas created in Firestore`);
                     } else {
                         transaction.update(ideasDocRef, { ideas });
-                        console.log(`ideas updated in Firestore`);
                     }
                 }
-
                 switch (operation) {
                     case "create":
                         transaction.set(docRef, JSON.parse(idea.toJSON()));
-                        console.log(`${collectionName.charAt(0).toUpperCase() + collectionName.slice(1)} created in Firestore`);
                         break;
                     case "update":
                         transaction.update(docRef, JSON.parse(idea.toJSON()));
-                        console.log(`${collectionName.charAt(0).toUpperCase() + collectionName.slice(1)} updated in Firestore`);
                         break;
                     case "delete":
                         transaction.delete(docRef);
-                        console.log(`${collectionName.charAt(0).toUpperCase() + collectionName.slice(1)} deleted in Firestore`);
                         break;
                     default:
                         console.error("Invalid operation");
                         throw new Error("Invalid operation");
                 }
             });
-
         } catch (error) {
             console.error(`Error updating ${collectionName}: `, error);
         } finally {
@@ -246,25 +232,16 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
                 console.log(`No user is logged in, updating ideas in local storage`);
                 return;
             }
-
             const ref = collection(firestore, "users", user.uid, "ideas");
             const docRef = doc(ref, 'ideas');
-
-            console.log(`Attempting to update ideas in Firestore`, ideas);
-
             await runTransaction(firestore, async (transaction) => {
                 const snapshot = await transaction.get(docRef);
-
                 if (!snapshot.exists()) {
                     transaction.set(docRef, { ideas });
-                    console.log(`ideas created in Firestore`);
                 } else {
                     transaction.update(docRef, { ideas });
-                    console.log(`ideas updated in Firestore`);
                 }
-            
             });
-
         } catch (error) {
             console.error(`Error updating ideas: `, error);
         } finally {
@@ -286,7 +263,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         const prevIdeasIds = ideas;
         setIdeas(updatedIdeasIds);
         try {
-            console.log('Attempting to update ideas in Firestore - ', updatedIdeasIds);
             await firestoreServiceIds(updatedIdeasIds);
         } catch (error) {
             console.error('Error updating ideas: ', error);
