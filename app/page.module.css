@@ -1,4 +1,5 @@
 .page,
+.pageAccount,
 .pageLogin {
   display: flex;
   flex-direction: column;
@@ -10,9 +11,14 @@
   cursor: default;
 }
 
-.page {
+.page,
+.pageAccount {
   padding-top: 5rem;
   padding-bottom: 5rem;
+}
+
+.pageAccount {
+  text-align: center;
 }
 
 .pageLogin {
@@ -33,7 +39,7 @@
 }
 
 .wrapperAccount {
-  max-width: 600px;
+  max-width: 400px;
 }
 
 .wrapperLogin {
@@ -66,14 +72,6 @@
   width: 100%;
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-  width: 100%;
-  box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
-}
-
 .modal,
 .popUpModal {
   position: absolute;
@@ -102,45 +100,30 @@
   justify-content: center;
 }
 
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  width: 100%;
+  box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
+  padding: 1rem;
+}
+
 .containerItem {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  box-shadow: 0 -1px 1px rgba(0.1, 0.1, 0.1, 0.1);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .containerItem p {
   font-size: large;
-}
-
-.containerItemHeader {
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.containerItemLeading {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding-left: 1.5rem;
-  width: 284px;
-}
-
-.containerItemTrailing {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding-right: 1.5rem;
 }
 
 .divider {
@@ -214,8 +197,7 @@
     background-color: #121212;
   }
 
-  .containerItem,
-  .information {
+  .containerItem {
     border: 0.5px solid gray;
   }
 }

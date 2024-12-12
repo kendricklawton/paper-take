@@ -28,66 +28,38 @@ export default function Account() {
     };
 
     return (
-        <div className={styles.page}>
-            <div className={styles.wrapper}>
+        <div className={styles.pageAccount}>
+            <div className={styles.wrapperAccount}>
+                <h2>Account</h2>
                 <div className={styles.container}>
-                    <div className={styles.containerItemHeader}>
-                        <h1>Personal Info</h1>
-                    </div>
                     {
                         user?.emailVerified === false && (
                             <div className={styles.containerItem} onClick={() => pushTo('verification')}>
-                                <div className={styles.containerItemLeading}>
-                                    <p className={styles.textError}>Verify Account!</p>
-                                </div>
-                                <div className={styles.containerItemTrailing}>
-                                    <ArrowForwardIos style={{
-                                        color: 'red'
-                                    }} />
-                                </div>
+                                <p className={styles.textError}>Verify Account!</p>
+                                <ArrowForwardIos style={{
+                                    color: 'red'
+                                }} />
                             </div>
                         )
                     }
                     <div className={styles.containerItem} onClick={() => pushTo('email')} >
-                        <div className={styles.containerItemLeading}>
-                            <p>Email</p>
-                            <p>{user?.email}</p>
-                        </div>
-                        <div className={styles.containerItemTrailing}>
-                            <ArrowForwardIos />
-                        </div>
+                        <p>Email</p>
+                        <ArrowForwardIos />
                     </div>
                     <div className={styles.containerItem} onClick={() => pushTo('displayName')} >
-                        <div className={styles.containerItemLeading}>
-                            <p>Display name</p>
-                            <p>{user?.displayName}</p>
-                        </div>
-                        <div className={styles.containerItemTrailing}>
-                            <ArrowForwardIos />
-                        </div>
-                    </div>
-                </div>
-                <div className={styles.container}>
-                    <div className={styles.containerItemHeader}>
-                        <h1>Data & Security</h1>
+                        <p>Display name</p>
+                        <ArrowForwardIos />
                     </div>
                     <div className={styles.containerItem} onClick={() => pushTo('password')}>
-                        <div className={styles.containerItemLeading}>
-                            <p>Password</p>
-                        </div>
-                        <div className={styles.containerItemTrailing}>
-                            <ArrowForwardIos />
-                        </div>
+                        <p>Password</p>
+                        <ArrowForwardIos />
                     </div>
                     <div className={styles.containerItem} onClick={() => pushTo('deleteAccount')}>
-                        <div className={styles.containerItemLeading}>
-                            <p>Delete Account</p>
-                        </div>
-                        <div className={styles.containerItemTrailing}>
-                            <ArrowForwardIos />
-                        </div>
+                        <p>Delete Account</p>
+                        <ArrowForwardIos />
                     </div>
                 </div>
+                <p>PaperTake.io <Link href={'PaperTake.io - Privacy Policy.pdf'} className={styles.textTerms} target="_blank" rel="noopener noreferrer">Terms of Service</Link> & <Link href={'/PaperTake.io - Terms of Service.pdf'} className={styles.textTerms} target="_blank" rel="noopener noreferrer">Privacy Policy</Link></p>
                 <p>
                     Need help with something else, please contact <Link href="mailto:support@machinename.dev?subject=Support%20Request&body=Please%20describe%20your%20issue%20here." className={styles.textTerms}>support</Link>
                 </p>

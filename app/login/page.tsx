@@ -253,7 +253,7 @@ export default function Login() {
                     )}
                 </div>
                 {(!isLogin && !isHelp) && (
-                    <p>By creating an account, you agree to our <Link href={'/machinename.dev/papertakeprivacy.pdf'} className={styles.textTerms} target="_blank" rel="noopener noreferrer">Terms of Service</Link> & <Link href={'/machinename.dev/papertaketermsofservice.pdf'} className={styles.textTerms} target="_blank" rel="noopener noreferrer">Privacy Policy</Link>.</p>
+                    <p>By creating an account, you agree to our <Link href={'PaperTake.io - Privacy Policy.pdf'} className={styles.textTerms} target="_blank" rel="noopener noreferrer">Terms of Service</Link> & <Link href={'/PaperTake.io - Terms of Service.pdf'} className={styles.textTerms} target="_blank" rel="noopener noreferrer">Privacy Policy</Link></p>
                 )}
                 {isHelp ? (
                     <React.Fragment>
