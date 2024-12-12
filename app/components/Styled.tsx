@@ -7,7 +7,7 @@ const defaultFontWeight = 'regular';
 export const StyledIconButton = styled(IconButton)({
     color: 'gray',
     '@media (prefers-color-scheme: dark)': {
-        color: 'lightgray',
+        color: '#ededed',
         '&.Mui-disabled': {
             color: 'gray'
         }
@@ -184,7 +184,7 @@ export const StyledButton = styled(Button)({
     width: '100%',
     fontFamily: 'inherit',
     fontWeight: defaultFontWeight,
-    color: 'white',
+    color: 'inherit',
     backgroundColor: 'black',
     borderRadius: defaultBorderRadius,
     '&:disabled': {
@@ -302,6 +302,7 @@ export const StyledToggleButton = styled(ToggleButton)({
 });
 
 export const StyledTextButton = styled(Button)({
+    color: 'inherit',
     backgroundColor: 'transparent',
     borderRadius: defaultBorderRadius,
     fontFamily: 'inherit',
