@@ -4,49 +4,6 @@ import { Circle } from "@mui/icons-material";
 const defaultBorderRadius = '0px';
 const defaultFontWeight = 'regular';
 
-export const StyledIconButton = styled(IconButton)({
-    color: 'gray',
-    '@media (prefers-color-scheme: dark)': {
-        color: '#ededed',
-        '&.Mui-disabled': {
-            color: 'gray'
-        }
-    }
-}); 
-
-interface BackgroundIconButtonProps {
-    selected?: boolean;
-}
-
-export const TransparentIconButton = styled(IconButton)<BackgroundIconButtonProps>(({ }) => ({
-    color: 'inherit',
-    backgroundColor: 'transparent',
-    '&:hover': {
-        backgroundColor: 'transparent',
-    }
-}));
-
-export const TransparentIcon = styled(Circle)({
-    color: 'transparent',
-    border: 'none',
-});
-export const BackgroundIconButton = styled(IconButton)<BackgroundIconButtonProps>(({ selected }) => ({
-    padding: '0.25rem',
-    '&:hover': {
-        backgroundColor: 'transparent',
-        '& .MuiSvgIcon-root': {
-            borderColor: selected ? 'purple' : '#222',
-        },
-    },
-    '@media (prefers-color-scheme: dark)': {
-        '&:hover': {
-            backgroundColor: 'transparent',
-            '& .MuiSvgIcon-root': {
-                borderColor: selected ? 'purple' : 'white',
-            },
-        },
-    },
-}));
 
 interface BackgroundCircleProps {
     selected?: boolean;
@@ -69,6 +26,22 @@ export const BackgroundCircle = styled(Circle)<BackgroundCircleProps>(({ selecte
         border: `2px solid ${selected ? 'purple' : 'lightgray'}`,
     },
 }));
+export const BackgroundCircleChalk = styled(Circle)<BackgroundCircleProps>(({ selected }) => ({
+    fontSize: '2rem',
+    backgroundColor: 'lightgray',
+    color: 'transparent',
+    border: `2px solid ${selected ? 'purple' : 'lightgray'}`,
+    borderRadius: '50%',
+    '&:hover': {
+        borderColor: 'inherit',
+    },
+    '@media (prefers-color-scheme: dark)': {
+        backgroundColor: '#8a8a8a',
+        color: 'transparent',
+        border: `2px solid ${selected ? 'purple' : '#8a8a8a'}`,
+    },
+}
+));
 
 export const BackgroundCircleYellow = styled(Circle)<BackgroundCircleProps>(({ selected }) => ({
     fontSize: '2rem',
@@ -119,113 +92,27 @@ export const BackgroundCircleTeal = styled(Circle)<BackgroundCircleProps>(({ sel
 }
 ));
 
-export const BackgroundCircleChalk = styled(Circle)<BackgroundCircleProps>(({ selected }) => ({
-    fontSize: '2rem',
-    backgroundColor: 'lightgray',
-    color: 'transparent',
-    border: `2px solid ${selected ? 'purple' : 'lightgray'}`,
-    borderRadius: '50%',
-    '&:hover': {
-        borderColor: 'inherit',
-    },
-    '@media (prefers-color-scheme: dark)': {
-        backgroundColor: '#8a8a8a',
-        color: 'transparent',
-        border: `2px solid ${selected ? 'purple' : '#8a8a8a'}`,
-    },
+interface BackgroundIconButtonProps {
+    selected?: boolean;
 }
-));
 
-export const NoteHeaderTextField = styled(TextField)({
-    width: '100%',
-    '& .MuiInputBase-input': {
-        fontSize: 'large',
-        fontFamily: 'inherit',
-        fontWeight: defaultFontWeight,
-        WebkitTapHighlightColor: 'transparent',
-        WebkitUserSelect: 'none',
-        color: '#121212',
-    },
-    '& .MuiOutlinedInput-root': {
-        '& fieldset': { border: 'none' },
-        '&:hover fieldset': { border: 'none' },
-        '&.Mui-focused fieldset': { border: 'none' },
-    },
-    '@media (prefers-color-scheme: dark)': {
-        '& .MuiInputBase-input': {
-            color: 'lightgray',
-        }
-    },
-});
-
-export const NoteBodyTextField = styled(TextField)({
-    width: '100%',
-    '& .MuiInputBase-input': {
-        fontFamily: 'inherit',
-        fontWeight: defaultFontWeight,
-        WebkitTapHighlightColor: 'transparent',
-        WebkitUserSelect: 'none',
-        color: '#121212',
-    },
-    '& .MuiOutlinedInput-root': {
-        '& fieldset': { border: 'none' },
-        '&:hover fieldset': { border: 'none' },
-        '&.Mui-focused fieldset': { border: 'none' },
-    },
-    '@media (prefers-color-scheme: dark)': {
-        '& .MuiInputBase-input': {
-            color: 'lightgray',
-        }
-    },
-
-});
-
-export const StyledButton = styled(Button)({
-    width: '100%',
-    fontFamily: 'inherit',
-    fontWeight: defaultFontWeight,
-    color: 'white',
-    backgroundColor: 'black',
-    borderRadius: defaultBorderRadius,
-    '&:disabled': {
-        backgroundColor: '#f0f0f0',
-        color: 'gray',
-        border: 'none',
-        cursor: 'not-allowed'
-    },
-    '@media (prefers-color-scheme: dark)': {
-        color: 'black',
-        backgroundColor: 'lightgray',
-    },
-});
-
-export const StyledNoteButton = styled(Button)({
-    width: '100%',
-    fontFamily: 'inherit',
-    fontWeight: defaultFontWeight,
-    color: 'grey',
-    backgroundColor: 'transparent',
-    borderRadius: defaultBorderRadius,
-    '@media (prefers-color-scheme: dark)': {
-        color: 'grey',
+export const BackgroundIconButton = styled(IconButton)<BackgroundIconButtonProps>(({ selected }) => ({
+    padding: '0.25rem',
+    '&:hover': {
         backgroundColor: 'transparent',
+        '& .MuiSvgIcon-root': {
+            borderColor: selected ? 'purple' : '#222',
+        },
     },
-});
-
-export const StyledNoteButtonTwo = styled(Button)({
-    width: '90px',
-    fontFamily: 'inherit',
-    fontWeight: defaultFontWeight,
-    color: '#121212',
-    backgroundColor: 'transparent',
-
-    borderRadius: defaultBorderRadius,
     '@media (prefers-color-scheme: dark)': {
-        color: 'lightgray',
-        backgroundColor: 'transparent',
-        border: '0.5px solid gray',
+        '&:hover': {
+            backgroundColor: 'transparent',
+            '& .MuiSvgIcon-root': {
+                borderColor: selected ? 'purple' : '#f9fafb',
+            },
+        },
     },
-});
+}));
 
 export const FormTextField = styled(TextField)({
     width: '100%',
@@ -277,11 +164,121 @@ export const FormTextField = styled(TextField)({
     },
 });
 
+export const NoteHeaderTextField = styled(TextField)({
+    width: '100%',
+    '& .MuiInputBase-input': {
+        fontSize: 'large',
+        fontFamily: 'inherit',
+        fontWeight: defaultFontWeight,
+        WebkitTapHighlightColor: 'transparent',
+        WebkitUserSelect: 'none',
+        color: '#121212',
+    },
+    '& .MuiOutlinedInput-root': {
+        '& fieldset': { border: 'none' },
+        '&:hover fieldset': { border: 'none' },
+        '&.Mui-focused fieldset': { border: 'none' },
+    },
+    '@media (prefers-color-scheme: dark)': {
+        '& .MuiInputBase-input': {
+            color: 'lightgray',
+        }
+    },
+});
 
+export const NoteBodyTextField = styled(TextField)({
+    width: '100%',
+    '& .MuiInputBase-input': {
+        fontFamily: 'inherit',
+        fontWeight: defaultFontWeight,
+        WebkitTapHighlightColor: 'transparent',
+        WebkitUserSelect: 'none',
+        color: '#121212',
+    },
+    '& .MuiOutlinedInput-root': {
+        '& fieldset': { border: 'none' },
+        '&:hover fieldset': { border: 'none' },
+        '&.Mui-focused fieldset': { border: 'none' },
+    },
+    '@media (prefers-color-scheme: dark)': {
+        '& .MuiInputBase-input': {
+            color: 'lightgray',
+        }
+    },
+
+});
+
+export const StyledButton = styled(Button)({
+    backgroundColor: 'black',
+    borderRadius: defaultBorderRadius,
+    color: '#f9fafb',
+    fontFamily: 'inherit',
+    fontWeight: defaultFontWeight,
+    width: '100%',
+    '&:disabled': {
+        backgroundColor: '#f0f0f0',
+        color: 'gray',
+        border: 'none',
+        cursor: 'not-allowed'
+    },
+    '@media (prefers-color-scheme: dark)': {
+        color: 'black',
+        backgroundColor: '#ededed',
+    },
+});
+
+export const StyledNoteButton = styled(Button)({
+    width: '100%',
+    fontFamily: 'inherit',
+    fontWeight: defaultFontWeight,
+    color: 'grey',
+    backgroundColor: 'transparent',
+    borderRadius: defaultBorderRadius,
+    '@media (prefers-color-scheme: dark)': {
+        color: 'grey',
+        backgroundColor: 'transparent',
+    },
+});
+
+export const StyledNoteButtonTwo = styled(Button)({
+    width: '90px',
+    fontFamily: 'inherit',
+    fontWeight: defaultFontWeight,
+    color: '#121212',
+    backgroundColor: 'transparent',
+    borderRadius: defaultBorderRadius,
+    '@media (prefers-color-scheme: dark)': {
+        color: 'lightgray',
+        backgroundColor: 'transparent',
+        border: '0.5px solid gray',
+    },
+});
+
+export const StyledIconButton = styled(IconButton)({
+    color: 'gray',
+    '@media (prefers-color-scheme: dark)': {
+        color: '#ededed',
+        '&.Mui-disabled': {
+            color: 'gray'
+        }
+    }
+});
+
+export const StyledTextButton = styled(Button)({
+    color: 'inherit',
+    backgroundColor: 'transparent',
+    borderRadius: defaultBorderRadius,
+    fontFamily: 'inherit',
+    fontWeight: defaultFontWeight,
+    padding: '0',
+    '@media (prefers-color-scheme: dark)': {
+        color: '#ededed',
+    }
+});
 export const StyledToggleButton = styled(ToggleButton)({
     fontSize: 'x-large',
     fontWeight: defaultFontWeight,
-    fontFamily: 'monospace',
+    fontFamily: 'inherit',
     color: 'inherit',
     border: 'none',
     borderRadius: '0px',
@@ -301,37 +298,34 @@ export const StyledToggleButton = styled(ToggleButton)({
     }
 });
 
-export const StyledTextButton = styled(Button)({
-    color: 'inherit',
-    backgroundColor: 'transparent',
-    borderRadius: defaultBorderRadius,
-    fontFamily: 'inherit',
-    fontWeight: defaultFontWeight,
-    padding: '0',
-    '@media (prefers-color-scheme: dark)': {
-        color: '#ededed',
-    }
-});
-
 export const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} classes={{ popper: className }} />
 ))(() => ({
     [`& .${tooltipClasses.tooltip}`]: {
-        fontFamily: 'monospace',
+        fontFamily: 'inherit',
         backgroundColor: 'gray',
         borderRadius: defaultBorderRadius,
-        color: 'white',
+        color: '#f9fafb',
         boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
         fontSize: '1rem',
-        '@media (prefers-color-scheme: dark)': {
-            // backgroundColor: '#121212',
-            // color: 'white',
-        },
     },
     [`& .${tooltipClasses.arrow}`]: {
-        color: 'white',
+        color: '#f9fafb',
         '@media (prefers-color-scheme: dark)': {
-            color: 'gray', // Dark mode arrow color
+            color: 'gray',
         },
     },
 }));
+
+export const TransparentIconButton = styled(IconButton)(({ }) => ({
+    color: 'inherit',
+    backgroundColor: 'transparent',
+    '&:hover': {
+        backgroundColor: 'transparent',
+    }
+}));
+
+export const TransparentIcon = styled(Circle)({
+    color: 'transparent',
+    border: 'none',
+});
