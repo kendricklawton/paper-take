@@ -18,7 +18,7 @@ export default function Account() {
     };
 
     return (
-        <div className={styles.pageAccount}>
+        <div className={styles.page}>
             <div className={styles.wrapperAccount}>
                 <h1>Account</h1>
                 <div className={styles.container}>

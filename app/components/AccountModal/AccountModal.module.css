@@ -11,13 +11,13 @@
     left: 0;
     right: 0;
     padding-top: max(10%, 5rem);
-    background-color: white;
+    background-color: #f9fafb;
 }
 
 .wrapperModal {
     width: 100%;
     max-width: 400px;
-    background-color: white;
+    background-color: #f9fafb;
 }
 
 .modalHeader {
@@ -45,6 +45,9 @@
 
 @media (prefers-color-scheme: dark) {
     .modal {
+        background-color: #0a0a0a;
+    }
+    .wrapperModal {
         background-color: #0a0a0a;
     }
 }

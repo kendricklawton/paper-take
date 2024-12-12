@@ -28,11 +28,9 @@ import {
 import { MenuItem } from '@mui/material';
 import { Timestamp } from 'firebase/firestore';
 import { useAppContext } from '../../providers/AppProvider';
-import { useAuthContext } from '../../providers/AuthProvider';
-import Link from 'next/link';
 
 const MenuItemStyles = {
-    fontFamily: 'monospace',
+    fontFamily: 'inherit',
     paddingLeft: '1.2rem',
     paddingRight: '1.2rem',
     // maxWidth: '280px',
@@ -134,7 +132,6 @@ export default function GUIFooter({
     togglePinned,
     toggleReminder,
 }: GUIFooterProps) {
-    const { user } = useAuthContext();
     const { setInfo } = useAppContext();
     const showFooter = isEditMode || initialOperation === 'read';
     const showFooterIcons = isEditMode || (isHovering && initialOperation === 'read') || isBackgroundMenuOpen || isOptionsMenuOpen || isReminderMenuOpen;
@@ -224,14 +221,13 @@ export default function GUIFooter({
                                     <div className={styles.footerLeading}>
                                         <StyledTooltip title={'Pin note'}>
                                             <StyledIconButton className={styles.menuButton}
-                                            onClick={togglePinned}
+                                                onClick={togglePinned}
                                             >
                                                 {
-                                                    isPinned ? <PushPin/> : <PushPinOutlined/>
+                                                    isPinned ? <PushPin /> : <PushPinOutlined />
                                                 }
                                             </StyledIconButton>
                                         </StyledTooltip>
-
                                         <div className={styles.anchor}>
                                             {/* <StyledTooltip  title={'Reminder'}> */}
                                             <StyledIconButton ref={reminderMenuRefButton} className={styles.menuButton}
@@ -250,7 +246,6 @@ export default function GUIFooter({
                                             )}
                                         </div>
                                         <div className={styles.anchor}>
-
                                             {/* <StyledTooltip title={'Background options'}> */}
                                             <StyledIconButton ref={backgroundMenuRefButton} className={styles.menuButton}
                                                 onClick={() => setIsBackgroundMenu(prev => !prev)}>
@@ -278,14 +273,11 @@ export default function GUIFooter({
                                                 </div>
                                             )}
                                         </div>
-
-
                                         <StyledTooltip title={'Archive note'} >
                                             <StyledIconButton aria-label="Archive" onClick={() => toggleArchive()}>
                                                 {isArchived ? <Archive /> : <ArchiveOutlined />}
                                             </StyledIconButton>
                                         </StyledTooltip>
-
                                         {isEditMode && (
                                             <React.Fragment>
                                                 <StyledTooltip title={'Undo'} >
@@ -333,13 +325,7 @@ export default function GUIFooter({
                             {
                                 showFooterTrailingButtons && (
                                     <div className={styles.footerTrailing}>
-                                        {
-                                            !user && (
-                                                <p className={styles.notesText}><Link href={"/login"}>Login</Link> to save note</p>
-                                            )
-                                        }
                                         <StyledTextButton type="submit">Close</StyledTextButton>
-
                                     </div>
                                 )}
                             {

@@ -1,31 +1,28 @@
 .page,
-.pageAccount,
 .pageLogin {
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
   padding-left: 1rem;
   padding-right: 1rem;
-}
-.page h2 {
-  cursor: default;
+  text-align: center;
 }
 
-.page,
-.pageAccount {
+.page {
   padding-top: 5rem;
   padding-bottom: 5rem;
 }
 
-.pageAccount {
-  text-align: center;
-}
-
 .pageLogin {
+  text-align: center;
   align-items: center;
   height: 100vh;
   justify-content: center;
-  text-align: center;
+}
+
+.page h1,
+.page h2 {
+  cursor: default;
 }
 
 .wrapperAccount,
@@ -36,11 +33,6 @@
   flex-direction: column;
   width: 100%;
   gap: 1rem;
-}
-
-.wrapperLogin {
-  justify-content: center;
-  max-width: 800px;
 }
 
 .wrapperAccount {
@@ -113,6 +105,13 @@
   max-width: 600px;
 }
 
+.pinnedTextContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 600px;
+}
+
 .textError {
   color: red;
   font-size: small;
@@ -128,13 +127,6 @@
   align-items: center;
 }
 
-.pinnedTextContainer {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 600px;
-}
-
 .switchContainer {
   position: absolute;
   top: 0;
@@ -148,21 +140,9 @@
   height: 1rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  .modal {
-    background-color: #121212;
-  }
-
-}
-
 @media screen and (max-width: 768px) {
   .divider {
     display: none;
-  }
-
-  .pinnedTextContainer {
-    width: 100%;
-    max-width: 600px;
   }
 
   .dividerMobile {
@@ -182,5 +162,10 @@
     padding-bottom: 1rem;
     height: auto;
     justify-content: flex-start;
+  }
+
+  .pinnedTextContainer {
+    width: 100%;
+    max-width: 600px;
   }
 }
