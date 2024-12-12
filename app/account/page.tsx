@@ -20,7 +20,7 @@ export default function Account() {
     return (
         <div className={styles.pageAccount}>
             <div className={styles.wrapperAccount}>
-                <h2>Account</h2>
+                <h1>Account</h1>
                 <div className={styles.container}>
                     {
                         user?.emailVerified === false && (

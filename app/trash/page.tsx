@@ -23,7 +23,7 @@ export default function Trash() {
         <div className={styles.page}>
             {
                 trashIdeas.length === 0 &&
-                <h2>Trash is empty</h2>
+                <h1>Trash is empty</h1>
             }
             {trashIdeas.length > 0 && (
                 trashIdeas.map((idea, index) => (

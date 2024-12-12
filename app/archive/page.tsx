@@ -24,7 +24,7 @@ export default function Archive() {
                 {
                     archiveIdeas.length === 0 &&
                     <React.Fragment>
-                        <h2>Archive is empty</h2>
+                        <h1>Archive is empty</h1>
                     </React.Fragment>
                 }
                 {archiveIdeas.length > 0 && (

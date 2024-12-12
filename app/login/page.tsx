@@ -169,7 +169,7 @@ export default function Login() {
                 </StyledTextButton>
             </div>
             <div className={styles.wrapperLogin}>
-                <h2>{isHelp ? 'Log in help' : (isLogin ? 'Log into PaperTake.io' : 'Create an account')}</h2>
+                <h1>{isHelp ? 'Log in help' : (isLogin ? 'Log into PaperTake.io' : 'Create an account')}</h1>
                 <div className={isHelp ? styles.loginHelp : styles.login}>
                     <form className={styles.form} onSubmit={handleSubmit}>
                         <FormTextField

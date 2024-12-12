@@ -134,7 +134,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, screen }) 
             case "email":
                 return (
                     <div className={styles.modalHeader}>
-                        <h1>Update email</h1>
+                        <h2>Update email</h2>
                         {
                             user?.email && (
                                 <p>{user.email}</p>
@@ -146,7 +146,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, screen }) 
             case "password":
                 return (
                     <div className={styles.modalHeader}>
-                        <h1>Reset password</h1>
+                        <h2>Reset password</h2>
                         <p>Password reset link will be sent to {user?.email}</p>
                         <p>To continue, type your email below</p>
                     </div>
@@ -154,7 +154,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, screen }) 
             case "delete":
                 return (
                     <div className={styles.modalHeader}>
-                        <h1>Delete account</h1>
+                        <h2>Delete account</h2>
                         <p>We will delete your account and all data associated with the email &apos;{user?.email}&apos;</p>
                         <p>To continue, type &apos;delete-my-account&apos; and your password below</p>
                     </div>
@@ -162,7 +162,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, screen }) 
             case "displayName":
                 return (
                     <div className={styles.modalHeader}>
-                        <h1>Update display name</h1>
+                        <h2>Update display name</h2>
                         {user?.displayName && (<p>{user.displayName}</p>)}
                         <p>To continue, type your new display name below</p>
                     </div>
@@ -170,7 +170,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, screen }) 
             case "verification":
                 return (
                     <div className={styles.modalHeader}>
-                        <h1>Email verification</h1>
+                        <h2>Email verification</h2>
                         <p>Email verification link will be sent to &apos;{user?.email}&apos;</p>
                         <p>To continue, type your email below</p>
                     </div>
