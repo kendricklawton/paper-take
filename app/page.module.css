@@ -30,21 +30,21 @@
 
 .wrapperAccount,
 .wrapperLogin,
-.wrapperPopUp {
+.wrapperModal {
   display: flex;
   align-items: center;
   flex-direction: column;
   width: 100%;
   gap: 1rem;
+}
+
+.wrapperLogin {
+  justify-content: center;
+  max-width: 800px;
 }
 
 .wrapperAccount {
-  max-width: 400px;
-}
-
-.wrapperLogin {
-  justify-content: center;
-  max-width: 800px;
+  max-width: 600px;
 }
 
 .wrapperLogin {
@@ -55,49 +55,6 @@
   width: 100%;
   max-width: 800px;
   gap: 1rem;
-}
-
-.wrapperPopUp {
-  max-width: 400px;
-  background-color: white;
-  padding: 1rem;
-  box-shadow: 0 4px 8px rgba(0.1, 0.1, 0.1, 0.1);
-}
-
-.wrapperPopUp div {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  gap: 1rem;
-  width: 100%;
-}
-
-.modal,
-.popUpModal {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  /* padding-top: 5rem;
-  padding-bottom: 5rem; */
-  /* padding-top: max(10%, 5rem); */
-  padding-left: 1rem;
-  padding-right: 1rem;
-  z-index: 5;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-
-.modal {
-  padding-top: max(10%, 5rem);
-  background-color: white;
-}
-
-.popUpModal {
-  background-color: rgba(0, 0, 0, 0.5);
-  justify-content: center;
 }
 
 .container {
@@ -175,8 +132,6 @@
   flex-direction: row;
   align-items: center;
   width: 600px;
-  /* padding-left: 1rem;
-  padding-right: 1rem; */
 }
 
 .switchContainer {
@@ -197,9 +152,6 @@
     background-color: #121212;
   }
 
-  .containerItem {
-    border: 0.5px solid gray;
-  }
 }
 
 @media screen and (max-width: 768px) {

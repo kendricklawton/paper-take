@@ -133,7 +133,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, screen }) 
         switch (screen) {
             case "email":
                 return (
-                    <React.Fragment>
+                    <div className={styles.modalHeader}>
                         <h1>Update email</h1>
                         {
                             user?.email && (
@@ -141,50 +141,49 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, screen }) 
                             )
                         }
                         <p>To continue, type your new email and your password below</p>
-                    </React.Fragment>
+                    </div>
                 );
             case "password":
                 return (
-                    <React.Fragment>
+                    <div className={styles.modalHeader}>
                         <h1>Reset password</h1>
                         <p>Password reset link will be sent to {user?.email}</p>
                         <p>To continue, type your email below</p>
-                    </React.Fragment>
+                    </div>
                 );
             case "delete":
                 return (
-                    <React.Fragment>
+                    <div className={styles.modalHeader}>
                         <h1>Delete account</h1>
                         <p>We will delete your account and all data associated with the email &apos;{user?.email}&apos;</p>
                         <p>To continue, type &apos;delete-my-account&apos; and your password below</p>
-                    </React.Fragment>
+                    </div>
                 );
             case "displayName":
                 return (
-                    <React.Fragment>
+                    <div className={styles.modalHeader}>
                         <h1>Update display name</h1>
                         {user?.displayName && (<p>{user.displayName}</p>)}
                         <p>To continue, type your new display name below</p>
-                    </React.Fragment>
+                    </div>
                 );
             case "verification":
                 return (
-                    <React.Fragment>
+                    <div className={styles.modalHeader}>
                         <h1>Email verification</h1>
                         <p>Email verification link will be sent to &apos;{user?.email}&apos;</p>
                         <p>To continue, type your email below</p>
-                    </React.Fragment>
+                    </div>
                 );
             default:
                 return null;
         }
     };
 
-    console.log(screen);
     return (
         isOpen && (
             <div className={styles.modal}>
-                <div className={styles.wrapperAccount}>
+                <div className={styles.wrapperModal}>
                     {FormHeader(screen)}
                     <form className={styles.form} onSubmit={handleSubmit}>
                         {screen === "verification" && (
@@ -262,17 +261,17 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, screen }) 
                                 }}
                             />
                         )}
-                        <React.Fragment>
+                        <div className={styles.modalFooter}>
                             {errors.email && (<p className={styles.textError} aria-live="polite">{errors.email}</p>)}
                             {errors.password && (<p className={styles.textError} aria-live="polite">{errors.password}</p>)}
                             {authError && (<p className={styles.textError} aria-live="polite">{authError}</p>)}
                             {                       
                                 screen === "password" ?
-                                    <StyledButton className={styles.button} disabled={!isButtonEnabled()} type="submit">
+                                    <StyledButton disabled={!isButtonEnabled()} type="submit">
                                         Send                      
                                     </StyledButton>
                                     :
-                                    <StyledButton className={styles.button} disabled={!isButtonEnabled()} type="submit">
+                                    <StyledButton disabled={!isButtonEnabled()} type="submit">
                                         {screen === "verification" ? "Resend" : "Submit"}
                                     </StyledButton>
                             }
@@ -283,10 +282,10 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, screen }) 
                                     </StyledButton>
                                 )
                             }
-                            <StyledButton className={styles.button} onClick={clearValues} type="reset">
+                            <StyledButton onClick={clearValues} type="reset">
                                 Cancel
                             </StyledButton>
-                        </React.Fragment>
+                        </div>
                     </form>
                 </div>
             </div>

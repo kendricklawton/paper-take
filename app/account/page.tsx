@@ -17,16 +17,6 @@ export default function Account() {
         setIsAccountModalOpen(true);
     };
 
-    if (!user) {
-        return (
-            <div className={styles.page}>
-                <div className={styles.wrapper}>
-                    <div>You need to be logged in to view this page.</div>;
-                </div>
-            </div>
-        );
-    };
-
     return (
         <div className={styles.pageAccount}>
             <div className={styles.wrapperAccount}>
@@ -54,15 +44,15 @@ export default function Account() {
                         <p>Password</p>
                         <ArrowForwardIos />
                     </div>
-                    <div className={styles.containerItem} onClick={() => pushTo('deleteAccount')}>
+                    <div className={styles.containerItem} onClick={() => pushTo('delete')}>
                         <p>Delete Account</p>
                         <ArrowForwardIos />
                     </div>
                 </div>
-                <p>PaperTake.io <Link href={'PaperTake.io - Privacy Policy.pdf'} className={styles.textTerms} target="_blank" rel="noopener noreferrer">Terms of Service</Link> & <Link href={'/PaperTake.io - Terms of Service.pdf'} className={styles.textTerms} target="_blank" rel="noopener noreferrer">Privacy Policy</Link></p>
                 <p>
                     Need help with something else, please contact <Link href="mailto:support@machinename.dev?subject=Support%20Request&body=Please%20describe%20your%20issue%20here." className={styles.textTerms}>support</Link>
                 </p>
+                <p>PaperTake.io <Link href={'PaperTake.io - Privacy Policy.pdf'} className={styles.textTerms} target="_blank" rel="noopener noreferrer">Terms of Service</Link> & <Link href={'/PaperTake.io - Terms of Service.pdf'} className={styles.textTerms} target="_blank" rel="noopener noreferrer">Privacy Policy</Link></p>
             </div>
             <AccountModal isOpen={isAccountModalOpen} onClose={() => setIsAccountModalOpen(false)} screen={screen} />
         </div>
