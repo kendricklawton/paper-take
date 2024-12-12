@@ -37,6 +37,16 @@
     justify-content: flex-end;
 }
 
+.headerTitle {
+    width: 200px;
+}
+
+.headerTitle p {
+    color: gray;
+    font-size: x-large;
+    font-weight: lighter;
+}
+
 .accountAnchor,
 .navAnchor,
 .settingsAnchor {
@@ -52,16 +62,6 @@
 
 .navAnchor {
     justify-content: flex-start;
-}
-
-.headerTitle {
-    width: 200px;
-}
-
-.headerTitle p {
-    color: gray;
-    font-size: x-large;
-    font-weight: lighter;
 }
 
 .menu {
@@ -130,7 +130,6 @@
     font-family: monospace;
     font-size: normal;
 }
-
 
 @media(prefers-color-scheme: dark) {
     .header,

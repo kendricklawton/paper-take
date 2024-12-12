@@ -52,6 +52,12 @@ export default function Header() {
     const settingsButtonRef = useRef<HTMLButtonElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
+    const handleCloseButton = () => {
+        router.push('/');
+        handleCloseSearch();
+        window.scrollTo({ top: 0 });
+    };
+
     const handleSearchButton = () => {
         router.push('/search');
         if (inputRef.current) {
@@ -63,14 +69,14 @@ export default function Header() {
         event.preventDefault();
         router.push('/search');
         handleSearch(event.target.value);
-    }
+    };
 
     const handleOnFocus = () => {
         router.push('/search');
         if (inputRef.current) {
             inputRef.current.focus();
         }
-    }
+    };
 
     const handleLogOut = async () => {
         try {
@@ -80,10 +86,22 @@ export default function Header() {
             console.log(error);
         }
     };
-    const handleCloseButton = () => {
-        router.push('/');
-        handleCloseSearch();
-        window.scrollTo({ top: 0 });
+
+    const getTitle = () => {
+        switch (pathname) {
+            case '/':
+                return 'Paper Take';
+            case '/archive':
+                return 'Archive';
+            case '/help':
+                return 'Help';
+            case '/search':
+                return 'Ideas';
+            case '/trash':
+                return 'Trash';
+            default:
+                return 'Paper Take';
+        };
     };
 
     useEffect(() => {
@@ -92,19 +110,18 @@ export default function Header() {
                 if (!navButtonRef.current?.contains(event.target as Node)) {
                     setIsNavMenuOpen(false);
                 }
-            }
+            };
             if (accountMenuRef.current && !accountMenuRef.current.contains(event.target as Node)) {
                 if (!accountButtonRef.current?.contains(event.target as Node)) {
                     setIsAccountMenuOpen(false);
                 }
-            }
+            };
             // if (settingsMenuRef.current && !settingsMenuRef.current.contains(event.target as Node)) {
             //     if (!settingsButtonRef.current?.contains(event.target as Node)) {
             //         setIsSettingsMenuOpen(false);
             //     }
-            // }
+            // };
         };
-
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
@@ -125,23 +142,6 @@ export default function Header() {
         };
     }, []);
 
-    const getTitle = () => {
-        switch (pathname) {
-            case '/archive':
-                return 'Archive';
-            case '/help':
-                return 'Help';
-            case '/':
-                return 'Ideas';
-            case '/search':
-                return 'Ideas';
-            case '/trash':
-                return 'Trash';
-            default:
-                return 'Ideas';
-        }
-    };
-
     useEffect(() => {
         const url = new URL(window.location.href);
         if (searchTerm) {
@@ -157,7 +157,9 @@ export default function Header() {
             <header className={isScrolled ? styles.headerScrolled : styles.header}>
                 <div className={styles.headerLeading}>
                     <div className={styles.navAnchor}>
-                        <StyledIconButton ref={navButtonRef} onClick={() => setIsNavMenuOpen(prev => !prev)}>
+                        <StyledIconButton ref={navButtonRef} 
+                            disableTouchRipple={true}
+                            onClick={() => setIsNavMenuOpen(prev => !prev)}>
                             {isNavMenuOpen ? <Close /> : <MenuOpen />}
                         </StyledIconButton>
                         {isNavMenuOpen && (
