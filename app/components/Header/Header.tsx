@@ -9,14 +9,14 @@ import {
 import Link from 'next/link';
 import CircularProgress from '@mui/material/CircularProgress';
 import {
-    AccountBoxOutlined, ArchiveOutlined, CircleOutlined, Close, DeleteOutlined, LoginOutlined,
+    AccountBoxOutlined, ArchiveOutlined, Close, DeleteOutlined, LoginOutlined,
     LogoutOutlined, MenuOpen, Refresh, Search,
     Archive, Delete,
     HelpCenter,
     HelpCenterOutlined,
-    Circle,
     Lightbulb,
     LightbulbOutlined,
+    AccountCircle,
     // Settings,
     // SettingsOutlined
 } from '@mui/icons-material';
@@ -218,15 +218,13 @@ export default function Header() {
                     }
                     <div className={styles.accountAnchor}>
                         <StyledIconButton ref={accountButtonRef} onClick={() => setIsAccountMenuOpen(prev => !prev)}>
-                            {isAccountMenuOpen ? <Circle /> : <CircleOutlined />}
+                            {isAccountMenuOpen ? <AccountCircle /> : <AccountCircle />}
                         </StyledIconButton>
                         {isAccountMenuOpen && (
                             <nav className={styles.menu} ref={accountMenuRef}>
                                 {user && (
                                     <Link className={styles.navLink}
-                                        href='https://www.machinename.dev/account'
-                                        target="_blank"
-                                        rel="noreferrer"
+                                        href='/account'
                                         onClick={() => setIsAccountMenuOpen(false)}>
                                         <AccountBoxOutlined /> Account
                                     </Link>
@@ -237,7 +235,7 @@ export default function Header() {
                                     </Link>
                                 ) : (
                                     <Link className={styles.navLink}
-                                        href='https://login.machinename.dev/?redirect=idea.machinename.dev'
+                                        href='/login'
                                         onClick={() => setIsAccountMenuOpen(false)}>
                                         <LoginOutlined /> Log In
                                     </Link>
