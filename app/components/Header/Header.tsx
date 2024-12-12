@@ -188,7 +188,7 @@ export default function Header() {
                         <p>{getTitle()}</p>
                     </div>
                     <div className={styles.searchInputContainer}>
-                        <StyledIconButton onClick={handleSearchButton}>
+                        <StyledIconButton disableTouchRipple={true} onClick={handleSearchButton}>
                             <Search />
                         </StyledIconButton>
                         <input
@@ -203,7 +203,9 @@ export default function Header() {
                             ref={inputRef}
                         />
                         {(pathname === '/search') && (
-                            <StyledIconButton onClick={handleCloseButton}>
+                            <StyledIconButton 
+                                disableTouchRipple={true}
+                                onClick={handleCloseButton}>
                                 <Close />
                             </StyledIconButton>
                         )}
@@ -229,7 +231,9 @@ export default function Header() {
                         )
                     }
                     <div className={styles.accountAnchor}>
-                        <StyledIconButton ref={accountButtonRef} onClick={() => setIsAccountMenuOpen(prev => !prev)}>
+                        <StyledIconButton ref={accountButtonRef} 
+                            disableTouchRipple={true}
+                            onClick={() => setIsAccountMenuOpen(prev => !prev)}>
                             {isAccountMenuOpen ? <AccountCircle /> : <AccountCircle />}
                         </StyledIconButton>
                         {isAccountMenuOpen && (
