@@ -45,7 +45,7 @@ export default function Account() {
                         <ArrowForwardIos />
                     </div>
                     <div className={styles.containerItem} onClick={() => pushTo('delete')}>
-                        <p>Delete Account</p>
+                        <p>Delete account</p>
                         <ArrowForwardIos />
                     </div>
                 </div>

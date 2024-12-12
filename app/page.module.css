@@ -81,6 +81,7 @@
 
 .containerItem p {
   font-size: large;
+  color: inherit;
 }
 
 .divider {
