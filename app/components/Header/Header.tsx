@@ -90,7 +90,7 @@ export default function Header() {
     const getTitle = () => {
         switch (pathname) {
             case '/':
-                return 'Paper Take';
+                return 'PaperTake.io';
             case '/archive':
                 return 'Archive';
             case '/help':
@@ -100,7 +100,7 @@ export default function Header() {
             case '/trash':
                 return 'Trash';
             default:
-                return 'Paper Take';
+                return 'PaperTake.io';
         };
     };
 
@@ -152,12 +152,17 @@ export default function Header() {
         window.history.replaceState({}, '', url);
     }, [searchTerm]);
 
+    if (pathname === '/login') {
+        return (
+            null
+        );
+    }
     return (
         <Suspense>
             <header className={isScrolled ? styles.headerScrolled : styles.header}>
                 <div className={styles.headerLeading}>
                     <div className={styles.navAnchor}>
-                        <StyledIconButton ref={navButtonRef} 
+                        <StyledIconButton ref={navButtonRef}
                             disableTouchRipple={true}
                             onClick={() => setIsNavMenuOpen(prev => !prev)}>
                             {isNavMenuOpen ? <Close /> : <MenuOpen />}

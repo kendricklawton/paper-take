@@ -2,6 +2,7 @@ import { Button, IconButton, styled, TextField, ToggleButton, Tooltip, tooltipCl
 import { Circle } from "@mui/icons-material";
 
 const defaultBorderRadius = '0px';
+const defaultFontWeight = 'regular';
 
 export const StyledIconButton = styled(IconButton)({
     color: 'gray',
@@ -11,7 +12,7 @@ export const StyledIconButton = styled(IconButton)({
             color: 'gray'
         }
     }
-});
+}); 
 
 interface BackgroundIconButtonProps {
     selected?: boolean;
@@ -139,8 +140,8 @@ export const NoteHeaderTextField = styled(TextField)({
     width: '100%',
     '& .MuiInputBase-input': {
         fontSize: 'large',
-        fontFamily: 'monospace',
-        fontWeight: 'lighter',
+        fontFamily: 'inherit',
+        fontWeight: defaultFontWeight,
         WebkitTapHighlightColor: 'transparent',
         WebkitUserSelect: 'none',
         color: '#121212',
@@ -160,8 +161,8 @@ export const NoteHeaderTextField = styled(TextField)({
 export const NoteBodyTextField = styled(TextField)({
     width: '100%',
     '& .MuiInputBase-input': {
-        fontFamily: 'monospace',
-        fontWeight: 'lighter',
+        fontFamily: 'inherit',
+        fontWeight: defaultFontWeight,
         WebkitTapHighlightColor: 'transparent',
         WebkitUserSelect: 'none',
         color: '#121212',
@@ -181,8 +182,8 @@ export const NoteBodyTextField = styled(TextField)({
 
 export const StyledButton = styled(Button)({
     width: '100%',
-    fontFamily: 'monospace',
-    fontWeight: 'lighter',
+    fontFamily: 'inherit',
+    fontWeight: defaultFontWeight,
     color: 'white',
     backgroundColor: 'black',
     borderRadius: defaultBorderRadius,
@@ -200,8 +201,8 @@ export const StyledButton = styled(Button)({
 
 export const StyledNoteButton = styled(Button)({
     width: '100%',
-    fontFamily: 'monospace',
-    fontWeight: 'lighter',
+    fontFamily: 'inherit',
+    fontWeight: defaultFontWeight,
     color: 'grey',
     backgroundColor: 'transparent',
     borderRadius: defaultBorderRadius,
@@ -213,8 +214,8 @@ export const StyledNoteButton = styled(Button)({
 
 export const StyledNoteButtonTwo = styled(Button)({
     width: '90px',
-    fontFamily: 'monospace',
-    fontWeight: 'lighter',
+    fontFamily: 'inherit',
+    fontWeight: defaultFontWeight,
     color: '#121212',
     backgroundColor: 'transparent',
 
@@ -232,19 +233,19 @@ export const FormTextField = styled(TextField)({
         backgroundColor: 'transparent',
     },
     '& .MuiInputBase-input': {
-        fontFamily: 'monospace',
-        fontWeight: 'lighter',
+        fontFamily: 'inherit',
+        fontWeight: defaultFontWeight,
         color: 'inherit',
         transition: 'color 0.3s ease',
     },
     '& label': {
-        fontFamily: 'monospace',
-        fontWeight: 'lighter',
+        fontFamily: 'inherit',
+        fontWeight: defaultFontWeight,
         transition: 'color 0.3s ease',
     },
     '& label.Mui-focused': {
-        fontFamily: 'monospace',
-        fontWeight: 'lighter',
+        fontFamily: 'inherit',
+        fontWeight: defaultFontWeight,
         color: 'inherit',
     },
     '@media (prefers-color-scheme: dark)': {
@@ -279,7 +280,7 @@ export const FormTextField = styled(TextField)({
 
 export const StyledToggleButton = styled(ToggleButton)({
     fontSize: 'x-large',
-    fontWeight: 'lighter',
+    fontWeight: defaultFontWeight,
     fontFamily: 'monospace',
     color: 'inherit',
     border: 'none',
@@ -301,12 +302,15 @@ export const StyledToggleButton = styled(ToggleButton)({
 });
 
 export const StyledTextButton = styled(Button)({
+    backgroundColor: 'transparent',
     borderRadius: defaultBorderRadius,
+    fontFamily: 'inherit',
+    fontWeight: defaultFontWeight,
+    padding: '0',
     '@media (prefers-color-scheme: dark)': {
-        color: 'lightgray',
+        color: '#ededed',
     }
 });
-
 
 export const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} classes={{ popper: className }} />

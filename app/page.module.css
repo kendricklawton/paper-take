@@ -14,7 +14,6 @@
 }
 
 .pageLogin {
-  padding-top: 10%;
   justify-content: center;
 }
 
@@ -205,10 +204,12 @@
 
 .switchContainer {
   position: absolute;
-  top: 3rem;
+  top: 0;
+  height: 4rem;
   right: 1rem;
+  display: flex;
+  align-items: center;
 }
-
 .spacer {
  height: 1rem;
 }
