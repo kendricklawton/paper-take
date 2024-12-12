@@ -184,7 +184,7 @@ export const StyledButton = styled(Button)({
     width: '100%',
     fontFamily: 'inherit',
     fontWeight: defaultFontWeight,
-    color: 'inherit',
+    color: 'white',
     backgroundColor: 'black',
     borderRadius: defaultBorderRadius,
     '&:disabled': {
