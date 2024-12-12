@@ -70,26 +70,9 @@ export default function Login() {
         setIsAuthLoading(false);
     };
 
-    const handleRedirect = () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const redirectParam = urlParams.get('redirect');
-
-        switch (redirectParam) {
-            case 'machinename.dev':
-                router.push('https://www.machinename.dev');
-                break;
-            case 'www.machinename.dev':
-                router.push('https://www.machinename.dev');
-                break;
-            default:
-                router.push('https://www.machinename.dev');
-                break;
-        }
-    };
-
     const handleContinueAsGuest = async (event: React.FormEvent<HTMLButtonElement>) => {
         event.preventDefault();
-        router.push('https://www.machinename.dev');
+        router.push('/');
     };
 
     const handleContinueWithGoogle = async (event: React.FormEvent<HTMLButtonElement>) => {
@@ -124,6 +107,7 @@ export default function Login() {
                     return;
                 }
                 await logIn(email, password);
+                router.push('/');
             } else if (!isLogin && !isHelp) {
                 if (!email.trim()) {
                     setErrors({ ...errors, email: 'Email is required' });
@@ -142,8 +126,9 @@ export default function Login() {
                     return;
                 }
                 await createUserAccount(email, password);
-                handleRedirect();
+                router.push('/');
             }
+
         } catch (error) {
             console.log('Error:', error);
             setIsAuthLoading(false);
@@ -183,8 +168,8 @@ export default function Login() {
                     {isLogin ? 'Create an account' : 'Already have an account?'}
                 </StyledTextButton>
             </div>
-            <div className={styles.wrapper}>
-                <h2>{isHelp ? 'Log in help' : (isLogin ? 'Log into Machine Name' : 'Create an account')}</h2>
+            <div className={styles.wrapperLogin}>
+                <h2>{isHelp ? 'Log in help' : (isLogin ? 'Log into PaperTake.io' : 'Create an account')}</h2>
                 <div className={isHelp ? styles.loginHelp : styles.login}>
                     <form className={styles.form} onSubmit={handleSubmit}>
                         <FormTextField
@@ -281,7 +266,7 @@ export default function Login() {
                     </React.Fragment>
                 ) :
                     <React.Fragment>
-                        <p>Secure Login with reCAPTCHA subject to Google <Link href="https://policies.google.com/terms" className={styles.textTerms}>Terms</Link> & <Link href="https://policies.google.com/privacy" className={styles.textTerms}>Privacy</Link></p>
+                        <p>Secure Login with reCAPTCHA subject to Google <Link href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" className={styles.textTerms}>Terms</Link> & <Link href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className={styles.textTerms}>Privacy</Link></p>
                     </React.Fragment>
                 }
                 <StyledTextButton type="button"

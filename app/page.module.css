@@ -5,7 +5,6 @@
   align-items: center;
   padding-left: 1rem;
   padding-right: 1rem;
-  
 }
 
 .page {
@@ -14,7 +13,10 @@
 }
 
 .pageLogin {
+  align-items: center;
+  height: 100vh;
   justify-content: center;
+  text-align: center;
 }
 
 .pageFooterContainer p,
@@ -28,7 +30,7 @@
   font-size: large;
 }
 
-.pageHeaderContainer { 
+.pageHeaderContainer {
   padding-bottom: 1rem;
   text-align: center;
   display: flex;
@@ -54,7 +56,18 @@
 }
 
 .wrapperLogin {
+  justify-content: center;
   max-width: 800px;
+}
+
+.wrapperLogin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 800px;
+  gap: 1rem;
 }
 
 .wrapperPopUp {
@@ -104,8 +117,8 @@
 }
 
 .popUpModal {
-    background-color: rgba(0, 0, 0, 0.5);
-    justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
 }
 
 .containerItem {
@@ -118,7 +131,7 @@
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
-  padding-top: 1.5rem; 
+  padding-top: 1.5rem;
   padding-bottom: 1.5rem;
 }
 
@@ -183,7 +196,7 @@
   font-size: small;
 }
 
-.textTerms{
+.textTerms {
   text-align: center;
 }
 
@@ -210,15 +223,15 @@
   display: flex;
   align-items: center;
 }
+
 .spacer {
- height: 1rem;
+  height: 1rem;
 }
 
 @media (prefers-color-scheme: dark) {
   .modal {
     background-color: #121212;
   }
-
 
   .containerItem,
   .information {
@@ -246,5 +259,12 @@
   .login {
     align-items: center;
     flex-direction: column;
+  }
+
+  .pageLogin {
+    padding-top: 5rem;
+    padding-bottom: 1rem;
+    height: auto;
+    justify-content: flex-start;
   }
 }
