@@ -95,7 +95,7 @@ const IdeasList: React.FC = () => {
         <React.Fragment>
             {!user &&
                 <React.Fragment>
-                    <h2>Ideas will not save in Guest Mode</h2>
+                    <h3>Ideas will not save in Guest Mode</h3>
                     <div className={styles.spacer} />
                 </React.Fragment>
             }
