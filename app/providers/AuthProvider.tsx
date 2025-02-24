@@ -27,6 +27,7 @@ import {
 } from "firebase/auth";
 import { auth } from '../firebase';
 
+// Define the shape of the authentication context
 interface AuthContextType {
     authError: string;
     isAuthLoading: boolean;
@@ -42,13 +43,16 @@ interface AuthContextType {
     updateUserEmail: (newEmail: string, password: string) => Promise<void>;
 }
 
+// Create the authentication context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Define the AuthProvider component
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [authError, setAuthError] = useState<string>('');
     const [isAuthLoading, setIsAuthLoading] = useState<boolean>(false);
     const [user, setUser] = useState<User | null>(null);
 
+    // Handle errors from Firebase operations
     const handleError = useCallback((error: unknown) => {
         if (error instanceof FirebaseError) {
             switch (error.code) {
@@ -78,6 +82,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     }, []);
 
+    // Monitor authentication state changes
     useEffect(() => {
         if (!auth) {
             console.error('Firebase auth is not initialized');
@@ -91,6 +96,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return () => unsubscribe();
     }, [user]);
 
+    // Create a new user account
     const createUserAccount = useCallback(async (email: string, password: string): Promise<void> => {
         setIsAuthLoading(true);
         try {
@@ -103,7 +109,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     }, [handleError]);
 
+    // Delete the current user account
     const deleteUserAccount = useCallback(async (password: string): Promise<void> => {
+        setIsAuthLoading(true);
         try {
             if (user) {
                 const credential = EmailAuthProvider.credential(user.email!, password);
@@ -112,11 +120,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 setUser(null);
             }
         } catch (error) {
-            setAuthError('' + error);
-            throw error;
+            handleError(error);
+        } finally {
+            setIsAuthLoading(false);
         }
-    }, [user]);
+    }, [handleError, user]);
 
+    // Log in with email and password
     const logIn = useCallback(async (email: string, password: string): Promise<void> => {
         setIsAuthLoading(true);
         try {
@@ -129,9 +139,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     }, [handleError]);
 
+    // Log in with Google
     const logInWithGoogle = useCallback(async (): Promise<void> => {
+        setIsAuthLoading(true);
         try {
-            setIsAuthLoading(true);
             const userCredential = await signInWithPopup(auth, new GoogleAuthProvider());
             setUser(userCredential.user);
         } catch (error) {
@@ -141,28 +152,35 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     }, [handleError]);
 
+    // Log out the current user
     const logOut = useCallback(async (): Promise<void> => {
+        setIsAuthLoading(true);
         try {
             await auth.signOut();
             setUser(null);
         } catch (error) {
-            setAuthError('' + error);
-            throw error;
+            handleError(error);
+        } finally {
+            setIsAuthLoading(false);
         }
-    }, []);
+    }, [handleError]);
 
+    // Send a password reset email
     const sendPasswordReset = useCallback(async (email: string): Promise<void> => {
         if (auth === null) {
             return;
         }
+        setIsAuthLoading(true);
         try {
             await sendPasswordResetEmail(auth, email);
         } catch (error) {
             handleError(error);
-            throw error;
+        } finally {
+            setIsAuthLoading(false);
         }
     }, [handleError]);
 
+    // Send a user verification email
     const sendUserVerification = useCallback(async (): Promise<void> => {
         try {
             if (user) {
@@ -171,11 +189,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 throw new Error('User not found.');
             }
         } catch (error) {
-            setAuthError('' + error);
+            handleError(error);
             throw error;
         }
-    }, [user]);
+    }, [handleError, user]);
 
+    // Update the user's display name
     const updateUserDisplayName = useCallback(async (newDisplayName: string): Promise<void> => {
         try {
             if (user) {
@@ -189,6 +208,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     }, [user]);
 
+    // Update the user's email address
     const updateUserEmail = useCallback(async (newEmail: string, password: string): Promise<void> => {
         try {
             if (user) {
@@ -204,7 +224,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     }, [user]);
 
-
+    // Memoize the context value to avoid unnecessary re-renders
     const contextValue = useMemo(() => ({
         authError,
         isAuthLoading,
@@ -233,6 +253,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         updateUserEmail,
     ]);
 
+    // Provide the context value to children components
     return (
         <AuthContext.Provider value={contextValue}>
             {children}
@@ -240,6 +261,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     );
 };
 
+// Custom hook to use the authentication context
 export const useAuthContext = (): AuthContextType => {
     const context = useContext(AuthContext);
     if (context === undefined) {
