@@ -261,7 +261,7 @@ export default function Login() {
                             Enter your email to receive a password reset link
                         </p>
                         <p className={styles.textTerms}>
-                            For any other issues, please contact <Link href="mailto:support@machinename.dev?subject=Support%20Request&body=Please%20describe%20your%20issue%20here." className={styles.textTerms}>support</Link>
+                            For any other issues, please contact <Link href="mailto:info@papertake.io?subject=Support%20Request&body=Please%20describe%20your%20issue%20here." className={styles.textTerms}>support</Link>
                         </p>
                     </React.Fragment>
                 ) :
